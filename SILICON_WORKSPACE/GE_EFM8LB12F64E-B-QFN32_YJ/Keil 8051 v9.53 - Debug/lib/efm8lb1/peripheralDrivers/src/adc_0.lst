@@ -1,0 +1,1030 @@
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE ADC_0
+OBJECT MODULE PLACED IN .\lib\efm8lb1\peripheralDrivers\src\adc_0.OBJ
+COMPILER INVOKED BY: c:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.53\BIN\C51.exe D:\WorkSpace\MyC
+                    -ode\SILICON_WORKSPACE\GE_EFM8LB12F64E-B-QFN32_YJ\lib\efm8lb1\peripheralDrivers\src\adc_0.c OMF2 LARGE DEBUG OBJECTEXTEND
+                    - ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SPEED) DEFINE(DEBUG=1) INTVECTOR(0X0000) BROWSE INTPROMOTE INCDIR(D
+                    -:\WorkSpace\MyCode\SILICON_WORKSPACE\GE_EFM8LB12F64E-B-QFN32_YJ\inc;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/80
+                    -51/v4.1.1//Device/shared/si8051base;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.1//Device/EFM8LB1/inc;C:
+                    -/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.1//Lib/efm8_assert;C:/SiliconLabs/SimplicityStudio/v4/develope
+                    -r/sdks/8051/v4.1.1//Device/EFM8LB1/peripheral_driver/inc) PRINT(.\lib\efm8lb1\peripheralDrivers\src\adc_0.lst) COND CODE
+                    - PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\lib\efm8lb1\peripheralDrivers\src\adc_0.OBJ)
+
+line level    source
+
+   1          /**************************************************************************//**
+   2           * Copyright (c) 2015 by Silicon Laboratories Inc. All rights reserved.
+   3           *
+   4           * http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
+   5           *****************************************************************************/
+   6          
+   7          #include "adc_0.h"
+   8          #include "assert.h"
+   9          
+  10          #if EFM8PDL_ADC0_AUTO_PAGE == 1
+  11          // declare variable needed for autopage enter/exit
+  12          #define DECL_PAGE uint8_t savedPage
+  13          // enter autopage section
+  14          #define SET_PAGE(p)     do                                                    \
+  15                                  {                                                     \
+  16                                    savedPage = SFRPAGE;  /* save current SFR page */   \
+  17                                    SFRPAGE = (p);        /* set SFR page */            \
+  18                                  } while(0)
+  19          // exit autopage section
+  20          #define RESTORE_PAGE    do                                                    \
+  21                                  {                                                     \
+  22                                    SFRPAGE = savedPage;  /* restore saved SFR page */  \
+  23                                  } while(0)
+  24          #else
+              #define DECL_PAGE
+              #define SET_PAGE(p)
+              #define RESTORE_PAGE
+              #endif
+  29          
+  30          #define ADC0_SFRPAGE 0x30
+  31          #define ADC0_enableTempSensor()   ADC0CN0_TEMPE = 1
+  32          #define ADC0_disableTempSensor()  ADC0CN0_TEMPE = 0
+  33          
+  34          #if EFM8PDL_ADC0_USE_INIT == 1
+  35          #define MAX_SARCLK 18000000UL
+  36          #define MAX_SYSCLK 75000000UL
+  37          void ADC0_init(ADC0_ConversionStart_t convStart,
+  38                          ADC0_Resolution_t resolution,
+  39                          uint32_t sysclk)
+  40          {
+  41   1              uint8_t divider;
+  42   1              DECL_PAGE;
+  43   1              SET_PAGE(ADC0_SFRPAGE);
+  44   1      
+  45   1              // Sysclk cannot be greater than the maximum
+  46   1              SLAB_ASSERT(sysclk <= MAX_SYSCLK);
+  47   1      
+  48   1          // calculate SAR clock divider 
+  49   1          divider = 0; 
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 2   
+
+  50   1        while(sysclk > MAX_SARCLK * (divider + 1))
+  51   1        {
+  52   2          divider++;
+  53   2        }
+  54   1      
+  55   1              ADC0CN0 = ADC0CN0_ADGN__GAIN_0P5;
+  56   1              ADC0CN1 = resolution | ADC0CN1_ADRPT__ACC_1 | ADC0CN1_ADSJST__RIGHT_NO_SHIFT;
+  57   1              ADC0CN2 = convStart | ADC0CN2_PACEN__PAC_DISABLED;
+  58   1      
+  59   1              ADC0CF0 = (divider << ADC0CF0_ADSC__SHIFT) | ADC0CF0_ADCLKSEL__SYSCLK;
+  60   1      
+  61   1              // Set min tracking time to minimum needed during fastest adc clock
+  62   1              ADC0CF1 = 5 << ADC0CF1_ADTK__SHIFT;
+  63   1      
+  64   1              // Enable ADC
+  65   1              ADC0CN0_ADEN = 1;
+  66   1              RESTORE_PAGE;
+  67   1      }
+  68          #endif //EFM8PDL_ADC0_USE_INIT
+  69          
+  70          uint8_t ADC0_getIntFlags()
+  71          {
+  72   1        uint8_t val;
+  73   1        DECL_PAGE;
+  74   1        SET_PAGE(ADC0_SFRPAGE);
+  75   1        val = ADC0CN0 & (ADC0_CONVERSION_COMPLETE_IF | ADC0_WINDOW_COMPARE_IF);
+  76   1        RESTORE_PAGE;
+  77   1        return val;
+  78   1      }
+  79          
+  80          void ADC0_clearIntFlags(uint8_t flags)
+  81          {
+  82   1        DECL_PAGE;
+  83   1        SET_PAGE(ADC0_SFRPAGE);
+  84   1      
+  85   1        // Must pass one of the valid flags
+  86   1        SLAB_ASSERT(flags & (ADC0_CONVERSION_COMPLETE_IF | ADC0_WINDOW_COMPARE_IF));
+  87   1      
+  88   1        ADC0CN0 &= ~(flags & (ADC0_CONVERSION_COMPLETE_IF | ADC0_WINDOW_COMPARE_IF));
+  89   1        RESTORE_PAGE;
+  90   1      }
+  91          
+  92          void ADC0_enableInt(uint8_t flags, bool enable)
+  93          {
+  94   1        uint8_t en;
+  95   1        DECL_PAGE;
+  96   1        SET_PAGE(0x00);
+  97   1      
+  98   1        // Must pass one of the valid flags
+  99   1        SLAB_ASSERT(flags & (ADC0_CONVERSION_COMPLETE_IF | ADC0_WINDOW_COMPARE_IF));
+ 100   1      
+ 101   1        en = (uint8_t) enable;
+ 102   1      
+ 103   1        if (flags & ADC0_CONVERSION_COMPLETE_IF)
+ 104   1        {
+ 105   2          EIE1 &= ~EIE1_EADC0__BMASK;
+ 106   2          EIE1 |= en << EIE1_EADC0__SHIFT;
+ 107   2        }
+ 108   1      
+ 109   1        if (flags & ADC0_WINDOW_COMPARE_IF)
+ 110   1        {
+ 111   2          EIE1 &= ~EIE1_EWADC0__BMASK;
+ 112   2          EIE1 |= en << EIE1_EWADC0__SHIFT;
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 3   
+
+ 113   2        }
+ 114   1        RESTORE_PAGE;
+ 115   1      }
+ 116          
+ 117          
+ 118          void ADC0_enable(void)
+ 119          {
+ 120   1              DECL_PAGE;
+ 121   1              SET_PAGE(ADC0_SFRPAGE);
+ 122   1              ADC0CN0_ADEN = 1;
+ 123   1              RESTORE_PAGE;
+ 124   1      }
+ 125          
+ 126          void ADC0_disable(void)
+ 127          {
+ 128   1              DECL_PAGE;
+ 129   1              SET_PAGE(ADC0_SFRPAGE);
+ 130   1              ADC0CN0_ADEN = 0;
+ 131   1              RESTORE_PAGE;
+ 132   1      }
+ 133          
+ 134          void ADC0_setPositiveInput(ADC0_PositiveInput_t input)
+ 135          {
+ 136   1              DECL_PAGE;
+ 137   1              SET_PAGE(ADC0_SFRPAGE);
+ 138   1      
+ 139   1              // Turn on the temp sensor if it is the input
+ 140   1        if (input == ADC0_POSITIVE_INPUT_TEMP)
+ 141   1        {
+ 142   2          ADC0_enableTempSensor();
+ 143   2        }
+ 144   1        else
+ 145   1        {
+ 146   2          ADC0_disableTempSensor();
+ 147   2        }
+ 148   1      
+ 149   1              ADC0MX = input;
+ 150   1              RESTORE_PAGE;
+ 151   1      }
+ 152          
+ 153          void ADC0_startConversion(void)
+ 154          {
+ 155   1              uint8_t ADCM_save;
+ 156   1              DECL_PAGE;
+ 157   1              SET_PAGE(ADC0_SFRPAGE);
+ 158   1      
+ 159   1              // Save the conversion source and set to ADBUSY
+ 160   1              ADCM_save = ADC0CN2 & ADC0CN2_ADCM__FMASK;
+ 161   1              ADC0CN2 = (ADC0CN2 & ~ADC0CN2_ADCM__FMASK) | ADC0CN2_ADCM__ADBUSY;
+ 162   1      
+ 163   1              // Clear the conversion complete flag
+ 164   1              ADC0CN0_ADINT = 0;
+ 165   1      
+ 166   1              // Start a conversion by setting ADBUSY
+ 167   1              ADC0CN0_ADBUSY = 1;
+ 168   1      
+ 169   1              // Restore the conversion source
+ 170   1              ADC0CN2 |= ADCM_save;
+ 171   1              RESTORE_PAGE;
+ 172   1      }
+ 173          
+ 174          bool ADC0_isConversionComplete(void)
+ 175          {
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 4   
+
+ 176   1              bool conversionComplete;
+ 177   1              DECL_PAGE;
+ 178   1              SET_PAGE(ADC0_SFRPAGE);
+ 179   1              conversionComplete = ADC0CN0_ADINT;
+ 180   1              RESTORE_PAGE;
+ 181   1              return conversionComplete;
+ 182   1      }
+ 183          
+ 184          uint16_t ADC0_getResult(void)
+ 185          {
+ 186   1              uint16_t result;
+ 187   1              DECL_PAGE;
+ 188   1              SET_PAGE(ADC0_SFRPAGE);
+ 189   1              result = ADC0;
+ 190   1              RESTORE_PAGE;
+ 191   1              return result;
+ 192   1      }
+ 193          
+ 194          void ADC0_setWindowCompare(uint16_t lessThan, uint16_t greaterThan)
+ 195          {
+ 196   1              DECL_PAGE;
+ 197   1              SET_PAGE(ADC0_SFRPAGE);
+ 198   1         ADC0LT = lessThan;
+ 199   1              ADC0GT = greaterThan;
+ 200   1              RESTORE_PAGE;
+ 201   1      }
+ 202          
+ 203          #if EFM8PDL_ADC0_USE_AUTOSCAN == 1
+ 204          void ADC0_setAutoscanInputs(ADC0_PositiveInput_t startChannel,
+ 205                                          uint8_t numChannels)
+ 206          {
+ 207   1              uint8_t endChannel;
+ 208   1              DECL_PAGE;
+ 209   1              SET_PAGE(ADC0_SFRPAGE);
+ 210   1      
+ 211   1              // Channels must be 1 to 4
+ 212   1              SLAB_ASSERT(numChannels <= 4 && numChannels >= 1);
+ 213   1      
+ 214   1              // Register setting for number of channels equals numChannels - 1.
+ 215   1              numChannels -= 1;
+ 216   1      
+ 217   1              ADC0ASCF = (ADC0ASCF & ~ADC0ASCF_NASCH__FMASK) | numChannels;
+ 218   1      
+ 219   1              endChannel = startChannel + numChannels;
+ 220   1      
+ 221   1              // Channels cannot end past the last channel
+ 222   1              SLAB_ASSERT(endChannel <= ADC0_POSITIVE_INPUT_NONE);
+ 223   1      
+ 224   1              // Turn on temp sensor if it is in the scan
+ 225   1        if (startChannel <= ADC0_POSITIVE_INPUT_TEMP
+ 226   1            && endChannel >= ADC0_POSITIVE_INPUT_TEMP)
+ 227   1        {
+ 228   2          ADC0_enableTempSensor();
+ 229   2        }
+ 230   1        else
+ 231   1        {
+ 232   2          ADC0_disableTempSensor();
+ 233   2        }
+ 234   1      
+ 235   1              ADC0MX = startChannel;
+ 236   1      
+ 237   1              RESTORE_PAGE;
+ 238   1      }
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 5   
+
+ 239          
+ 240          void ADC0_enableAutoscan(const ADC0_AutoscanBuffer_t * buffer,
+ 241                                uint8_t numElements, //Max 64
+ 242                                ADC0_AutoscanMode_t mode)
+ 243          {
+ 244   1              uint8_t ADCM_save;
+ 245   1              DECL_PAGE;
+ 246   1              SET_PAGE(ADC0_SFRPAGE);
+ 247   1      
+ 248   1              // Save the conversion source and set to ADBUSY
+ 249   1              ADCM_save = ADC0CN2 & ADC0CN2_ADCM__FMASK;
+ 250   1              ADC0CN2 = (ADC0CN2 & ~ADC0CN2_ADCM__FMASK) | ADC0CN2_ADCM__ADBUSY;
+ 251   1      
+ 252   1              // Load the initial buffer and start the Autoscan
+ 253   1              ADC0_setNextAutoscanBuffer(buffer, numElements);
+ 254   1              ADC0ASCF |= ADC0ASCF_ASEN__START_SCAN;
+ 255   1      
+ 256   1              // Disable autoscan if only a single scan is to be performed
+ 257   1              // This prevents the next autoscan from starting after the
+ 258   1              // current one is finished.
+ 259   1        if (mode == ADC0_AUTOSCAN_MODE_SINGLE)
+ 260   1        {
+ 261   2          ADC0_disableAutoscan();
+ 262   2        }
+ 263   1      
+ 264   1              // Restore start-of-conversion source
+ 265   1              ADC0CN2 |= ADCM_save;
+ 266   1              RESTORE_PAGE;
+ 267   1      }
+ 268          
+ 269          const ADC0_AutoscanBuffer_t * ADC0_getNextAutoscanBuffer(void)
+ 270          {
+ 271   1        const ADC0_AutoscanBuffer_t * buffer;
+ 272   1        DECL_PAGE;
+ 273   1        SET_PAGE(ADC0_SFRPAGE);
+ 274   1      
+ 275   1        buffer = (ADC0_AutoscanBuffer_t *)(((ADC0ASAH & ADC0ASAH_STADDRH__FMASK) << 8) | (ADC0ASAL & ADC0ASAL_ST
+             -ADDRL__FMASK));
+ 276   1      
+ 277   1        RESTORE_PAGE;
+ 278   1        return buffer;
+ 279   1      }
+ 280          
+ 281          void ADC0_setNextAutoscanBuffer(const ADC0_AutoscanBuffer_t * buffer,
+ 282                                uint8_t numElements)
+ 283          {
+ 284   1              uint16_t addr = (uint16_t)buffer;
+ 285   1              DECL_PAGE;
+ 286   1              SET_PAGE(ADC0_SFRPAGE);
+ 287   1      
+ 288   1              // Buffer must be aligned to an even address
+ 289   1              SLAB_ASSERT(!(addr & 0x01));
+ 290   1      
+ 291   1              // Set the autoscan address
+ 292   1              ADC0ASAH = (ADC0ASAH & ~ADC0ASAH_STADDRH__FMASK) | ((addr >> 8) & ADC0ASAH_STADDRH__FMASK);
+ 293   1              ADC0ASAL = (ADC0ASAL & ~ADC0ASAL_STADDRL__FMASK) | (addr & ADC0ASAL_STADDRL__FMASK);
+ 294   1      
+ 295   1              // Buffer size must be 1-64
+ 296   1              SLAB_ASSERT(numElements <= 64 && numElements >= 1);
+ 297   1      
+ 298   1              // Actual count setting is count + 1, subtract one from numElements
+ 299   1              numElements -= 1;
+ 300   1      
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 6   
+
+ 301   1              // Set autoscan count
+ 302   1              ADC0ASCT = (ADC0ASCT & ~ADC0ASCT_ASCNT__FMASK) | numElements;
+ 303   1      
+ 304   1              RESTORE_PAGE;
+ 305   1      }
+ 306          
+ 307          void ADC0_disableAutoscan(void)
+ 308          {
+ 309   1              DECL_PAGE;
+ 310   1              SET_PAGE(ADC0_SFRPAGE);
+ 311   1      
+ 312   1              ADC0ASCF &= ~ADC0ASCF_ASEN__BMASK;
+ 313   1      
+ 314   1              RESTORE_PAGE;
+ 315   1      }
+ 316          #endif //EFM8PDL_ADC0_USE_AUTOSCAN
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 7   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _ADC0_init (BEGIN)
+                                           ; SOURCE LINE # 37
+0000 900000      R     MOV     DPTR,#convStart
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 ED                MOV     A,R5
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 40
+                                           ; SOURCE LINE # 43
+0008 900000      R     MOV     DPTR,#savedPage
+000B E5A7              MOV     A,SFRPAGE
+000D F0                MOVX    @DPTR,A
+000E 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 46
+0011 7FC0              MOV     R7,#0C0H
+0013 7E68              MOV     R6,#068H
+0015 7D78              MOV     R5,#078H
+0017 7C04              MOV     R4,#04H
+0019 900000      R     MOV     DPTR,#sysclk
+001C E0                MOVX    A,@DPTR
+001D F8                MOV     R0,A
+001E A3                INC     DPTR
+001F E0                MOVX    A,@DPTR
+0020 F9                MOV     R1,A
+0021 A3                INC     DPTR
+0022 E0                MOVX    A,@DPTR
+0023 FA                MOV     R2,A
+0024 A3                INC     DPTR
+0025 E0                MOVX    A,@DPTR
+0026 FB                MOV     R3,A
+0027 D3                SETB    C
+0028 120000      E     LCALL   ?C?ULCMP
+002B 4003              JC      ?C0005
+002D         ?C0004:
+002D 120000      E     LCALL   slab_Assert
+0030         ?C0005:
+                                           ; SOURCE LINE # 49
+0030 E4                CLR     A
+0031 900000      R     MOV     DPTR,#divider
+0034 F0                MOVX    @DPTR,A
+0035         ?C0006:
+                                           ; SOURCE LINE # 50
+0035 900000      R     MOV     DPTR,#divider
+0038 E0                MOVX    A,@DPTR
+0039 2401              ADD     A,#01H
+003B FF                MOV     R7,A
+003C E4                CLR     A
+003D 33                RLC     A
+003E FE                MOV     R6,A
+003F E4                CLR     A
+0040 FC                MOV     R4,A
+0041 FD                MOV     R5,A
+0042 7B80              MOV     R3,#080H
+0044 7AA8              MOV     R2,#0A8H
+0046 7912              MOV     R1,#012H
+0048 7801              MOV     R0,#01H
+004A 120000      E     LCALL   ?C?LMUL
+004D 900000      R     MOV     DPTR,#sysclk
+0050 E0                MOVX    A,@DPTR
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 8   
+
+0051 F8                MOV     R0,A
+0052 A3                INC     DPTR
+0053 E0                MOVX    A,@DPTR
+0054 F9                MOV     R1,A
+0055 A3                INC     DPTR
+0056 E0                MOVX    A,@DPTR
+0057 FA                MOV     R2,A
+0058 A3                INC     DPTR
+0059 E0                MOVX    A,@DPTR
+005A FB                MOV     R3,A
+005B D3                SETB    C
+005C 120000      E     LCALL   ?C?ULCMP
+005F 4008              JC      ?C0007
+                                           ; SOURCE LINE # 51
+                                           ; SOURCE LINE # 52
+0061 900000      R     MOV     DPTR,#divider
+0064 E0                MOVX    A,@DPTR
+0065 04                INC     A
+0066 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 53
+0067 80CC              SJMP    ?C0006
+0069         ?C0007:
+                                           ; SOURCE LINE # 55
+0069 75E804            MOV     ADC0CN0,#04H
+                                           ; SOURCE LINE # 56
+006C 900000      R     MOV     DPTR,#resolution
+006F E0                MOVX    A,@DPTR
+0070 F5B2              MOV     ADC0CN1,A
+                                           ; SOURCE LINE # 57
+0072 900000      R     MOV     DPTR,#convStart
+0075 E0                MOVX    A,@DPTR
+0076 F5B3              MOV     ADC0CN2,A
+                                           ; SOURCE LINE # 59
+0078 900000      R     MOV     DPTR,#divider
+007B E0                MOVX    A,@DPTR
+007C 33                RLC     A
+007D 33                RLC     A
+007E 33                RLC     A
+007F 54F8              ANL     A,#0F8H
+0081 F5BC              MOV     ADC0CF0,A
+                                           ; SOURCE LINE # 62
+0083 75B905            MOV     ADC0CF1,#05H
+                                           ; SOURCE LINE # 65
+0086 D2EF              SETB    ADC0CN0_ADEN
+                                           ; SOURCE LINE # 66
+0088 A3                INC     DPTR
+0089 E0                MOVX    A,@DPTR
+008A F5A7              MOV     SFRPAGE,A
+                                           ; SOURCE LINE # 67
+008C 22                RET     
+             ; FUNCTION _ADC0_init (END)
+
+             ; FUNCTION ADC0_getIntFlags (BEGIN)
+                                           ; SOURCE LINE # 70
+                                           ; SOURCE LINE # 71
+                                           ; SOURCE LINE # 74
+;---- Variable 'savedPage' assigned to Register 'R7' ----
+0000 AFA7              MOV     R7,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 75
+0005 E5E8              MOV     A,ADC0CN0
+0007 5428              ANL     A,#028H
+;---- Variable 'val' assigned to Register 'R6' ----
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 9   
+
+                                           ; SOURCE LINE # 76
+0009 8FA7              MOV     SFRPAGE,R7
+                                           ; SOURCE LINE # 77
+000B FF                MOV     R7,A
+                                           ; SOURCE LINE # 78
+000C         ?C0018:
+000C 22                RET     
+             ; FUNCTION ADC0_getIntFlags (END)
+
+             ; FUNCTION _ADC0_clearIntFlags (BEGIN)
+                                           ; SOURCE LINE # 80
+0000 900000      R     MOV     DPTR,#flags
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 81
+                                           ; SOURCE LINE # 83
+0005 A3                INC     DPTR
+0006 E5A7              MOV     A,SFRPAGE
+0008 F0                MOVX    @DPTR,A
+0009 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 86
+000C 900000      R     MOV     DPTR,#flags
+000F E0                MOVX    A,@DPTR
+0010 5428              ANL     A,#028H
+0012 7003              JNZ     ?C0023
+0014         ?C0022:
+0014 120000      E     LCALL   slab_Assert
+0017         ?C0023:
+                                           ; SOURCE LINE # 88
+0017 900000      R     MOV     DPTR,#flags
+001A E0                MOVX    A,@DPTR
+001B 5428              ANL     A,#028H
+001D F4                CPL     A
+001E 52E8              ANL     ADC0CN0,A
+                                           ; SOURCE LINE # 89
+0020 A3                INC     DPTR
+0021 E0                MOVX    A,@DPTR
+0022 F5A7              MOV     SFRPAGE,A
+                                           ; SOURCE LINE # 90
+0024 22                RET     
+             ; FUNCTION _ADC0_clearIntFlags (END)
+
+             ; FUNCTION _ADC0_enableInt (BEGIN)
+                                           ; SOURCE LINE # 92
+0000 900000      R     MOV     DPTR,#flags
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 93
+                                           ; SOURCE LINE # 96
+0005 A3                INC     DPTR
+0006 E5A7              MOV     A,SFRPAGE
+0008 F0                MOVX    @DPTR,A
+0009 E4                CLR     A
+000A F5A7              MOV     SFRPAGE,A
+                                           ; SOURCE LINE # 99
+000C 900000      R     MOV     DPTR,#flags
+000F E0                MOVX    A,@DPTR
+0010 5428              ANL     A,#028H
+0012 7003              JNZ     ?C0032
+0014         ?C0031:
+0014 120000      E     LCALL   slab_Assert
+0017         ?C0032:
+                                           ; SOURCE LINE # 101
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 10  
+
+0017 A200        R     MOV     C,enable
+0019 E4                CLR     A
+001A 33                RLC     A
+001B FF                MOV     R7,A
+;---- Variable 'en' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 103
+001C 900000      R     MOV     DPTR,#flags
+001F E0                MOVX    A,@DPTR
+0020 FE                MOV     R6,A
+0021 30E50B            JNB     ACC.5,?C0033
+                                           ; SOURCE LINE # 104
+                                           ; SOURCE LINE # 105
+0024 53E6F7            ANL     EIE1,#0F7H
+                                           ; SOURCE LINE # 106
+0027 EF                MOV     A,R7
+0028 33                RLC     A
+0029 33                RLC     A
+002A 33                RLC     A
+002B 54F8              ANL     A,#0F8H
+002D 42E6              ORL     EIE1,A
+                                           ; SOURCE LINE # 107
+002F         ?C0033:
+                                           ; SOURCE LINE # 109
+002F EE                MOV     A,R6
+0030 30E30A            JNB     ACC.3,?C0037
+                                           ; SOURCE LINE # 110
+                                           ; SOURCE LINE # 111
+0033 53E6FB            ANL     EIE1,#0FBH
+                                           ; SOURCE LINE # 112
+0036 EF                MOV     A,R7
+0037 25E0              ADD     A,ACC
+0039 25E0              ADD     A,ACC
+003B 42E6              ORL     EIE1,A
+                                           ; SOURCE LINE # 113
+003D         ?C0037:
+                                           ; SOURCE LINE # 114
+003D 900000      R     MOV     DPTR,#savedPage
+0040 E0                MOVX    A,@DPTR
+0041 F5A7              MOV     SFRPAGE,A
+                                           ; SOURCE LINE # 115
+0043 22                RET     
+             ; FUNCTION _ADC0_enableInt (END)
+
+             ; FUNCTION ADC0_enable (BEGIN)
+                                           ; SOURCE LINE # 118
+                                           ; SOURCE LINE # 119
+                                           ; SOURCE LINE # 121
+;---- Variable 'savedPage' assigned to Register 'R7' ----
+0000 AFA7              MOV     R7,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 122
+0005 D2EF              SETB    ADC0CN0_ADEN
+                                           ; SOURCE LINE # 123
+0007 8FA7              MOV     SFRPAGE,R7
+                                           ; SOURCE LINE # 124
+0009 22                RET     
+             ; FUNCTION ADC0_enable (END)
+
+             ; FUNCTION ADC0_disable (BEGIN)
+                                           ; SOURCE LINE # 126
+                                           ; SOURCE LINE # 127
+                                           ; SOURCE LINE # 129
+;---- Variable 'savedPage' assigned to Register 'R7' ----
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 11  
+
+0000 AFA7              MOV     R7,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 130
+0005 C2EF              CLR     ADC0CN0_ADEN
+                                           ; SOURCE LINE # 131
+0007 8FA7              MOV     SFRPAGE,R7
+                                           ; SOURCE LINE # 132
+0009 22                RET     
+             ; FUNCTION ADC0_disable (END)
+
+             ; FUNCTION _ADC0_setPositiveInput (BEGIN)
+                                           ; SOURCE LINE # 134
+;---- Variable 'input' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 135
+                                           ; SOURCE LINE # 137
+;---- Variable 'savedPage' assigned to Register 'R6' ----
+0000 AEA7              MOV     R6,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 140
+0005 EF                MOV     A,R7
+0006 B41404            CJNE    A,#014H,?C0056
+                                           ; SOURCE LINE # 141
+                                           ; SOURCE LINE # 142
+0009 D2E8              SETB    ADC0CN0_TEMPE
+                                           ; SOURCE LINE # 143
+000B 8002              SJMP    ?C0057
+000D         ?C0056:
+                                           ; SOURCE LINE # 145
+                                           ; SOURCE LINE # 146
+000D C2E8              CLR     ADC0CN0_TEMPE
+                                           ; SOURCE LINE # 147
+000F         ?C0057:
+                                           ; SOURCE LINE # 149
+000F 8FBB              MOV     ADC0MX,R7
+                                           ; SOURCE LINE # 150
+0011 AF06              MOV     R7,AR6
+0013 8FA7              MOV     SFRPAGE,R7
+                                           ; SOURCE LINE # 151
+0015 22                RET     
+             ; FUNCTION _ADC0_setPositiveInput (END)
+
+             ; FUNCTION ADC0_startConversion (BEGIN)
+                                           ; SOURCE LINE # 153
+                                           ; SOURCE LINE # 154
+                                           ; SOURCE LINE # 157
+;---- Variable 'savedPage' assigned to Register 'R7' ----
+0000 AFA7              MOV     R7,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 160
+0005 E5B3              MOV     A,ADC0CN2
+0007 540F              ANL     A,#0FH
+;---- Variable 'ADCM_save' assigned to Register 'R6' ----
+                                           ; SOURCE LINE # 161
+0009 53B3F0            ANL     ADC0CN2,#0F0H
+                                           ; SOURCE LINE # 164
+000C C2ED              CLR     ADC0CN0_ADINT
+                                           ; SOURCE LINE # 167
+000E D2EC              SETB    ADC0CN0_ADBUSY
+                                           ; SOURCE LINE # 170
+0010 42B3              ORL     ADC0CN2,A
+                                           ; SOURCE LINE # 171
+0012 8FA7              MOV     SFRPAGE,R7
+                                           ; SOURCE LINE # 172
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 12  
+
+0014 22                RET     
+             ; FUNCTION ADC0_startConversion (END)
+
+             ; FUNCTION ADC0_isConversionComplete (BEGIN)
+                                           ; SOURCE LINE # 174
+                                           ; SOURCE LINE # 175
+                                           ; SOURCE LINE # 178
+;---- Variable 'savedPage' assigned to Register 'R7' ----
+0000 AFA7              MOV     R7,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 179
+0005 A2ED              MOV     C,ADC0CN0_ADINT
+0007 9200        R     MOV     conversionComplete,C
+                                           ; SOURCE LINE # 180
+0009 8FA7              MOV     SFRPAGE,R7
+                                           ; SOURCE LINE # 181
+000B A200        R     MOV     C,conversionComplete
+                                           ; SOURCE LINE # 182
+000D         ?C0075:
+000D 22                RET     
+             ; FUNCTION ADC0_isConversionComplete (END)
+
+             ; FUNCTION ADC0_getResult (BEGIN)
+                                           ; SOURCE LINE # 184
+                                           ; SOURCE LINE # 185
+                                           ; SOURCE LINE # 188
+;---- Variable 'savedPage' assigned to Register 'R7' ----
+0000 AFA7              MOV     R7,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 189
+;---- Variable 'result' assigned to Register 'R4/R5' ----
+0005 ADBD              MOV     R5,ADC0
+0007 ACBE              MOV     R4,ADC0+01H
+                                           ; SOURCE LINE # 190
+0009 8FA7              MOV     SFRPAGE,R7
+                                           ; SOURCE LINE # 191
+000B AE04              MOV     R6,AR4
+000D AF05              MOV     R7,AR5
+                                           ; SOURCE LINE # 192
+000F         ?C0082:
+000F 22                RET     
+             ; FUNCTION ADC0_getResult (END)
+
+             ; FUNCTION _ADC0_setWindowCompare (BEGIN)
+                                           ; SOURCE LINE # 194
+;---- Variable 'greaterThan' assigned to Register 'R4/R5' ----
+;---- Variable 'lessThan' assigned to Register 'R6/R7' ----
+                                           ; SOURCE LINE # 195
+                                           ; SOURCE LINE # 197
+;---- Variable 'savedPage' assigned to Register 'R3' ----
+0000 ABA7              MOV     R3,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 198
+0005 8EC6              MOV     ADC0LT+01H,R6
+0007 8FC5              MOV     ADC0LT,R7
+                                           ; SOURCE LINE # 199
+0009 AE04              MOV     R6,AR4
+000B AF05              MOV     R7,AR5
+000D 8EC4              MOV     ADC0GT+01H,R6
+000F 8FC3              MOV     ADC0GT,R7
+                                           ; SOURCE LINE # 200
+0011 AF03              MOV     R7,AR3
+0013 8FA7              MOV     SFRPAGE,R7
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 13  
+
+                                           ; SOURCE LINE # 201
+0015 22                RET     
+             ; FUNCTION _ADC0_setWindowCompare (END)
+
+             ; FUNCTION _ADC0_setAutoscanInputs (BEGIN)
+                                           ; SOURCE LINE # 204
+0000 900000      R     MOV     DPTR,#startChannel
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 ED                MOV     A,R5
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 206
+                                           ; SOURCE LINE # 209
+0008 900000      R     MOV     DPTR,#savedPage
+000B E5A7              MOV     A,SFRPAGE
+000D F0                MOVX    @DPTR,A
+000E 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 212
+0011 900000      R     MOV     DPTR,#numChannels
+0014 E0                MOVX    A,@DPTR
+0015 FF                MOV     R7,A
+0016 D3                SETB    C
+0017 9404              SUBB    A,#04H
+0019 5006              JNC     ?C0093
+001B EF                MOV     A,R7
+001C C3                CLR     C
+001D 9401              SUBB    A,#01H
+001F 5003              JNC     ?C0094
+0021         ?C0093:
+0021 120000      E     LCALL   slab_Assert
+0024         ?C0094:
+                                           ; SOURCE LINE # 215
+0024 900000      R     MOV     DPTR,#numChannels
+0027 E0                MOVX    A,@DPTR
+0028 14                DEC     A
+0029 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 217
+002A E5A1              MOV     A,ADC0ASCF
+002C 54FC              ANL     A,#0FCH
+002E FF                MOV     R7,A
+002F E0                MOVX    A,@DPTR
+0030 FE                MOV     R6,A
+0031 4F                ORL     A,R7
+0032 F5A1              MOV     ADC0ASCF,A
+                                           ; SOURCE LINE # 219
+0034 900000      R     MOV     DPTR,#startChannel
+0037 E0                MOVX    A,@DPTR
+0038 2E                ADD     A,R6
+0039 900000      R     MOV     DPTR,#endChannel
+003C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 222
+003D D3                SETB    C
+003E 941F              SUBB    A,#01FH
+0040 4003              JC      ?C0096
+0042         ?C0095:
+0042 120000      E     LCALL   slab_Assert
+0045         ?C0096:
+                                           ; SOURCE LINE # 225
+0045 900000      R     MOV     DPTR,#startChannel
+0048 E0                MOVX    A,@DPTR
+0049 FF                MOV     R7,A
+004A D3                SETB    C
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 14  
+
+004B 9414              SUBB    A,#014H
+004D 500D              JNC     ?C0097
+004F 900000      R     MOV     DPTR,#endChannel
+0052 E0                MOVX    A,@DPTR
+0053 C3                CLR     C
+0054 9414              SUBB    A,#014H
+0056 4004              JC      ?C0097
+                                           ; SOURCE LINE # 227
+                                           ; SOURCE LINE # 228
+0058 D2E8              SETB    ADC0CN0_TEMPE
+                                           ; SOURCE LINE # 229
+005A 8002              SJMP    ?C0098
+005C         ?C0097:
+                                           ; SOURCE LINE # 231
+                                           ; SOURCE LINE # 232
+005C C2E8              CLR     ADC0CN0_TEMPE
+                                           ; SOURCE LINE # 233
+005E         ?C0098:
+                                           ; SOURCE LINE # 235
+005E 8FBB              MOV     ADC0MX,R7
+                                           ; SOURCE LINE # 237
+0060 900000      R     MOV     DPTR,#savedPage
+0063 E0                MOVX    A,@DPTR
+0064 F5A7              MOV     SFRPAGE,A
+                                           ; SOURCE LINE # 238
+0066 22                RET     
+             ; FUNCTION _ADC0_setAutoscanInputs (END)
+
+             ; FUNCTION _ADC0_enableAutoscan (BEGIN)
+                                           ; SOURCE LINE # 240
+0000 900000      R     MOV     DPTR,#buffer
+0003 EE                MOV     A,R6
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 EB                MOV     A,R3
+000A F0                MOVX    @DPTR,A
+;---- Variable 'numElements' assigned to Register 'R5' ----
+                                           ; SOURCE LINE # 243
+                                           ; SOURCE LINE # 246
+000B 900000      R     MOV     DPTR,#savedPage
+000E E5A7              MOV     A,SFRPAGE
+0010 F0                MOVX    @DPTR,A
+0011 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 249
+0014 E5B3              MOV     A,ADC0CN2
+0016 540F              ANL     A,#0FH
+0018 900000      R     MOV     DPTR,#ADCM_save
+001B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 250
+001C 53B3F0            ANL     ADC0CN2,#0F0H
+                                           ; SOURCE LINE # 253
+001F 900000      R     MOV     DPTR,#buffer
+0022 E0                MOVX    A,@DPTR
+0023 FE                MOV     R6,A
+0024 A3                INC     DPTR
+0025 E0                MOVX    A,@DPTR
+0026 FF                MOV     R7,A
+0027 120000      R     LCALL   _ADC0_setNextAutoscanBuffer
+                                           ; SOURCE LINE # 254
+002A 43A180            ORL     ADC0ASCF,#080H
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 15  
+
+                                           ; SOURCE LINE # 259
+002D 900000      R     MOV     DPTR,#mode
+0030 E0                MOVX    A,@DPTR
+0031 7003              JNZ     ?C0106
+                                           ; SOURCE LINE # 260
+                                           ; SOURCE LINE # 261
+0033 120000      R     LCALL   ADC0_disableAutoscan
+                                           ; SOURCE LINE # 262
+0036         ?C0106:
+                                           ; SOURCE LINE # 265
+0036 900000      R     MOV     DPTR,#ADCM_save
+0039 E0                MOVX    A,@DPTR
+003A 42B3              ORL     ADC0CN2,A
+                                           ; SOURCE LINE # 266
+003C A3                INC     DPTR
+003D E0                MOVX    A,@DPTR
+003E F5A7              MOV     SFRPAGE,A
+                                           ; SOURCE LINE # 267
+0040 22                RET     
+             ; FUNCTION _ADC0_enableAutoscan (END)
+
+             ; FUNCTION ADC0_getNextAutoscanBuffer (BEGIN)
+                                           ; SOURCE LINE # 269
+                                           ; SOURCE LINE # 270
+                                           ; SOURCE LINE # 273
+;---- Variable 'savedPage' assigned to Register 'R5' ----
+0000 ADA7              MOV     R5,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 275
+0005 E5B6              MOV     A,ADC0ASAH
+0007 540F              ANL     A,#0FH
+0009 FE                MOV     R6,A
+000A E5B5              MOV     A,ADC0ASAL
+000C 54FE              ANL     A,#0FEH
+000E FB                MOV     R3,A
+000F EB                MOV     A,R3
+0010 FF                MOV     R7,A
+;---- Variable 'buffer' assigned to Register 'R6/R7' ----
+                                           ; SOURCE LINE # 277
+0011 8DA7              MOV     SFRPAGE,R5
+                                           ; SOURCE LINE # 278
+                                           ; SOURCE LINE # 279
+0013         ?C0117:
+0013 22                RET     
+             ; FUNCTION ADC0_getNextAutoscanBuffer (END)
+
+             ; FUNCTION _ADC0_setNextAutoscanBuffer (BEGIN)
+                                           ; SOURCE LINE # 281
+0000 900000      R     MOV     DPTR,#numElements
+0003 ED                MOV     A,R5
+0004 F0                MOVX    @DPTR,A
+;---- Variable 'buffer' assigned to Register 'R6/R7' ----
+                                           ; SOURCE LINE # 283
+                                           ; SOURCE LINE # 284
+0005 A3                INC     DPTR
+0006 EE                MOV     A,R6
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 286
+000B A3                INC     DPTR
+000C E5A7              MOV     A,SFRPAGE
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 16  
+
+000E F0                MOVX    @DPTR,A
+000F 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 289
+0012 900000      R     MOV     DPTR,#addr+01H
+0015 E0                MOVX    A,@DPTR
+0016 30E003            JNB     ACC.0,?C0122
+0019         ?C0121:
+0019 120000      E     LCALL   slab_Assert
+001C         ?C0122:
+                                           ; SOURCE LINE # 292
+001C 900000      R     MOV     DPTR,#addr
+001F E0                MOVX    A,@DPTR
+0020 FC                MOV     R4,A
+0021 A3                INC     DPTR
+0022 E0                MOVX    A,@DPTR
+0023 FD                MOV     R5,A
+0024 EC                MOV     A,R4
+0025 540F              ANL     A,#0FH
+0027 FF                MOV     R7,A
+0028 E5B6              MOV     A,ADC0ASAH
+002A 54F0              ANL     A,#0F0H
+002C 4F                ORL     A,R7
+002D F5B6              MOV     ADC0ASAH,A
+                                           ; SOURCE LINE # 293
+002F ED                MOV     A,R5
+0030 54FE              ANL     A,#0FEH
+0032 FF                MOV     R7,A
+0033 E5B5              MOV     A,ADC0ASAL
+0035 5401              ANL     A,#01H
+0037 4F                ORL     A,R7
+0038 F5B5              MOV     ADC0ASAL,A
+                                           ; SOURCE LINE # 296
+003A 900000      R     MOV     DPTR,#numElements
+003D E0                MOVX    A,@DPTR
+003E FF                MOV     R7,A
+003F D3                SETB    C
+0040 9440              SUBB    A,#040H
+0042 5006              JNC     ?C0123
+0044 EF                MOV     A,R7
+0045 C3                CLR     C
+0046 9401              SUBB    A,#01H
+0048 5003              JNC     ?C0124
+004A         ?C0123:
+004A 120000      E     LCALL   slab_Assert
+004D         ?C0124:
+                                           ; SOURCE LINE # 299
+004D 900000      R     MOV     DPTR,#numElements
+0050 E0                MOVX    A,@DPTR
+0051 14                DEC     A
+0052 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 302
+0053 E5C7              MOV     A,ADC0ASCT
+0055 54C0              ANL     A,#0C0H
+0057 FF                MOV     R7,A
+0058 E0                MOVX    A,@DPTR
+0059 4F                ORL     A,R7
+005A F5C7              MOV     ADC0ASCT,A
+                                           ; SOURCE LINE # 304
+005C 900000      R     MOV     DPTR,#savedPage
+005F E0                MOVX    A,@DPTR
+0060 F5A7              MOV     SFRPAGE,A
+                                           ; SOURCE LINE # 305
+0062 22                RET     
+C51 COMPILER V9.53.0.0   ADC_0                                                             12/27/2017 17:49:02 PAGE 17  
+
+             ; FUNCTION _ADC0_setNextAutoscanBuffer (END)
+
+             ; FUNCTION ADC0_disableAutoscan (BEGIN)
+                                           ; SOURCE LINE # 307
+                                           ; SOURCE LINE # 308
+                                           ; SOURCE LINE # 310
+;---- Variable 'savedPage' assigned to Register 'R7' ----
+0000 AFA7              MOV     R7,SFRPAGE
+0002 75A730            MOV     SFRPAGE,#030H
+                                           ; SOURCE LINE # 312
+0005 53A17F            ANL     ADC0ASCF,#07FH
+                                           ; SOURCE LINE # 314
+0008 8FA7              MOV     SFRPAGE,R7
+                                           ; SOURCE LINE # 315
+000A 22                RET     
+             ; FUNCTION ADC0_disableAutoscan (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    672    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      25
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       2
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

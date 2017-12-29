@@ -1,0 +1,3 @@
+---- SLAVE_ADDR Matches (2 in 1 files) ----
+EFM8LB1_I2C_Slave.h (inc) line 31 : #define  SLAVE_ADDR               0x10 //0xF0 // Device addresses (7 bits,
+EFM8LB1_I2C_Slave.h (inc) line 33 :                                        // Set (SLAVE_ADDR>>1) to sfr I2C0SLAD

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;GE_EFM8LB12F64E-B-QFN32_YJ&apos;" deleteContents="false" description="Delete resource &apos;GE_EFM8LB12F64E-B-QFN32_YJ&apos;" element1="/GE_EFM8LB12F64E-B-QFN32_YJ" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1514445498931"/>
+</session>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="com.silabs.ss.framework.ide.project.core.cdtMbsProjectType">
+		<item value="com.silabs.ss.tool.hwconfig.project.ui.halConfiguratedProjectWizard" key="projectTypeId"/>
+		<item value="true" key="filterTemplatesByPartSdk"/>
+		<item value="LINK" key="importOption"/>
+		<item value="true" key="filterTemplatesByToolchain"/>
+		<list key="fileLocationHistory">
+		</list>
+		<list key="fileLocations">
+			<item value="D:\WorkSpace\MyCode\SILICON_WORKSPACE\GE_EFM8LB12F64E-B-QFN32_YJ\.settings\com.silabs.ss.framework.ide.project.sls.core.prefs"/>
+		</list>
+	</section>
+</section>
