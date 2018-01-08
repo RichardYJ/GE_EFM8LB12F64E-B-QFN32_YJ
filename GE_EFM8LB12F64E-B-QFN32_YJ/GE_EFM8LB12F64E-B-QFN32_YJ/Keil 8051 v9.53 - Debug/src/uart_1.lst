@@ -1,0 +1,650 @@
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE UART_1
+OBJECT MODULE PLACED IN .\src\uart_1.OBJ
+COMPILER INVOKED BY: c:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.53\BIN\C51.exe D:\WorkSpace\MyC
+                    -ode\GE_EFM8LB12F64E-B-QFN32_YJ\GE_EFM8LB12F64E-B-QFN32_YJ\src\uart_1.c OMF2 LARGE DEBUG OBJECTEXTEND ROM(LARGE) WARNINGL
+                    -EVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SPEED) DEFINE(DEBUG=1) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:\WorkSpace\MyCode\GE_EFM8L
+                    -B12F64E-B-QFN32_YJ\GE_EFM8LB12F64E-B-QFN32_YJ\inc;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.1//Device/
+                    -shared/si8051base;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.1//Device/EFM8LB1/inc) PRINT(.\src\uart_1.
+                    -lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\uart_1.OBJ)
+
+line level    source
+
+   1          /**************************************************************************//**
+   2           * Copyright (c) 2016 by Silicon Laboratories Inc. All rights reserved.
+   3           *
+   4           * http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
+   5           *****************************************************************************/
+   6          
+   7          #include "uart_1.h"
+   8          
+   9          #if EFM8PDL_UART1_AUTO_PAGE == 1
+  10          // declare variable needed for autopage enter/exit
+  11          #define DECL_PAGE uint8_t savedPage
+  12          // enter autopage section
+  13          #define SET_PAGE(p)     do                                                    \
+  14                                  {                                                     \
+  15                                    savedPage = SFRPAGE;  /* save current SFR page */   \
+  16                                    SFRPAGE = (p);        /* set SFR page */            \
+  17                                  } while(0)
+  18          // exit autopage section
+  19          #define RESTORE_PAGE    do                                                    \
+  20                                  {                                                     \
+  21                                    SFRPAGE = savedPage;  /* restore saved SFR page */  \
+  22                                  } while(0)
+  23          
+  24          #else
+              #define DECL_PAGE
+              #define SET_PAGE(x)
+              #define RESTORE_PAGE
+              #endif //EFM8PDL_UART1_AUTO_PAGE
+  29          
+  30          // SFR page used to access UART1 registers
+  31          #define UART1_SFR_PAGE 0x20
+  32          
+  33          // Clock prescaler values for baud rate initialization
+  34          #define NUM_PRESC 8
+  35          static const uint8_t PRESC[NUM_PRESC]      = {1, 4, 8, 12, 16, 24, 32, 48};
+  36          static const uint8_t PRESC_ENUM[NUM_PRESC] = {SBCON1_BPS__DIV_BY_1,  SBCON1_BPS__DIV_BY_4,  SBCON1_BPS__DI
+             -V_BY_8,  SBCON1_BPS__DIV_BY_12,
+  37                                                        SBCON1_BPS__DIV_BY_16, SBCON1_BPS__DIV_BY_24, SBCON1_BPS__DI
+             -V_BY_32, SBCON1_BPS__DIV_BY_48};
+  38          static void UART1_initBaudRate(uint32_t sysclk, uint32_t baudrate)
+  39          {
+  40   1        uint8_t i;
+  41   1        uint8_t min_presc;
+  42   1        uint16_t reload;
+  43   1        DECL_PAGE;
+  44   1        SET_PAGE(UART1_SFR_PAGE);
+  45   1      
+  46   1        // Calculate baud rate prescaler and baud rate reload
+  47   1        // value to maximize precision.
+  48   1        // See reference manual for calculation details
+  49   1        min_presc = ((*((uint16_t*)(&sysclk)) >> 1) + baudrate) / baudrate; // calculate minimum prescaler neces
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 2   
+
+             -sary
+  50   1        for(i = 0; i < NUM_PRESC; ++i)
+  51   1        {
+  52   2          if(PRESC[i] >= min_presc) // use a prescaler that is equal or just greater than the minimum
+  53   2          {
+  54   3            reload  = ((1 << 16) - (sysclk / (2 * baudrate * PRESC[i]))); // calculate reload value using presca
+             -ler
+  55   3            SBRLH1  = (reload >> 8) & 0xFF;
+  56   3            SBRLL1  = reload & 0xFF;
+  57   3            SBCON1 |= (SBCON1_BREN__ENABLED | PRESC_ENUM[i]); // enable baud rate with calculated prescaler
+  58   3            RESTORE_PAGE;
+  59   3            return;
+  60   3          }
+  61   2        }
+  62   1      
+  63   1        // Baud rate is too small to be match
+  64   1        while(1);
+  65   1      }
+  66          
+  67          //=========================================================
+  68          // Runtime API
+  69          //=========================================================
+  70          
+  71          #if (EFM8PDL_UART1_AUTO_PAGE == 1)
+  72          uint8_t UART1_getIntFlags(void)
+  73          {
+  74   1        uint8_t val;
+  75   1        DECL_PAGE;
+  76   1        SET_PAGE(UART1_SFR_PAGE);
+  77   1        val = SCON1 & (UART1_TX_IF | UART1_RX_IF);
+  78   1        RESTORE_PAGE;
+  79   1        return val;
+  80   1      }
+  81          
+  82          void UART1_clearIntFlags(uint8_t flags)
+  83          {
+  84   1        DECL_PAGE;
+  85   1        SET_PAGE(UART1_SFR_PAGE);
+  86   1        SCON1 &= ~(flags);
+  87   1        RESTORE_PAGE;
+  88   1      }
+  89          
+  90          void UART1_enableTxInt(bool enable)
+  91          {
+  92   1        DECL_PAGE;
+  93   1        SET_PAGE(UART1_SFR_PAGE);
+  94   1        UART1FCN1_TIE = enable;
+  95   1        RESTORE_PAGE;
+  96   1      }
+  97          
+  98          void UART1_enableRxInt(bool enable)
+  99          {
+ 100   1        DECL_PAGE;
+ 101   1        SET_PAGE(UART1_SFR_PAGE);
+ 102   1        UART1FCN1_RIE = enable;
+ 103   1        RESTORE_PAGE;
+ 104   1      }
+ 105          
+ 106          void UART1_initTxPolling(void)
+ 107          {
+ 108   1        DECL_PAGE;
+ 109   1        SET_PAGE(UART1_SFR_PAGE);
+ 110   1        SCON1_TI = 1;
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 3   
+
+ 111   1        RESTORE_PAGE;
+ 112   1      }
+ 113          
+ 114          void UART1_write(uint8_t value)
+ 115          {
+ 116   1        DECL_PAGE;
+ 117   1        SET_PAGE(UART1_SFR_PAGE);
+ 118   1        SBUF1 = value;
+ 119   1        RESTORE_PAGE;
+ 120   1      }
+ 121          
+ 122          uint8_t UART1_read(void)
+ 123          {
+ 124   1        uint8_t val;
+ 125   1        DECL_PAGE;
+ 126   1        SET_PAGE(UART1_SFR_PAGE);
+ 127   1        val = SBUF1;
+ 128   1        RESTORE_PAGE;
+ 129   1        return val;
+ 130   1      }
+ 131          #endif
+ 132          
+ 133          void UART1_writeWithExtraBit(uint16_t value)
+ 134          {
+ 135   1        uint8_t shift, mask;
+ 136   1        DECL_PAGE;
+ 137   1        SET_PAGE(UART1_SFR_PAGE);
+ 138   1      
+ 139   1        // Calculate shift and mask for data length
+ 140   1        shift = ((SMOD1 & SMOD1_SDL__FMASK) >> SMOD1_SDL__SHIFT) + 5;
+ 141   1        mask = 0xFF >> (8 - shift);
+ 142   1      
+ 143   1        SCON1_TBX = (value >> shift) & 0x1;
+ 144   1        SBUF1 = (value & mask);
+ 145   1      
+ 146   1        RESTORE_PAGE;
+ 147   1      }
+ 148          
+ 149          uint16_t UART1_readWithExtraBit(void)
+ 150          {
+ 151   1        uint8_t shift, mask;
+ 152   1        uint16_t val;
+ 153   1        DECL_PAGE;
+ 154   1        SET_PAGE(UART1_SFR_PAGE);
+ 155   1      
+ 156   1        // Calculate shift and mask for data length
+ 157   1        shift = ((SMOD1 & SMOD1_SDL__FMASK) >> SMOD1_SDL__SHIFT) + 5;
+ 158   1        mask = 0xFF >> (8 - shift);
+ 159   1      
+ 160   1        val = SCON1_RBX;
+ 161   1        val = val << shift;
+ 162   1        val |= (SBUF1 & mask);
+ 163   1      
+ 164   1        RESTORE_PAGE;
+ 165   1        return val;
+ 166   1      }
+ 167          
+ 168          #if (EFM8PDL_UART1_AUTO_PAGE == 1)
+ 169          uint8_t UART1_getErrFlags(void)
+ 170          {
+ 171   1        uint8_t val;
+ 172   1        DECL_PAGE;
+ 173   1        SET_PAGE(UART1_SFR_PAGE);
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 4   
+
+ 174   1        val = (SCON1 & (UART1_RXOVR_EF | UART1_PARITY_EF));
+ 175   1        RESTORE_PAGE;
+ 176   1        return val;
+ 177   1      }
+ 178          
+ 179          void UART1_clearErrFlags(uint8_t flags)
+ 180          {
+ 181   1        DECL_PAGE;
+ 182   1        SET_PAGE(UART1_SFR_PAGE);
+ 183   1        SCON1 &= ~flags;
+ 184   1        RESTORE_PAGE;
+ 185   1      }
+ 186          
+ 187          uint8_t UART1_getFifoIntFlags(void)
+ 188          {
+ 189   1        uint8_t val;
+ 190   1        DECL_PAGE;
+ 191   1        SET_PAGE(UART1_SFR_PAGE);
+ 192   1        val = UART1FCN1 & (UART1_TFRQ_IF | UART1_RFRQ_IF);
+ 193   1        RESTORE_PAGE;
+ 194   1        return val;
+ 195   1      }
+ 196          #endif
+ 197          
+ 198          void UART1_enableTxFifoInt(bool enable)
+ 199          {
+ 200   1        DECL_PAGE;
+ 201   1        SET_PAGE(UART1_SFR_PAGE);
+ 202   1        if(enable)
+ 203   1        {
+ 204   2          UART1FCN0 |= UART1FCN0_TFRQE__ENABLED;
+ 205   2        }
+ 206   1        else
+ 207   1        {
+ 208   2          UART1FCN0 &= ~UART1FCN0_TFRQE__ENABLED;
+ 209   2        }
+ 210   1        RESTORE_PAGE;
+ 211   1      }
+ 212          
+ 213          void UART1_enableRxFifoInt(bool enable)
+ 214          {
+ 215   1        DECL_PAGE;
+ 216   1        SET_PAGE(UART1_SFR_PAGE);
+ 217   1        if(enable)
+ 218   1        {
+ 219   2          UART1FCN0 |= UART1FCN0_RFRQE__ENABLED;
+ 220   2        }
+ 221   1        else
+ 222   1        {
+ 223   2          UART1FCN0 &= ~UART1FCN0_RFRQE__ENABLED;
+ 224   2        }
+ 225   1        RESTORE_PAGE;
+ 226   1      }
+ 227          
+ 228          #if (EFM8PDL_UART1_AUTO_PAGE == 1)
+ 229          uint8_t UART1_getTxFifoCount(void)
+ 230          {
+ 231   1        uint8_t txcnt;
+ 232   1        DECL_PAGE;
+ 233   1        SET_PAGE(UART1_SFR_PAGE);
+ 234   1        txcnt = (UART1FCT & UART1FCT_TXCNT__FMASK) >> UART1FCT_TXCNT__SHIFT;
+ 235   1        RESTORE_PAGE;
+ 236   1        return txcnt;
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 5   
+
+ 237   1      }
+ 238          
+ 239          uint8_t UART1_getRxFifoCount(void)
+ 240          {
+ 241   1        uint8_t rxcnt;
+ 242   1        DECL_PAGE;
+ 243   1        SET_PAGE(UART1_SFR_PAGE);
+ 244   1        rxcnt = (UART1FCT & UART1FCT_RXCNT__FMASK) >> UART1FCT_RXCNT__SHIFT;
+ 245   1        RESTORE_PAGE;
+ 246   1        return rxcnt;
+ 247   1      }
+ 248          #endif
+ 249          
+ 250          bool UART1_isTxFifoFull(void){
+ 251   1        bool txfull;
+ 252   1        DECL_PAGE;
+ 253   1        SET_PAGE(UART1_SFR_PAGE);
+ 254   1        if(UART1FCN1 & UART1FCN1_TXNF__NOT_FULL)
+ 255   1        {
+ 256   2          txfull = false;
+ 257   2        }
+ 258   1        else
+ 259   1        {
+ 260   2          txfull = true;
+ 261   2        }
+ 262   1        RESTORE_PAGE;
+ 263   1        return txfull;
+ 264   1      }
+ 265          
+ 266          void UART1_stallTxFifo(bool enable)
+ 267          {
+ 268   1        DECL_PAGE;
+ 269   1        SET_PAGE(UART1_SFR_PAGE);
+ 270   1        if(enable)
+ 271   1        {
+ 272   2          UART1FCN1 |= UART1FCN1_TXHOLD__HOLD;
+ 273   2        }
+ 274   1        else
+ 275   1        {
+ 276   2          UART1FCN1 &= ~UART1FCN1_TXHOLD__HOLD;
+ 277   2        }
+ 278   1        RESTORE_PAGE;
+ 279   1      }
+ 280          
+ 281          #if (EFM8PDL_UART1_AUTO_PAGE == 1)
+ 282          void UART1_flushTxFifo(void)
+ 283          {
+ 284   1        DECL_PAGE;
+ 285   1        SET_PAGE(UART1_SFR_PAGE);
+ 286   1        UART1FCN0 |= UART1FCN0_TFLSH__FLUSH;
+ 287   1        RESTORE_PAGE;
+ 288   1      }
+ 289          
+ 290          void UART1_flushRxFifo(void)
+ 291          {
+ 292   1        DECL_PAGE;
+ 293   1        SET_PAGE(UART1_SFR_PAGE);
+ 294   1        UART1FCN0 |= UART1FCN0_RFLSH__FLUSH;
+ 295   1        RESTORE_PAGE;
+ 296   1      }
+ 297          
+ 298          uint8_t UART1_getAutobaudIntFlag(void)
+ 299          {
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 6   
+
+ 300   1        uint8_t val;
+ 301   1        DECL_PAGE;
+ 302   1        SET_PAGE(UART1_SFR_PAGE);
+ 303   1        val = UART1LIN & UART1_AUTOBAUD_IF;
+ 304   1        RESTORE_PAGE;
+ 305   1        return val;
+ 306   1      }
+ 307          
+ 308          void UART1_clearAutobaudIntFlag(void)
+ 309          {
+ 310   1        DECL_PAGE;
+ 311   1        SET_PAGE(UART1_SFR_PAGE);
+ 312   1        UART1LIN &= ~UART1_AUTOBAUD_IF;
+ 313   1        RESTORE_PAGE;
+ 314   1      }
+ 315          #endif
+ 316          
+ 317          void UART1_enableAutobaud(bool enable)
+ 318          {
+ 319   1        DECL_PAGE;
+ 320   1        SET_PAGE(UART1_SFR_PAGE);
+ 321   1        if(enable)
+ 322   1        {
+ 323   2          UART1LIN |= (UART1LIN_AUTOBDE__ENABLED | UART1LIN_SYNCDIE__ENABLED);
+ 324   2        }
+ 325   1        else
+ 326   1        {
+ 327   2          UART1LIN &= ~(UART1LIN_AUTOBDE__ENABLED | UART1LIN_SYNCDIE__ENABLED);
+ 328   2        }
+ 329   1        RESTORE_PAGE;
+ 330   1      }
+ 331          
+ 332          //=========================================================
+ 333          // Initialization API
+ 334          //=========================================================
+ 335          
+ 336          void UART1_init(uint32_t sysclk, uint32_t baudrate, 
+ 337                          UART1_DataLen_t datalen, UART1_StopLen_t stoplen, 
+ 338                          UART1_FeatureBit_t featbit, UART1_ParityType_t partype,
+ 339                          UART1_RxEnable_t rxen, UART1_RxSelect_t rxsel, 
+ 340                          UART1_Multiproc_t mcen)
+ 341          {
+ 342   1        DECL_PAGE;
+ 343   1        SET_PAGE(UART1_SFR_PAGE);
+ 344   1        UART1_initBaudRate(sysclk, baudrate);
+ 345   1        SCON1 = rxen;
+ 346   1        UART1PCF = rxsel;
+ 347   1        SMOD1 = datalen | stoplen | featbit | partype | mcen;
+ 348   1        RESTORE_PAGE;
+ 349   1      }
+ 350          
+ 351          void UART1_initWithAutobaud(UART1_BrPrescaler_t presc, UART1_StopLen_t stoplen,
+ 352                                      UART1_FeatureBit_t featbit, UART1_ParityType_t partype,
+ 353                                      UART1_RxEnable_t rxen, UART1_RxSelect_t rxsel,
+ 354                                      UART1_Multiproc_t mcen)
+ 355          {
+ 356   1        DECL_PAGE;
+ 357   1        SET_PAGE(UART1_SFR_PAGE);
+ 358   1        SCON1 = rxen;
+ 359   1        UART1PCF = rxsel;  
+ 360   1        SMOD1 = SMOD1_SDL__8_BITS | stoplen | featbit | partype | mcen;
+ 361   1        UART1LIN = (UART1LIN_AUTOBDE__ENABLED | UART1LIN_SYNCDIE__ENABLED);
+ 362   1        SBCON1 = (SBCON1_BREN__ENABLED | presc);
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 7   
+
+ 363   1        RESTORE_PAGE;
+ 364   1      }
+ 365          
+ 366          void UART1_reset(void)
+ 367          {
+ 368   1        DECL_PAGE;
+ 369   1        SET_PAGE(UART1_SFR_PAGE);
+ 370   1        SCON1 = SCON1_OVR__NOT_SET
+ 371   1                | SCON1_PERR__NOT_SET
+ 372   1                | SCON1_REN__RECEIVE_DISABLED
+ 373   1                | SCON1_TBX__LOW
+ 374   1                | SCON1_RBX__LOW
+ 375   1                | SCON1_TI__NOT_SET
+ 376   1                | SCON1_RI__NOT_SET;
+ 377   1        UART1PCF = UART1PCF_RXSEL__CROSSBAR;            
+ 378   1        SMOD1 = SMOD1_MCE__MULTI_DISABLED
+ 379   1                | SMOD1_SPT__ODD_PARITY
+ 380   1                | SMOD1_PE__PARITY_DISABLED
+ 381   1                | SMOD1_SDL__8_BITS
+ 382   1                | SMOD1_XBE__DISABLED
+ 383   1                | SMOD1_SBL__SHORT;
+ 384   1        SBCON1 = SBCON1_BREN__DISABLED
+ 385   1                 | SBCON1_BPS__DIV_BY_1;
+ 386   1        UART1LIN = (UART1LIN_AUTOBDE__DISABLED | UART1LIN_SYNCDIE__DISABLED);
+ 387   1        RESTORE_PAGE;
+ 388   1      }
+ 389          
+ 390          void UART1_initTxFifo(UART1_TxFifoThreshold_t txth, UART1_TxFifoInt_t txint)
+ 391          {
+ 392   1        DECL_PAGE;
+ 393   1        SET_PAGE(UART1_SFR_PAGE);
+ 394   1      
+ 395   1        UART1FCN0 &= ~(UART1FCN0_TFRQE__BMASK
+ 396   1                       | UART1FCN0_TFLSH__BMASK
+ 397   1                       | UART1FCN0_TXTH__FMASK
+ 398   1                       | UART1FCN0_TFRQE__BMASK);
+ 399   1        UART1FCN0 |= (txth | txint);
+ 400   1      
+ 401   1        UART1FCN1 &= ~(UART1FCN1_TFRQ__BMASK
+ 402   1                       | UART1FCN1_TXHOLD__BMASK
+ 403   1                       | UART1FCN1_TXNF__BMASK
+ 404   1                       | UART1FCN1_TIE__BMASK);
+ 405   1        UART1FCN1 |= (UART1FCN1_TFRQ__SET
+ 406   1                      | UART1FCN1_TXHOLD__CONTINUE
+ 407   1                      | UART1FCN1_TIE__DISABLED);
+ 408   1      
+ 409   1        RESTORE_PAGE;
+ 410   1      }
+ 411          
+ 412          void UART1_initRxFifo(UART1_RxFiFoThreshold_t rxth, UART1_RxFifoTimeout_t rxto,
+ 413                                UART1_RxFifoInt_t rxint)
+ 414          {
+ 415   1        DECL_PAGE;
+ 416   1        SET_PAGE(UART1_SFR_PAGE);
+ 417   1      
+ 418   1        UART1FCN0 &= ~(UART1FCN0_RFRQE__BMASK
+ 419   1                       | UART1FCN0_RFLSH__BMASK
+ 420   1                       | UART1FCN0_RXTH__FMASK
+ 421   1                       | UART1FCN0_RFRQE__BMASK);
+ 422   1        UART1FCN0 |= (rxth | rxint);
+ 423   1      
+ 424   1        UART1FCN1 &= ~(UART1FCN1_RFRQ__BMASK
+ 425   1                       | UART1FCN1_RXTO__FMASK
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 8   
+
+ 426   1                       | UART1FCN1_RIE__BMASK);
+ 427   1        UART1FCN1 |= (UART1FCN1_RFRQ__SET
+ 428   1                      | rxto
+ 429   1                      | UART1FCN1_RIE__DISABLED);
+ 430   1      
+ 431   1        RESTORE_PAGE;
+ 432   1      }
+ 433          
+ 434          //=========================================================
+ 435          // Buffer Access API
+ 436          //=========================================================
+ 437          #if EFM8PDL_UART1_USE_BUFFER == 1
+              
+              SI_SEGMENT_VARIABLE(txRemaining, static uint8_t, SI_SEG_XDATA) = 0;
+              SI_SEGMENT_VARIABLE(rxRemaining, static uint8_t, SI_SEG_XDATA) = 0;
+              SI_SEGMENT_VARIABLE_SEGMENT_POINTER(txBuffer, static uint8_t, EFM8PDL_UART1_TX_BUFTYPE, SI_SEG_XDATA);
+              SI_SEGMENT_VARIABLE_SEGMENT_POINTER(rxBuffer, static uint8_t, EFM8PDL_UART1_RX_BUFTYPE, SI_SEG_XDATA);
+              
+              SI_INTERRUPT(UART1_ISR, UART1_IRQn)
+              {
+              #if (EFM8PDL_UART1_USE_ERR_CALLBACK == 1)
+                uint8_t discard;
+                uint8_t errors;
+              #endif //EFM8PDL_UART1_USE_ERR_CALLBACK
+              
+                // If auto-baud sync word detected to set baudrate, clear flag and disable auto-baud detection
+                if (UART1LIN & UART1_AUTOBAUD_IF)
+                {
+                  UART1LIN &= ~(UART1_AUTOBAUD_IF | UART1LIN_AUTOBDE__ENABLED | UART1LIN_SYNCDIE__ENABLED);
+                }
+                
+              
+                // If rx fifo request interrupt is set and enabled
+                if ((UART1FCN1 & UART1_RFRQ_IF) && (UART1FCN0 & UART1FCN0_RFRQE__ENABLED))
+                {
+                  // Read bytes as long as rx fifo count is not zero and there
+                      // is room in the tx buffer
+                  while (rxRemaining && ((UART1FCT & UART1FCT_RXCNT__FMASK) >> UART1FCT_RXCNT__SHIFT))
+                  {
+              #if (EFM8PDL_UART1_USE_ERR_CALLBACK == 1)
+                    // If parity or overrun error, clear flags, and call user
+                    errors = SCON1 & (UART1_RXOVR_EF | UART1_PARITY_EF);
+                    if(errors)
+                    {
+                      SCON1 &= ~errors;
+                      UART1_transferErrorCb(errors);
+                    }
+              
+                    // Store byte if there is no parity error a
+                    if (errors & UART1_PARITY_EF)
+                    {
+                      discard = SBUF1;
+                    }
+                    else
+              #endif //EFM8PDL_UART1_USE_ERR_CALLBACK
+                    {
+                      *rxBuffer = SBUF1;
+                       ++rxBuffer;
+                      --rxRemaining;
+                      if (!rxRemaining)
+                      {
+                        UART1_receiveCompleteCb();
+                      }
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 9   
+
+                    }
+                  }
+                  if(!rxRemaining)
+                  {
+                    // Flush Fifo if there is no room available in rx buffer
+                    UART1FCN0 |= UART1FCN0_RFLSH__FLUSH;
+                  }
+                }
+              
+                // If tx fifo request interrupt is set and enabled
+                if ((UART1FCN1 &  UART1_TFRQ_IF) && (UART1FCN0 & UART1FCN0_TFRQE__ENABLED))
+                {
+                  // Write bytes as long as the tx fifo is not full and there
+                  // is room in the tx buffer
+                  while (txRemaining && (UART1FCN1 & UART1FCN1_TXNF__NOT_FULL))
+                  {
+                    SBUF1 = *txBuffer;
+                    ++txBuffer;
+                    --txRemaining;
+                  }
+                  if(!txRemaining)
+                  {
+                    UART1_transmitCompleteCb();
+                  }
+                }
+              }
+              
+              void UART1_writeBuffer(SI_VARIABLE_SEGMENT_POINTER(buffer, uint8_t, EFM8PDL_UART1_RX_BUFTYPE),
+                                     uint8_t length)
+              {
+                // Initialize internal data
+                txBuffer = buffer;
+                txRemaining = length;
+              
+                // Enable tx fifo interrupts to kick off transfer
+                UART1FCN0 |= UART1FCN0_TFRQE__ENABLED;
+              }
+              
+              void UART1_readBuffer(SI_VARIABLE_SEGMENT_POINTER(buffer, uint8_t, EFM8PDL_UART1_TX_BUFTYPE),
+                                    uint8_t length)
+              {
+                // Initialize internal data
+                rxBuffer = buffer;
+                rxRemaining = length;
+              }
+              
+              void UART1_abortTx(void)
+              {
+                txRemaining = 0;
+                UART1_flushTxFifo();
+              }
+              
+              void UART1_abortRx(void)
+              {
+                rxRemaining = 0;
+                UART1_flushRxFifo();
+              }
+              
+              uint8_t UART1_txBytesRemaining(void)
+              {
+                return txRemaining;
+              }
+              
+C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 10  
+
+              uint8_t UART1_rxBytesRemaining(void)
+              {
+                return rxRemaining;
+              }
+              
+              #endif //EFM8PDL_UART1_USE_BUFFER
+ 558          
+ 559          //=========================================================
+ 560          // STDIO API
+ 561          //=========================================================
+ 562          #if EFM8PDL_UART1_USE_STDIO == 1
+ 563          char putchar(char c){
+ 564   1        DECL_PAGE;
+ 565   1        SET_PAGE(UART1_SFR_PAGE);
+ 566   1        while(!SCON1_TI);
+ 567   1        SBUF1 = c;
+ 568   1        SCON1_TI = 0;
+ 569   1        RESTORE_PAGE;
+ 570   1        return c;
+ 571   1      }
+ 572          
+ 573          char _getkey(void){
+ 574   1        char val;
+ 575   1        DECL_PAGE;
+ 576   1        SET_PAGE(UART1_SFR_PAGE);
+ 577   1        while(!SCON1_RI);
+ 578   1        SCON1_RI = 0;
+ 579   1      
+ 580   1        val = SBUF1;
+ 581   1        RESTORE_PAGE;
+ 582   1        return val;
+ 583   1      }
+ 584          
+ 585          void UART1_initStdio(uint32_t sysclk, uint32_t baudrate)
+ 586          {
+ 587   1        DECL_PAGE;
+ 588   1        SET_PAGE(UART1_SFR_PAGE);
+ 589   1        SCON1  |= SCON1_REN__RECEIVE_ENABLED | SCON1_TI__SET;
+ 590   1        UART1PCF = UART1PCF_RXSEL__CROSSBAR;              
+ 591   1        SMOD1  |= SMOD1_SDL__8_BITS;
+ 592   1        UART1_initBaudRate(sysclk, baudrate);
+ 593   1        RESTORE_PAGE;
+ 594   1      }
+ 595          
+ 596          #endif //EFM8PDL_UART0_USE_STDIO
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    973    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     16      44
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       7
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
