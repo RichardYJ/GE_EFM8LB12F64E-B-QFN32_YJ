@@ -1,0 +1,9 @@
+---- volatile Matches (8 in 3 files) ----
+EFM8LB1_SMBus_MasterMultibyte.h (inc) line 67 : extern volatile bool SMB_BUSY;          // Software flag to indicate when the
+EFM8LB1_SMBus_MasterMultibyte.h (inc) line 71 : extern volatile bool SMB_RW;            // Software flag to indicate the
+GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) line 81 : volatile bool SMB_BUSY;                 // Software flag to indicate when the
+GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) line 85 : volatile bool SMB_RW;                   // Software flag to indicate the
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) :    volatile uint8_t dat;               // Test counter
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) :    volatile uint8_t data_count;        // SMB_DATA_IN and SMB_DATA_OUT counter
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) :    volatile uint16_t sI2C_rd;
+Interrupts.c (src) line 18 : volatile uint8_t I2C1_slaveWriteData = 0x16;

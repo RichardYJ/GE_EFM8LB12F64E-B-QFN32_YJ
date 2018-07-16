@@ -29,6 +29,7 @@
 							<option id="com.silabs.ide.si8051.keil.toolchain.category.general.debug.787017066" name="Generate debug information" superClass="com.silabs.ide.si8051.keil.toolchain.category.general.debug" value="true" valueType="boolean"/>
 							<option id="com.silabs.ide.si8051.keil.toolchain.category.general.extended_assembler.523721281" name="Use Extended Assembler (AX51) instead of A51" superClass="com.silabs.ide.si8051.keil.toolchain.category.general.extended_assembler" value="true" valueType="boolean"/>
 							<option id="com.silabs.ide.si8051.keil.toolchain.category.general.extended_linker.544204584" name="Use Extended Linker (LX51) instead of BL51" superClass="com.silabs.ide.si8051.keil.toolchain.category.general.extended_linker" value="true" valueType="boolean"/>
+							<option id="com.silabs.ide.si8051.keil.toolchain.category.general.memory_model.678287044" name="Memory model" superClass="com.silabs.ide.si8051.keil.toolchain.category.general.memory_model" value="com.silabs.ide.si8051.keil.toolchain.category.general.memory_model.large" valueType="enumerated"/>
 							<targetPlatform binaryParser="com.silabs.ss.tool.ide.c8051.debug.OMF;com.silabs.ss.tool.ide.c8051.debug.OMF2;com.silabs.ss.framework.debugger.core.BIN;com.silabs.ss.framework.debugger.core.HEX;com.silabs.ss.framework.debugger.core.S37;com.silabs.ss.framework.debugger.core.EBL;com.silabs.ss.framework.debugger.core.GBL" id="com.silabs.ide.si8051.keil.targetplatform.2027736134" isAbstract="false" superClass="com.silabs.ide.si8051.keil.targetplatform"/>
 							<builder buildPath="${workspace_loc:/GE_EFM8LB12F64E-B-QFN32_YJ}/Keil 8051 v9.53 - Debug" id="com.silabs.ide.si8051.keil.builder.1630500584" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Keil Builder" parallelBuildOn="false" superClass="com.silabs.ide.si8051.keil.builder"/>
 							<tool id="com.silabs.ide.si8051.keil.toolchain.compiler.139079801" name="Keil 8051 Compiler" superClass="com.silabs.ide.si8051.keil.toolchain.compiler">
@@ -152,5 +153,13 @@
 		<scannerConfigBuildInfo instanceId="com.silabs.ss.tool.ide.c8051.toolchain.keil.cdt.debug#com.silabs.ss.tool.ide.c8051.toolchain.keil.cdt:9.53.0;com.silabs.ss.tool.ide.c8051.toolchain.keil.cdt.debug#com.silabs.ss.tool.ide.c8051.toolchain.keil.cdt:9.53.0.">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.silabs.ide.si8051.keil.KeilScannerInfoCollector"/>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Keil 8051 v9.53 - Debug">
+			<resource resourceType="PROJECT" workspacePath="/GE_EFM8LB12F64E-B-QFN32_YJ"/>
+		</configuration>
+		<configuration configurationName="Keil 8051 v9.53 - Release">
+			<resource resourceType="PROJECT" workspacePath="/GE_EFM8LB12F64E-B-QFN32_YJ"/>
+		</configuration>
 	</storageModule>
 </cproject>

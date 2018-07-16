@@ -262,9 +262,8 @@ void main (void)
 //		for (i = 0; i < 255; i++) 
 		{
 #if 1		
-			sI2C_rd = SMB0_I2C_MasterRead(0x00);
-			SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
-
+				sI2C_rd = SMB0_I2C_MasterRead(0x00);
+				/*while(1)*/SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
 			if (0x204c != sI2C_rd)
 				printf(					"SMB0_I2C    ===============Read================== 0x0 ============Error!!!->0x%02X \r\n ",					sI2C_rd);
 //			else
@@ -282,6 +281,12 @@ void main (void)
 //					printf("SMB0_I2C Write & Read 0x9811 OK !\r\n");
 //				}
 		}
+
+
+#if 0
+
+
+#endif
 
 
 #endif
@@ -386,4 +391,20 @@ void T0_Waitms(uint8_t ms)
 
    TCON_TR0 = 0;                       // Stop Timer0
 }
+
+/////////////////////////////////////////// SMBUS0部分测试结果 //////////////////////////////
+#if 0
+//			while(1){
+				sI2C_rd = SMB0_I2C_MasterRead(0x00);
+				SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
+//				T0_Waitms (50);//不加这个延时，会一直发204c？   有可能是读写操作一遍后要给个延时，一直单一读或者一直单一写应该没有问题。读了之后马上写，再马上读...  这种立即读写的立即循环，感觉会有冲突，会打架，应该是芯片那边原因！
+//			}
+#endif
+
+#if 0
+while(1)SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);			//已经测试过单一一直WRITE大量是可以的，没有问题！
+
+
+#endif
+/////////////////////////////////////////// SMBUS0部分测试结果 //////////////////////////////
 

@@ -6226,3 +6226,2040 @@ Caused by: org.eclipse.swt.SWTException: Device is disposed
 	at org.eclipse.swt.widgets.Display.asyncExec(Display.java:709)
 	at org.eclipse.cdt.dsf.ui.concurrent.SimpleDisplayExecutor.execute(SimpleDisplayExecutor.java:77)
 	... 15 more
+!SESSION 2017-12-30 19:59:47.772 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.8.0_92
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=zh_CN
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:00:04.464
+!MESSAGE Failed to load assets file: C:\SiliconLabs\SimplicityStudio\v4\configuration\studio\assets\assets_aem.assets3
+!STACK 0
+org.eclipse.emf.ecore.resource.impl.ResourceSetImpl$1DiagnosticWrappedException: org.xml.sax.SAXParseExceptionpublicId: file:/C:/SiliconLabs/SimplicityStudio/v4/configuration/studio/assets/assets_aem.assets3; systemId: file:/C:/SiliconLabs/SimplicityStudio/v4/configuration/studio/assets/assets_aem.assets3; lineNumber: 1; columnNumber: 50; 在 publicId 和 systemId 之间需要有空格。
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.handleDemandLoadException(ResourceSetImpl.java:319)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:278)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.getResource(ResourceSetImpl.java:406)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.loadRemoteAssets(AssetService.java:688)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.loadAssetsFiles(AssetService.java:795)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.init(AssetService.java:608)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.<init>(AssetService.java:155)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at java.lang.Class.newInstance(Class.java:442)
+	at org.eclipse.equinox.internal.ds.model.ServiceComponent.createInstance(ServiceComponent.java:493)
+	at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.createInstance(ServiceComponentProp.java:270)
+	at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.build(ServiceComponentProp.java:331)
+	at org.eclipse.equinox.internal.ds.InstanceProcess.buildComponent(InstanceProcess.java:620)
+	at org.eclipse.equinox.internal.ds.ServiceReg.getService(ServiceReg.java:53)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceFactoryUse$1.run(ServiceFactoryUse.java:212)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceFactoryUse.factoryGetService(ServiceFactoryUse.java:210)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceFactoryUse.getService(ServiceFactoryUse.java:111)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceConsumer$2.getService(ServiceConsumer.java:45)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceRegistrationImpl.getService(ServiceRegistrationImpl.java:496)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceRegistry.getService(ServiceRegistry.java:461)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.getService(BundleContextImpl.java:619)
+	at org.eclipse.e4.core.internal.contexts.osgi.EclipseContextOSGi.lookup(EclipseContextOSGi.java:85)
+	at org.eclipse.e4.core.internal.contexts.osgi.EclipseContextOSGi.containsKey(EclipseContextOSGi.java:61)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.containsKey(EclipseContext.java:141)
+	at org.eclipse.e4.core.internal.contexts.ContextObjectSupplier$ContextInjectionListener.update(ContextObjectSupplier.java:69)
+	at org.eclipse.e4.core.internal.contexts.TrackableComputationExt.update(TrackableComputationExt.java:111)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.runAndTrack(EclipseContext.java:322)
+	at org.eclipse.e4.core.internal.contexts.ContextObjectSupplier.get(ContextObjectSupplier.java:170)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.resolveArgs(InjectorImpl.java:477)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.resolveRequestorArgs(InjectorImpl.java:405)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.inject(InjectorImpl.java:110)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.inject(InjectorImpl.java:86)
+	at org.eclipse.e4.core.contexts.ContextInjectionFactory.inject(ContextInjectionFactory.java:73)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.<init>(UpdateManager.java:52)
+	at com.silabs.ss.platform.internal.api.installer.core.updates.IUpdateManager.<clinit>(IUpdateManager.java:21)
+	at com.silabs.ss.platform.internal.installer.ui.update.StudioUpdateChecker.<init>(StudioUpdateChecker.java:81)
+	at com.silabs.ss.platform.internal.installer.ui.update.StudioUpdateCheckerComponent.createService(StudioUpdateCheckerComponent.java:13)
+	at org.eclipse.equinox.internal.p2.core.ProvisioningAgent.getService(ProvisioningAgent.java:72)
+	at org.eclipse.equinox.internal.p2.ui.sdk.scheduler.AutomaticUpdateScheduler.<init>(AutomaticUpdateScheduler.java:76)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at java.lang.Class.newInstance(Class.java:442)
+	at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:184)
+	at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:905)
+	at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+	at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:55)
+	at org.eclipse.ui.internal.WorkbenchPlugin$1.run(WorkbenchPlugin.java:293)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:52)
+	at org.eclipse.ui.internal.WorkbenchPlugin.createExtension(WorkbenchPlugin.java:288)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.getExecutableExtension(EarlyStartupRunnable.java:120)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:68)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.ui.internal.Workbench$56.run(Workbench.java:2812)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Caused by: org.xml.sax.SAXParseExceptionpublicId: file:/C:/SiliconLabs/SimplicityStudio/v4/configuration/studio/assets/assets_aem.assets3; systemId: file:/C:/SiliconLabs/SimplicityStudio/v4/configuration/studio/assets/assets_aem.assets3; lineNumber: 1; columnNumber: 50; 在 publicId 和 systemId 之间需要有空格。
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.createSAXParseException(ErrorHandlerWrapper.java:203)
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.fatalError(ErrorHandlerWrapper.java:177)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:400)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:327)
+	at com.sun.org.apache.xerces.internal.impl.XMLScanner.reportFatalError(XMLScanner.java:1438)
+	at com.sun.org.apache.xerces.internal.impl.XMLScanner.scanExternalID(XMLScanner.java:1050)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.scanDoctypeDecl(XMLDocumentScannerImpl.java:646)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$PrologDriver.next(XMLDocumentScannerImpl.java:929)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:606)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:510)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:848)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:777)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1213)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:643)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl.parse(SAXParserImpl.java:327)
+	at org.eclipse.emf.ecore.xmi.impl.XMLLoadImpl.load(XMLLoadImpl.java:175)
+	at org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl.doLoad(XMLResourceImpl.java:261)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1518)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1297)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoad(ResourceSetImpl.java:259)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:274)
+	... 58 more
+
+!ENTRY com.silabs.ss.platform.apack.ip 2 0 2017-12-30 20:00:04.684
+!MESSAGE No network interfaces found.
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:00:06.535
+!MESSAGE Exception comparing timestamps for: /common/Master_Software_License_Agreement.zip
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1513)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.isAssetUpdateNeeded(AssetService.java:508)
+	at com.silabs.ss.platform.internal.api.installer.core.LicenseRetriever.updateLicenses(LicenseRetriever.java:284)
+	at com.silabs.ss.platform.internal.api.installer.ui.CheckLicenses.needsUpdate(CheckLicenses.java:87)
+	at com.silabs.ss.platform.internal.api.installer.ui.CheckLicenses.checkLicenses(CheckLicenses.java:73)
+	at com.silabs.ss.platform.internal.product.AppStartupCompleteEventHandler$1.run(AppStartupCompleteEventHandler.java:82)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:00:06.535
+!MESSAGE Local timestamp file does not exist: C:\SiliconLabs\SimplicityStudio\v4\offline\common\Simplicity_Studio_Terms_of_Use_and_Privacy_Statement.timestamp
+
+!ENTRY org.eclipse.equinox.p2.transport.ecf 2 0 2017-12-30 20:00:06.955
+!MESSAGE Connection to https://devtools.silabs.com/studio/v4/updates/p2.index failed on devtools.silabs.com. Retry attempt 0 started
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:144)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:131)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer.performConnect(HttpClientRetrieveFileTransfer.java:1077)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer.access$0(HttpClientRetrieveFileTransfer.java:1068)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer$1.performFileTransfer(HttpClientRetrieveFileTransfer.java:1064)
+	at org.eclipse.ecf.filetransfer.FileTransferJob.run(FileTransferJob.java:73)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.installer.core 4 0 2017-12-30 20:00:07.285
+!MESSAGE Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+!STACK 1
+org.eclipse.equinox.p2.core.ProvisionException: Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:243)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.getLocalFile(SimpleMetadataRepositoryFactory.java:66)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.load(SimpleMetadataRepositoryFactory.java:88)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:57)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:768)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:668)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.basicRefreshRepository(AbstractRepositoryManager.java:203)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.refreshRepository(MetadataRepositoryManager.java:100)
+	at com.silabs.ss.platform.internal.api.installer.core.SLSP2UpdateSites.ensureStudioReposLoaded(SLSP2UpdateSites.java:620)
+	at com.silabs.ss.platform.internal.installer.core.scripting.SLSInstallerModule.createSession(SLSInstallerModule.java:537)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.updatePackageMetadata(UpdateManager.java:206)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.ensureUpdatesFetched(UpdateManager.java:283)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.access$5(UpdateManager.java:274)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager$1.run(UpdateManager.java:166)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Caused by: java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+	... 1 more
+!SUBENTRY 1 org.eclipse.equinox.p2.transport.ecf 4 1006 2017-12-30 20:00:07.285
+!MESSAGE Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.equinox.p2.transport.ecf 2 0 2017-12-30 20:00:07.325
+!MESSAGE Connection to https://devtools.silabs.com/studio/v4/updates/p2.index failed on devtools.silabs.com. Retry attempt 0 started
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:144)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:131)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer.performConnect(HttpClientRetrieveFileTransfer.java:1077)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer.access$0(HttpClientRetrieveFileTransfer.java:1068)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer$1.performFileTransfer(HttpClientRetrieveFileTransfer.java:1064)
+	at org.eclipse.ecf.filetransfer.FileTransferJob.run(FileTransferJob.java:73)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.installer.core 4 0 2017-12-30 20:00:07.585
+!MESSAGE Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+!STACK 1
+org.eclipse.equinox.p2.core.ProvisionException: Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:243)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.getLocalFile(SimpleMetadataRepositoryFactory.java:66)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.load(SimpleMetadataRepositoryFactory.java:88)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:57)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:768)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:668)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.basicRefreshRepository(AbstractRepositoryManager.java:203)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.refreshRepository(MetadataRepositoryManager.java:100)
+	at com.silabs.ss.platform.internal.api.installer.core.SLSP2UpdateSites.ensureStudioReposLoaded(SLSP2UpdateSites.java:620)
+	at com.silabs.ss.platform.internal.installer.core.scripting.SLSInstallerModule.updateInstallationMetadata(SLSInstallerModule.java:470)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.updatePackageMetadata(UpdateManager.java:208)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.ensureUpdatesFetched(UpdateManager.java:283)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.access$5(UpdateManager.java:274)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager$1.run(UpdateManager.java:166)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Caused by: java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+	... 1 more
+!SUBENTRY 1 org.eclipse.equinox.p2.transport.ecf 4 1006 2017-12-30 20:00:07.585
+!MESSAGE Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:00:07.615
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.checkForUpdates(AssetService.java:428)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.updatePackageMetadata(UpdateManager.java:235)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.ensureUpdatesFetched(UpdateManager.java:283)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.access$5(UpdateManager.java:274)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager$1.run(UpdateManager.java:166)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:00:07.615
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.checkForUpdates(AssetService.java:428)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.updatePackageMetadata(UpdateManager.java:235)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.ensureUpdatesFetched(UpdateManager.java:283)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.access$5(UpdateManager.java:274)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager$1.run(UpdateManager.java:166)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 20:00:07.615
+!MESSAGE Assets checkForUpdates failed due to not online
+
+!ENTRY com.silabs.ss.framework.debugger.tcf.agent 1 0 2017-12-30 20:02:16.385
+!MESSAGE Launching SiAgent (Silicon Labs TCF Agent)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:02:20.705
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:02:20.711
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:02:20.717
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:02:20.720
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 1 0 2017-12-30 20:02:20.723
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+!STACK 0
+java.lang.Exception: /efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json is not currently available offline.  Please make sure you have Internet access.
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:378)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.framework.debugger.core 4 0 2017-12-30 20:02:20.726
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Asset error while getting device descriptor(s) for agent
+	at com.silabs.ss.platform.api.rcp.core.StatusReporter.newCoreException(StatusReporter.java:239)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:63)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	... 14 more
+!SUBENTRY 1 com.silabs.ss.framework.debugger.tcf.agent 4 0 2017-12-30 20:02:20.727
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+!SUBENTRY 2 com.silabs.ss.platform.content.core 2 0 2017-12-30 20:02:20.727
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 20:02:20.732
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2017-12-30 20:02:22.123
+!MESSAGE Request for monitor: 'CountingRequestMonitor: Status ERROR: org.eclipse.cdt.dsf code=0  null children=[Status ERROR: org.eclipse.cdt.debug.edc code=0 Fail to get TCF context for process: rc.root.000440059131 java.lang.Exception: java.lang.Error: Channel is closed]' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.debug.edc 4 0 2017-12-30 20:02:22.123
+!MESSAGE Fail to get TCF context for process: rc.root.000440059131
+!STACK 0
+java.lang.Exception: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.Command.<init>(Command.java:83)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy$3.<init>(ProcessesProxy.java:165)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy.getContext(ProcessesProxy.java:165)
+	at org.eclipse.cdt.debug.edc.internal.services.dsf.Processes$2.run(Processes.java:221)
+	at org.eclipse.tcf.EventQueue.run(EventQueue.java:95)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.AbstractChannel.sendCommand(AbstractChannel.java:875)
+	at org.eclipse.tcf.core.Command.<init>(Command.java:79)
+	... 5 more
+
+!ENTRY com.silabs.ss.framework.debugger.tcf.agent 1 0 2017-12-30 20:12:06.362
+!MESSAGE Launching SiAgent (Silicon Labs TCF Agent)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:12:10.156
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:12:10.159
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:12:10.164
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:12:10.166
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 1 0 2017-12-30 20:12:10.168
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+!STACK 0
+java.lang.Exception: /efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json is not currently available offline.  Please make sure you have Internet access.
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:378)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.framework.debugger.core 4 0 2017-12-30 20:12:10.170
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Asset error while getting device descriptor(s) for agent
+	at com.silabs.ss.platform.api.rcp.core.StatusReporter.newCoreException(StatusReporter.java:239)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:63)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	... 14 more
+!SUBENTRY 1 com.silabs.ss.framework.debugger.tcf.agent 4 0 2017-12-30 20:12:10.170
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+!SUBENTRY 2 com.silabs.ss.platform.content.core 2 0 2017-12-30 20:12:10.170
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 20:12:10.172
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2017-12-30 20:12:11.413
+!MESSAGE Request for monitor: 'CountingRequestMonitor: Status ERROR: org.eclipse.cdt.dsf code=0  null children=[Status ERROR: org.eclipse.cdt.debug.edc code=0 Fail to get TCF context for process: rc.root.000440059131 java.lang.Exception: java.lang.Error: Channel is closed]' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.debug.edc 4 0 2017-12-30 20:12:11.413
+!MESSAGE Fail to get TCF context for process: rc.root.000440059131
+!STACK 0
+java.lang.Exception: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.Command.<init>(Command.java:83)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy$3.<init>(ProcessesProxy.java:165)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy.getContext(ProcessesProxy.java:165)
+	at org.eclipse.cdt.debug.edc.internal.services.dsf.Processes$2.run(Processes.java:221)
+	at org.eclipse.tcf.EventQueue.run(EventQueue.java:95)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.AbstractChannel.sendCommand(AbstractChannel.java:875)
+	at org.eclipse.tcf.core.Command.<init>(Command.java:79)
+	... 5 more
+
+!ENTRY com.silabs.ss.framework.debugger.tcf.agent 1 0 2017-12-30 20:25:45.973
+!MESSAGE Launching SiAgent (Silicon Labs TCF Agent)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:25:50.104
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:25:50.107
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:25:50.112
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:25:50.114
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 1 0 2017-12-30 20:25:50.118
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+!STACK 0
+java.lang.Exception: /efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json is not currently available offline.  Please make sure you have Internet access.
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:378)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 20:25:50.120
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY com.silabs.ss.framework.debugger.core 4 0 2017-12-30 20:25:50.122
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Asset error while getting device descriptor(s) for agent
+	at com.silabs.ss.platform.api.rcp.core.StatusReporter.newCoreException(StatusReporter.java:239)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:63)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	... 14 more
+!SUBENTRY 1 com.silabs.ss.framework.debugger.tcf.agent 4 0 2017-12-30 20:25:50.122
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+!SUBENTRY 2 com.silabs.ss.platform.content.core 2 0 2017-12-30 20:25:50.122
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2017-12-30 20:25:51.694
+!MESSAGE Request for monitor: 'CountingRequestMonitor: Status ERROR: org.eclipse.cdt.dsf code=0  null children=[Status ERROR: org.eclipse.cdt.debug.edc code=0 Fail to get TCF context for process: rc.root.000440059131 java.lang.Exception: java.lang.Error: Channel is closed]' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.debug.edc 4 0 2017-12-30 20:25:51.694
+!MESSAGE Fail to get TCF context for process: rc.root.000440059131
+!STACK 0
+java.lang.Exception: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.Command.<init>(Command.java:83)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy$3.<init>(ProcessesProxy.java:165)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy.getContext(ProcessesProxy.java:165)
+	at org.eclipse.cdt.debug.edc.internal.services.dsf.Processes$2.run(Processes.java:221)
+	at org.eclipse.tcf.EventQueue.run(EventQueue.java:95)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.AbstractChannel.sendCommand(AbstractChannel.java:875)
+	at org.eclipse.tcf.core.Command.<init>(Command.java:79)
+	... 5 more
+
+!ENTRY com.silabs.ss.framework.debugger.tcf.agent 1 0 2017-12-30 20:38:13.679
+!MESSAGE Launching SiAgent (Silicon Labs TCF Agent)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:38:17.523
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:38:17.527
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:38:17.531
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:38:17.534
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 1 0 2017-12-30 20:38:17.536
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+!STACK 0
+java.lang.Exception: /efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json is not currently available offline.  Please make sure you have Internet access.
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:378)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 20:38:17.538
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY com.silabs.ss.framework.debugger.core 4 0 2017-12-30 20:38:17.540
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Asset error while getting device descriptor(s) for agent
+	at com.silabs.ss.platform.api.rcp.core.StatusReporter.newCoreException(StatusReporter.java:239)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:63)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	... 14 more
+!SUBENTRY 1 com.silabs.ss.framework.debugger.tcf.agent 4 0 2017-12-30 20:38:17.540
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+!SUBENTRY 2 com.silabs.ss.platform.content.core 2 0 2017-12-30 20:38:17.540
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2017-12-30 20:38:18.706
+!MESSAGE Request for monitor: 'CountingRequestMonitor: Status ERROR: org.eclipse.cdt.dsf code=0  null children=[Status ERROR: org.eclipse.cdt.debug.edc code=0 Fail to get TCF context for process: rc.root.000440059131 java.lang.Exception: java.lang.Error: Channel is closed]' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.debug.edc 4 0 2017-12-30 20:38:18.706
+!MESSAGE Fail to get TCF context for process: rc.root.000440059131
+!STACK 0
+java.lang.Exception: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.Command.<init>(Command.java:83)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy$3.<init>(ProcessesProxy.java:165)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy.getContext(ProcessesProxy.java:165)
+	at org.eclipse.cdt.debug.edc.internal.services.dsf.Processes$2.run(Processes.java:221)
+	at org.eclipse.tcf.EventQueue.run(EventQueue.java:95)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.AbstractChannel.sendCommand(AbstractChannel.java:875)
+	at org.eclipse.tcf.core.Command.<init>(Command.java:79)
+	... 5 more
+
+!ENTRY com.silabs.ss.framework.debugger.tcf.agent 1 0 2017-12-30 20:41:34.139
+!MESSAGE Launching SiAgent (Silicon Labs TCF Agent)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:41:37.279
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:41:37.282
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:41:37.286
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:41:37.289
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 1 0 2017-12-30 20:41:37.291
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+!STACK 0
+java.lang.Exception: /efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json is not currently available offline.  Please make sure you have Internet access.
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:378)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 20:41:37.293
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY com.silabs.ss.framework.debugger.core 4 0 2017-12-30 20:41:37.295
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Asset error while getting device descriptor(s) for agent
+	at com.silabs.ss.platform.api.rcp.core.StatusReporter.newCoreException(StatusReporter.java:239)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:63)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	... 14 more
+!SUBENTRY 1 com.silabs.ss.framework.debugger.tcf.agent 4 0 2017-12-30 20:41:37.295
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+!SUBENTRY 2 com.silabs.ss.platform.content.core 2 0 2017-12-30 20:41:37.295
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2017-12-30 20:41:38.426
+!MESSAGE Request for monitor: 'CountingRequestMonitor: Status ERROR: org.eclipse.cdt.dsf code=0  null children=[Status ERROR: org.eclipse.cdt.debug.edc code=0 Fail to get TCF context for process: rc.root.000440059131 java.lang.Exception: java.lang.Error: Channel is closed]' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.debug.edc 4 0 2017-12-30 20:41:38.426
+!MESSAGE Fail to get TCF context for process: rc.root.000440059131
+!STACK 0
+java.lang.Exception: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.Command.<init>(Command.java:83)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy$3.<init>(ProcessesProxy.java:165)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy.getContext(ProcessesProxy.java:165)
+	at org.eclipse.cdt.debug.edc.internal.services.dsf.Processes$2.run(Processes.java:221)
+	at org.eclipse.tcf.EventQueue.run(EventQueue.java:95)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.AbstractChannel.sendCommand(AbstractChannel.java:875)
+	at org.eclipse.tcf.core.Command.<init>(Command.java:79)
+	... 5 more
+
+!ENTRY com.silabs.ss.framework.debugger.tcf.agent 1 0 2017-12-30 20:42:29.980
+!MESSAGE Launching SiAgent (Silicon Labs TCF Agent)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:42:33.443
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:42:33.445
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:42:33.450
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:42:33.452
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 1 0 2017-12-30 20:42:33.454
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+!STACK 0
+java.lang.Exception: /efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json is not currently available offline.  Please make sure you have Internet access.
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:378)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 20:42:33.455
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY com.silabs.ss.framework.debugger.core 4 0 2017-12-30 20:42:33.457
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Asset error while getting device descriptor(s) for agent
+	at com.silabs.ss.platform.api.rcp.core.StatusReporter.newCoreException(StatusReporter.java:239)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:63)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	... 14 more
+!SUBENTRY 1 com.silabs.ss.framework.debugger.tcf.agent 4 0 2017-12-30 20:42:33.457
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+!SUBENTRY 2 com.silabs.ss.platform.content.core 2 0 2017-12-30 20:42:33.457
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2017-12-30 20:42:34.600
+!MESSAGE Request for monitor: 'CountingRequestMonitor: Status ERROR: org.eclipse.cdt.dsf code=0  null children=[Status ERROR: org.eclipse.cdt.debug.edc code=0 Fail to get TCF context for process: rc.root.000440059131 java.lang.Exception: java.lang.Error: Channel is closed]' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.debug.edc 4 0 2017-12-30 20:42:34.600
+!MESSAGE Fail to get TCF context for process: rc.root.000440059131
+!STACK 0
+java.lang.Exception: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.Command.<init>(Command.java:83)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy$3.<init>(ProcessesProxy.java:165)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy.getContext(ProcessesProxy.java:165)
+	at org.eclipse.cdt.debug.edc.internal.services.dsf.Processes$2.run(Processes.java:221)
+	at org.eclipse.tcf.EventQueue.run(EventQueue.java:95)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.AbstractChannel.sendCommand(AbstractChannel.java:875)
+	at org.eclipse.tcf.core.Command.<init>(Command.java:79)
+	... 5 more
+
+!ENTRY com.silabs.ss.framework.debugger.tcf.agent 1 0 2017-12-30 20:47:09.150
+!MESSAGE Launching SiAgent (Silicon Labs TCF Agent)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:47:12.322
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:47:12.328
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:376)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:47:12.336
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 20:47:12.338
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.access$0(AssetService.java:935)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:325)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 1 0 2017-12-30 20:47:12.339
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+!STACK 0
+java.lang.Exception: /efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json is not currently available offline.  Please make sure you have Internet access.
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:378)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService$2.run(AssetService.java:323)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 20:47:12.341
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY com.silabs.ss.framework.debugger.core 4 0 2017-12-30 20:47:12.342
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Asset error while getting device descriptor(s) for agent
+	at com.silabs.ss.platform.api.rcp.core.StatusReporter.newCoreException(StatusReporter.java:239)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:63)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	... 14 more
+!SUBENTRY 1 com.silabs.ss.framework.debugger.tcf.agent 4 0 2017-12-30 20:47:12.342
+!MESSAGE Asset error while getting device descriptor(s) for agent
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.resolveAsset(AssetService.java:340)
+	at com.silabs.ss.framework.debugger.api.tcf.agent.SiAgentUtils.resolveDeviceDescriptors(SiAgentUtils.java:49)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence.ensurePartDescriptor(SLSLaunchSequence.java:640)
+	at com.silabs.ss.framework.debugger.api.core.SLSLaunchSequence$2.execute(SLSLaunchSequence.java:100)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.executeStep(Sequence.java:459)
+	at org.eclipse.cdt.dsf.concurrent.Sequence.access$2(Sequence.java:373)
+	at org.eclipse.cdt.dsf.concurrent.Sequence$2.handleSuccess(Sequence.java:420)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+!SUBENTRY 2 com.silabs.ss.platform.content.core 2 0 2017-12-30 20:47:12.343
+!MESSAGE Unable to download asset://efm8/debug/lb1/EFM8LB1_B/EFM8LB12F64E-B-QFN32_debug.json
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2017-12-30 20:47:13.460
+!MESSAGE Request for monitor: 'CountingRequestMonitor: Status ERROR: org.eclipse.cdt.dsf code=0  null children=[Status ERROR: org.eclipse.cdt.debug.edc code=0 Fail to get TCF context for process: rc.root.000440059131 java.lang.Exception: java.lang.Error: Channel is closed]' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.debug.edc 4 0 2017-12-30 20:47:13.460
+!MESSAGE Fail to get TCF context for process: rc.root.000440059131
+!STACK 0
+java.lang.Exception: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.Command.<init>(Command.java:83)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy$3.<init>(ProcessesProxy.java:165)
+	at org.eclipse.tcf.internal.services.remote.ProcessesProxy.getContext(ProcessesProxy.java:165)
+	at org.eclipse.cdt.debug.edc.internal.services.dsf.Processes$2.run(Processes.java:221)
+	at org.eclipse.tcf.EventQueue.run(EventQueue.java:95)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.Error: Channel is closed
+	at org.eclipse.tcf.core.AbstractChannel.sendCommand(AbstractChannel.java:875)
+	at org.eclipse.tcf.core.Command.<init>(Command.java:79)
+	... 5 more
+!SESSION 2017-12-30 21:02:43.898 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.8.0_92
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=zh_CN
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 21:02:58.771
+!MESSAGE Failed to load assets file: C:\SiliconLabs\SimplicityStudio\v4\configuration\studio\assets\assets_aem.assets3
+!STACK 0
+org.eclipse.emf.ecore.resource.impl.ResourceSetImpl$1DiagnosticWrappedException: org.xml.sax.SAXParseExceptionpublicId: file:/C:/SiliconLabs/SimplicityStudio/v4/configuration/studio/assets/assets_aem.assets3; systemId: file:/C:/SiliconLabs/SimplicityStudio/v4/configuration/studio/assets/assets_aem.assets3; lineNumber: 1; columnNumber: 50; 在 publicId 和 systemId 之间需要有空格。
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.handleDemandLoadException(ResourceSetImpl.java:319)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:278)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.getResource(ResourceSetImpl.java:406)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.loadRemoteAssets(AssetService.java:688)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.loadAssetsFiles(AssetService.java:795)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.init(AssetService.java:608)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.<init>(AssetService.java:155)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at java.lang.Class.newInstance(Class.java:442)
+	at org.eclipse.equinox.internal.ds.model.ServiceComponent.createInstance(ServiceComponent.java:493)
+	at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.createInstance(ServiceComponentProp.java:270)
+	at org.eclipse.equinox.internal.ds.model.ServiceComponentProp.build(ServiceComponentProp.java:331)
+	at org.eclipse.equinox.internal.ds.InstanceProcess.buildComponent(InstanceProcess.java:620)
+	at org.eclipse.equinox.internal.ds.ServiceReg.getService(ServiceReg.java:53)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceFactoryUse$1.run(ServiceFactoryUse.java:212)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceFactoryUse.factoryGetService(ServiceFactoryUse.java:210)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceFactoryUse.getService(ServiceFactoryUse.java:111)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceConsumer$2.getService(ServiceConsumer.java:45)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceRegistrationImpl.getService(ServiceRegistrationImpl.java:496)
+	at org.eclipse.osgi.internal.serviceregistry.ServiceRegistry.getService(ServiceRegistry.java:461)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.getService(BundleContextImpl.java:619)
+	at com.silabs.ss.framework.hwconfig.api.core.HalConfigUtils.assetService(HalConfigUtils.java:155)
+	at com.silabs.ss.framework.hwconfig.api.core.HalConfigUtils.resolveAsset(HalConfigUtils.java:191)
+	at com.silabs.ss.framework.hwconfig.api.core.HalConfigUtils.lambda$3(HalConfigUtils.java:180)
+	at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193)
+	at java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:948)
+	at java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:580)
+	at java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:270)
+	at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193)
+	at java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1374)
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:481)
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:471)
+	at java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:708)
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:499)
+	at com.silabs.ss.framework.hwconfig.api.core.HalConfigUtils.getConfigDataPaths(HalConfigUtils.java:181)
+	at com.silabs.ss.framework.hwconfig.api.core.HalConfigUtils.ensureDeviceIsLoaded(HalConfigUtils.java:134)
+	at com.silabs.ss.framework.hwconfig.api.core.ABDeviceReader.doReadDeviceFromFile(ABDeviceReader.java:170)
+	at com.silabs.ss.framework.hwconfig.api.core.ABDeviceReader.readDeviceFromFile(ABDeviceReader.java:96)
+	at com.silabs.ss.tool.hwconfig.ui.editor.AppBuilderEditor.loadDevice(AppBuilderEditor.java:610)
+	at com.silabs.ss.tool.hwconfig.ui.editor.AppBuilderEditor.lambda$0(AppBuilderEditor.java:559)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
+	at com.silabs.ss.tool.hwconfig.ui.editor.AppBuilderEditor.loadDevice(AppBuilderEditor.java:559)
+	at com.silabs.ss.tool.hwconfig.ui.editor.AppBuilderEditor.getDevice(AppBuilderEditor.java:553)
+	at com.silabs.ss.tool.hwconfig.ui.editor.actions.NewModeAction.calculateEnabled(NewModeAction.java:45)
+	at org.eclipse.gef.ui.actions.WorkbenchPartAction.refresh(WorkbenchPartAction.java:131)
+	at org.eclipse.gef.ui.actions.WorkbenchPartAction.update(WorkbenchPartAction.java:173)
+	at com.silabs.ss.framework.hwconfig.api.base.ui.editor.ABObjectAbstractEditor.registerAction(ABObjectAbstractEditor.java:556)
+	at com.silabs.ss.tool.hwconfig.ui.editor.AppBuilderEditor.createActions(AppBuilderEditor.java:434)
+	at com.silabs.ss.framework.hwconfig.api.base.ui.editor.ABObjectAbstractEditor.init(ABObjectAbstractEditor.java:331)
+	at com.silabs.ss.tool.hwconfig.ui.editor.AppBuilderEditor.init(AppBuilderEditor.java:394)
+	at org.eclipse.ui.internal.EditorReference.initialize(EditorReference.java:361)
+	at org.eclipse.ui.internal.e4.compatibility.CompatibilityPart.create(CompatibilityPart.java:319)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:56)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.processAnnotated(InjectorImpl.java:898)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.processAnnotated(InjectorImpl.java:879)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.inject(InjectorImpl.java:121)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.internalMake(InjectorImpl.java:345)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.make(InjectorImpl.java:264)
+	at org.eclipse.e4.core.contexts.ContextInjectionFactory.make(ContextInjectionFactory.java:162)
+	at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.createFromBundle(ReflectionContributionFactory.java:104)
+	at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.doCreate(ReflectionContributionFactory.java:73)
+	at org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory.create(ReflectionContributionFactory.java:55)
+	at org.eclipse.e4.ui.workbench.renderers.swt.ContributedPartRenderer.createWidget(ContributedPartRenderer.java:129)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createWidget(PartRenderingEngine.java:971)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:640)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.StackRenderer.showTab(StackRenderer.java:1306)
+	at org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer.postProcess(LazyStackRenderer.java:103)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:658)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer.processContents(SWTPartRenderer.java:71)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:654)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$1.run(PartRenderingEngine.java:525)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:509)
+	at org.eclipse.e4.ui.workbench.renderers.swt.ElementReferenceRenderer.createWidget(ElementReferenceRenderer.java:69)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createWidget(PartRenderingEngine.java:971)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:640)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer.processContents(SWTPartRenderer.java:71)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SashRenderer.processContents(SashRenderer.java:151)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:654)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer.processContents(SWTPartRenderer.java:71)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SashRenderer.processContents(SashRenderer.java:151)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:654)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer.processContents(SWTPartRenderer.java:71)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SashRenderer.processContents(SashRenderer.java:151)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:654)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer.processContents(SWTPartRenderer.java:71)
+	at org.eclipse.e4.ui.workbench.renderers.swt.PerspectiveRenderer.processContents(PerspectiveRenderer.java:49)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:654)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.PerspectiveStackRenderer.showTab(PerspectiveStackRenderer.java:82)
+	at org.eclipse.e4.ui.workbench.renderers.swt.LazyStackRenderer.postProcess(LazyStackRenderer.java:103)
+	at org.eclipse.e4.ui.workbench.renderers.swt.PerspectiveStackRenderer.postProcess(PerspectiveStackRenderer.java:63)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:658)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer.processContents(SWTPartRenderer.java:71)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SashRenderer.processContents(SashRenderer.java:151)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:654)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.workbench.renderers.swt.SWTPartRenderer.processContents(SWTPartRenderer.java:71)
+	at org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer.processContents(WBWRenderer.java:614)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:654)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeCreateGui(PartRenderingEngine.java:746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.access$0(PartRenderingEngine.java:717)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$2.run(PartRenderingEngine.java:711)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.createGui(PartRenderingEngine.java:695)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:1061)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:337)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1018)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:156)
+	at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:654)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:337)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:598)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:150)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:139)
+	at com.silabs.ss.platform.internal.product.Application.start(Application.java:37)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:134)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:380)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:235)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:669)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:608)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1515)
+Caused by: org.xml.sax.SAXParseExceptionpublicId: file:/C:/SiliconLabs/SimplicityStudio/v4/configuration/studio/assets/assets_aem.assets3; systemId: file:/C:/SiliconLabs/SimplicityStudio/v4/configuration/studio/assets/assets_aem.assets3; lineNumber: 1; columnNumber: 50; 在 publicId 和 systemId 之间需要有空格。
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.createSAXParseException(ErrorHandlerWrapper.java:203)
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.fatalError(ErrorHandlerWrapper.java:177)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:400)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:327)
+	at com.sun.org.apache.xerces.internal.impl.XMLScanner.reportFatalError(XMLScanner.java:1438)
+	at com.sun.org.apache.xerces.internal.impl.XMLScanner.scanExternalID(XMLScanner.java:1050)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.scanDoctypeDecl(XMLDocumentScannerImpl.java:646)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$PrologDriver.next(XMLDocumentScannerImpl.java:929)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:606)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:510)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:848)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:777)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1213)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:643)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl.parse(SAXParserImpl.java:327)
+	at org.eclipse.emf.ecore.xmi.impl.XMLLoadImpl.load(XMLLoadImpl.java:175)
+	at org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl.doLoad(XMLResourceImpl.java:261)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1518)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1297)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoad(ResourceSetImpl.java:259)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:274)
+	... 177 more
+
+!ENTRY com.silabs.ss.platform.apack.ip 2 0 2017-12-30 21:03:16.551
+!MESSAGE No network interfaces found.
+
+!ENTRY org.eclipse.equinox.p2.transport.ecf 2 0 2017-12-30 21:03:17.912
+!MESSAGE Connection to https://devtools.silabs.com/studio/v4/updates/p2.index failed on devtools.silabs.com. Retry attempt 0 started
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.Inet4AddressImpl.lookupAllHostAddr(Native Method)
+	at java.net.InetAddress$2.lookupAllHostAddr(InetAddress.java:928)
+	at java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1323)
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1276)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:144)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:131)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer.performConnect(HttpClientRetrieveFileTransfer.java:1077)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer.access$0(HttpClientRetrieveFileTransfer.java:1068)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer$1.performFileTransfer(HttpClientRetrieveFileTransfer.java:1064)
+	at org.eclipse.ecf.filetransfer.FileTransferJob.run(FileTransferJob.java:73)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 21:03:18.382
+!MESSAGE Exception comparing timestamps for: /common/Master_Software_License_Agreement.zip
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1513)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.isAssetUpdateNeeded(AssetService.java:508)
+	at com.silabs.ss.platform.internal.api.installer.core.LicenseRetriever.updateLicenses(LicenseRetriever.java:284)
+	at com.silabs.ss.platform.internal.api.installer.ui.CheckLicenses.needsUpdate(CheckLicenses.java:87)
+	at com.silabs.ss.platform.internal.api.installer.ui.CheckLicenses.checkLicenses(CheckLicenses.java:73)
+	at com.silabs.ss.platform.internal.product.AppStartupCompleteEventHandler$1.run(AppStartupCompleteEventHandler.java:82)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 21:03:18.382
+!MESSAGE Local timestamp file does not exist: C:\SiliconLabs\SimplicityStudio\v4\offline\common\Simplicity_Studio_Terms_of_Use_and_Privacy_Statement.timestamp
+
+!ENTRY com.silabs.ss.platform.installer.core 4 0 2017-12-30 21:03:18.872
+!MESSAGE Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+!STACK 1
+org.eclipse.equinox.p2.core.ProvisionException: Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:243)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.getLocalFile(SimpleMetadataRepositoryFactory.java:66)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.load(SimpleMetadataRepositoryFactory.java:88)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:57)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:768)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:668)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.basicRefreshRepository(AbstractRepositoryManager.java:203)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.refreshRepository(MetadataRepositoryManager.java:100)
+	at com.silabs.ss.platform.internal.api.installer.core.SLSP2UpdateSites.ensureStudioReposLoaded(SLSP2UpdateSites.java:620)
+	at com.silabs.ss.platform.internal.installer.core.scripting.SLSInstallerModule.createSession(SLSInstallerModule.java:537)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.updatePackageMetadata(UpdateManager.java:206)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.ensureUpdatesFetched(UpdateManager.java:283)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.access$5(UpdateManager.java:274)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager$1.run(UpdateManager.java:166)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Caused by: java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+	... 1 more
+!SUBENTRY 1 org.eclipse.equinox.p2.transport.ecf 4 1006 2017-12-30 21:03:18.872
+!MESSAGE Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.equinox.p2.transport.ecf 2 0 2017-12-30 21:03:18.972
+!MESSAGE Connection to https://devtools.silabs.com/studio/v4/updates/p2.index failed on devtools.silabs.com. Retry attempt 0 started
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:144)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:131)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer.performConnect(HttpClientRetrieveFileTransfer.java:1077)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer.access$0(HttpClientRetrieveFileTransfer.java:1068)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientRetrieveFileTransfer$1.performFileTransfer(HttpClientRetrieveFileTransfer.java:1064)
+	at org.eclipse.ecf.filetransfer.FileTransferJob.run(FileTransferJob.java:73)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.installer.core 4 0 2017-12-30 21:03:20.102
+!MESSAGE Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+!STACK 1
+org.eclipse.equinox.p2.core.ProvisionException: Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:243)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.getLocalFile(SimpleMetadataRepositoryFactory.java:66)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.load(SimpleMetadataRepositoryFactory.java:88)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:57)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:768)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:668)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.basicRefreshRepository(AbstractRepositoryManager.java:203)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.refreshRepository(MetadataRepositoryManager.java:100)
+	at com.silabs.ss.platform.internal.api.installer.core.SLSP2UpdateSites.ensureStudioReposLoaded(SLSP2UpdateSites.java:620)
+	at com.silabs.ss.platform.internal.installer.core.scripting.SLSInstallerModule.updateInstallationMetadata(SLSInstallerModule.java:470)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.updatePackageMetadata(UpdateManager.java:208)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.ensureUpdatesFetched(UpdateManager.java:283)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.access$5(UpdateManager.java:274)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager$1.run(UpdateManager.java:166)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Caused by: java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+	... 1 more
+!SUBENTRY 1 org.eclipse.equinox.p2.transport.ecf 4 1006 2017-12-30 21:03:20.102
+!MESSAGE Unknown Host: https://devtools.silabs.com/studio/v4/updates/content.xml
+!STACK 0
+java.net.UnknownHostException: devtools.silabs.com
+	at java.net.InetAddress.getAllByName0(InetAddress.java:1280)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1192)
+	at java.net.InetAddress.getAllByName(InetAddress.java:1126)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:44)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(DefaultClientConnectionOperator.java:259)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:159)
+	at org.apache.http.impl.conn.ManagedClientConnectionImpl.open(ManagedClientConnectionImpl.java:304)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:611)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:446)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:863)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)
+	at org.eclipse.ecf.provider.filetransfer.httpclient4.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:259)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:69)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 21:03:20.152
+!MESSAGE Failed to connect, verify on line, due to exception https://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:668)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:367)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:191)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:177)
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:153)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:944)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.checkForUpdates(AssetService.java:428)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.updatePackageMetadata(UpdateManager.java:235)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.ensureUpdatesFetched(UpdateManager.java:283)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.access$5(UpdateManager.java:274)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager$1.run(UpdateManager.java:166)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 4 0 2017-12-30 21:03:20.152
+!MESSAGE Failed to connect, verify on line, due to exception http://developer.silabs.com/studio/v4/assets/
+!STACK 0
+java.net.UnknownHostException: developer.silabs.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:184)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1169)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1105)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:999)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:933)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.online(AssetService.java:959)
+	at com.silabs.ss.platform.internal.api.content.core.asset.AssetService.checkForUpdates(AssetService.java:428)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.updatePackageMetadata(UpdateManager.java:235)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.ensureUpdatesFetched(UpdateManager.java:283)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager.access$5(UpdateManager.java:274)
+	at com.silabs.ss.platform.internal.installer.core.updates.UpdateManager$1.run(UpdateManager.java:166)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.silabs.ss.platform.content.core 2 0 2017-12-30 21:03:20.152
+!MESSAGE Assets checkForUpdates failed due to not online
+
+!ENTRY org.eclipse.ui 4 0 2017-12-30 21:04:36.622
+!MESSAGE Unhandled event loop exception
+!STACK 0
+org.eclipse.swt.SWTException: Failed to execute runnable (java.lang.NullPointerException)
+	at org.eclipse.swt.SWT.error(SWT.java:4491)
+	at org.eclipse.swt.SWT.error(SWT.java:4406)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:138)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4155)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3772)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:1127)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:337)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1018)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:156)
+	at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:654)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:337)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:598)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:150)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:139)
+	at com.silabs.ss.platform.internal.product.Application.start(Application.java:37)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:134)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:380)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:235)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:669)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:608)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1515)
+Caused by: java.lang.NullPointerException
+	at org.eclipse.cdt.dsf.ui.viewmodel.DefaultVMModelProxyStrategy$11.handleSuccess(DefaultVMModelProxyStrategy.java:752)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor.handleCompleted(RequestMonitor.java:385)
+	at org.eclipse.cdt.dsf.concurrent.RequestMonitor$2.run(RequestMonitor.java:312)
+	at org.eclipse.cdt.dsf.ui.concurrent.SimpleDisplayExecutor.runInSwtThread(SimpleDisplayExecutor.java:117)
+	at org.eclipse.cdt.dsf.ui.concurrent.SimpleDisplayExecutor$1.run(SimpleDisplayExecutor.java:80)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
+	... 24 more
