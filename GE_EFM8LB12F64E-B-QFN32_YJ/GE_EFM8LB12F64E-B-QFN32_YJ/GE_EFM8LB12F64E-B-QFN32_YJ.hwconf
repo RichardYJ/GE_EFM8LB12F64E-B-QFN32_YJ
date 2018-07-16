@@ -5,6 +5,7 @@
     <property object="CLOCK_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="CLOCK_0" propertyId="clock.clockselect.clocksourcedivider" value="SYSCLK / 1"/>
     <property object="CROSSBAR0" propertyId="xbar0.smbus0.clockdata" value="Enabled"/>
+    <property object="CROSSBAR0" propertyId="xbar0.uart1.data" value="Enabled"/>
     <property object="DefaultMode" propertyId="mode.diagramLocation" value="281, 296"/>
     <property object="INTERRUPT_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="INTERRUPT_0" propertyId="interrupt.extendedinterruptenable1.enablesmbussmb0interrupt" value="Enabled"/>
@@ -20,6 +21,8 @@
     <property object="P0.7" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P1.0" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P1.1" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P1.4" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P1.4" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="PBCFG_0" propertyId="pbcfg.settings.enablecrossbar" value="Enabled"/>
     <property object="SMBUS_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="SMBUS_0" propertyId="smbus.configuration.enablesmbus" value="Enabled"/>
@@ -54,6 +57,14 @@
     <property object="TIMER_SETUP_0" propertyId="timer_setup.timer1.mode" value="Mode 2, 8-bit Counter/Timer with Auto-Reload"/>
     <property object="TIMER_SETUP_0" propertyId="timer_setup.timer1.timerrunningstate" value="Timer is Running"/>
     <property object="TIMER_SETUP_0" propertyId="timer_setup.timer1.timerswitch1:runcontrol" value="Start"/>
+    <property object="UARTE_1" propertyId="ABPeripheral.included" value="true"/>
+    <property object="UARTE_1" propertyId="uarte.baudrategeneratorcontrol.actualbaudrate" value="115566"/>
+    <property object="UARTE_1" propertyId="uarte.baudrategeneratorcontrol.baudrateprescaler" value="Divide by 1"/>
+    <property object="UARTE_1" propertyId="uarte.baudrategeneratorcontrol.baudratereloadhigh" value="255"/>
+    <property object="UARTE_1" propertyId="uarte.baudrategeneratorcontrol.baudratereloadlow" value="150"/>
+    <property object="UARTE_1" propertyId="uarte.baudrategeneratorcontrol.enablebaudrategenerator" value="Enabled"/>
+    <property object="UARTE_1" propertyId="uarte.baudrategeneratorcontrol.expectedbaudrate" value="115200"/>
+    <property object="UARTE_1" propertyId="uarte.serialportcontrol.enablereceive" value="Enabled"/>
     <property object="WDT_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="WDT_0" propertyId="wdt.watchdogcontrol.wdtenable" value="Disable"/>
   </mode>

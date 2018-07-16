@@ -55,7 +55,12 @@
 //-----------------------------------------------------------------------------
 // Includes
 //-----------------------------------------------------------------------------
-#include <SI_EFM8LB1_Register_Enums.h>
+#include "bsp.h"
+#include "uart_1.h"
+#include "InitDevice.h"
+#include <stdio.h>
+
+#include <SI_EFM8LB1_Register_Enums.h>                  // SFR declarations
 #include "InitDevice.h"
 #include "EFM8LB1_SMBus_MasterMultibyte.h"
 
@@ -147,6 +152,7 @@ void main (void)
    volatile uint16_t sI2C_rd;
 
    enter_BusFreeMode_from_RESET();
+   UART1_initStdio(24500000, 115200);
 
    DISP_EN = DISP_BC_DRIVEN;           // EFM8 does not drive display
 
@@ -218,18 +224,18 @@ void main (void)
       else
 #endif
 #else
-		for (i = 0; i < 255; i++) 
+//		for (i = 0; i < 255; i++) 
 		{
 #if 1		
 			sI2C_rd = SMB0_I2C_MasterRead(0x00);
 			SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
 
-//			if (0x204c != sI2C_rd)
-			for(i=0;i<32768;i++);
-			LED1 = !LED1;
-//				printf(					"SMB0_I2C    ===============Read================== 0x0 ============Error!!!->0x%02X \r\n ",					sI2C_rd);
+			if (0x204c != sI2C_rd)
+				printf(					"SMB0_I2C    ===============Read================== 0x0 ============Error!!!->0x%02X \r\n ",					sI2C_rd);
 //			else
-//			printf("SMB0_I2C Read 0x0 OK  !\r\n");
+//				printf("SMB0_I2C Read 0x0 OK  !\r\n");
+
+
 #endif
 //			if (1 == SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/)) {
 //				sI2C_rd = SMB0_I2C_MasterRead(0x9811);
@@ -245,12 +251,12 @@ void main (void)
 
 #endif
       {
-//         LED1 = !LED1;
+         LED1 = !LED1;
       }
 
       // Run to here to view the SMB_DATA_IN and SMB_DATA_OUT variable arrays
 
-      T0_Waitms (50);                  // Wait 50 ms until the next cycle
+      T0_Waitms (500);                  // Wait 50 ms until the next cycle
                                        // so that LED blinks slow enough to see
    }
 
