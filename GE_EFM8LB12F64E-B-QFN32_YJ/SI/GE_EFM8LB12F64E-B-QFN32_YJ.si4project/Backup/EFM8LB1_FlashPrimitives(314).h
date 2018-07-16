@@ -1,3 +1,21 @@
+//-----------------------------------------------------------------------------
+// EFM8LB1_FlashPrimitives.h
+//-----------------------------------------------------------------------------
+// Copyright 2014 Silicon Laboratories, Inc.
+// http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
+//
+// Program Description:
+//
+// This program contains several useful utilities for writing and updating
+// flash memory.
+//
+// Target:         EFM8LB1
+// Tool chain:     Keil C51
+//
+// Release 1.0
+//    -Initial Revision (ST)
+//    -19 AUG 2015
+//
 
 #ifndef _EFM8LB1_FLASHPRIMITIVES_H_
 #define _EFM8LB1_FLASHPRIMITIVES_H_
@@ -20,11 +38,15 @@ typedef uint16_t FLADDR;
 #endif
 
 #ifndef FLASH_TEMP
-#define FLASH_TEMP 0xFA00L             
+#define FLASH_TEMP 0xFA00L             // For 64 kB Flash devices
+//#define FLASH_TEMP 0x7C00L           // For 32 kB Flash devices
+//#define FLASH_TEMP 0x3C00L           // For 16 kB Flash devices
 #endif
 
 #ifndef FLASH_LAST
-#define FLASH_LAST 0xFC00L             
+#define FLASH_LAST 0xFC00L             // For 64 kB Flash devices
+//#define FLASH_TEMP 0x7E00L           // For 32 kB Flash devices
+//#define FLASH_TEMP 0x3E00L           // For 16 kB Flash devices
 #endif
 
 //-----------------------------------------------------------------------------

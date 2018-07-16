@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   EFM8LB1_FLASHPRIMITIVES                                           01/23/2018 16:19:48 PAGE 1   
+C51 COMPILER V9.53.0.0   EFM8LB1_FLASHPRIMITIVES                                           01/24/2018 13:59:38 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE EFM8LB1_FLASHPRIMITIVES
@@ -12,164 +12,132 @@ COMPILER INVOKED BY: c:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\kei
 
 line level    source
 
-   1          //-----------------------------------------------------------------------------
-   2          // EFM8LB1_FlashPrimitives.c
+   1          
+   2          
    3          //-----------------------------------------------------------------------------
-   4          // Copyright 2015 Silicon Laboratories, Inc.
-   5          // http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
-   6          //
-   7          // Program Description:
-   8          //
-   9          // This program contains several useful utilities for writing and updating
-  10          // flash memory.
-  11          //
-  12          // Target:         EFM8LB1
-  13          // Tool chain:     Keil C51
-  14          //
-  15          // Release 1.0
-  16          //    -Initial Revision (ST)
-  17          //    -19 AUG 2015
-  18          //
-  19          
-  20          //-----------------------------------------------------------------------------
-  21          // Includes
-  22          //-----------------------------------------------------------------------------
-  23          #include <SI_EFM8LB1_Register_Enums.h>
-  24          #include "EFM8LB1_FlashPrimitives.h"
-  25          
-  26          //-----------------------------------------------------------------------------
-  27          // FLASH_ByteWrite
-  28          //-----------------------------------------------------------------------------
-  29          //
-  30          // Return Value : None
-  31          // Parameters   :
-  32          //   1) FLADDR addr - address of the byte to write to
-  33          //                    valid range is from 0x0000 to 0x1FFF for 8 kB devices
-  34          //                    valid range is from 0x0000 to 0x0FFF for 4 kB devices
-  35          //                    valid range is from 0x0000 to 0x07FF for 2 kB devices
-  36          //   2) uint8_t - byte to write to flash.
-  37          //
-  38          // This routine writes <byte> to the linear flash address <addr>.
-  39          //
+   4          // Includes
+   5          //-----------------------------------------------------------------------------
+   6          #include <SI_EFM8LB1_Register_Enums.h>
+   7          #include "EFM8LB1_FlashPrimitives.h"
+   8          
+   9          void FLASH_ByteWrite (FLADDR addr, uint8_t byte)
+  10          {
+  11   1         bool EA_SAVE = IE_EA;                
+  12   1         uint8_t SAVE_SFRPAGE;
+  13   1         SI_VARIABLE_SEGMENT_POINTER(pwrite, uint8_t, SI_SEG_XDATA); 
+  14   1      
+  15   1         SAVE_SFRPAGE = SFRPAGE;
+  16   1         SFRPAGE = 0;
+  17   1         IE_EA = 0;                         
+  18   1      
+  19   1         VDM0CN = 0x80;                     
+  20   1      
+  21   1         RSTSRC = 0x02;                     
+  22   1      
+  23   1         pwrite = (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_XDATA)) addr;
+  24   1      
+  25   1         FLKEY  = 0xA5;                     
+  26   1         FLKEY  = 0xF1;                     
+  27   1         PSCTL |= 0x01;                     
+  28   1      
+  29   1         VDM0CN = 0x80;                     
+  30   1      
+  31   1         RSTSRC = 0x02;                     
+  32   1         *pwrite = byte;                    
+  33   1      
+  34   1         PSCTL &= ~0x01;                    
+  35   1      
+  36   1         SFRPAGE = SAVE_SFRPAGE;
+  37   1         IE_EA = EA_SAVE;                   
+  38   1      }
+  39          
   40          //-----------------------------------------------------------------------------
-  41          void FLASH_ByteWrite (FLADDR addr, uint8_t byte)
-  42          {
-  43   1         bool EA_SAVE = IE_EA;                // Preserve IE_EA
-  44   1         uint8_t SAVE_SFRPAGE;
-  45   1         SI_VARIABLE_SEGMENT_POINTER(pwrite, uint8_t, SI_SEG_XDATA); // Flash write pointer
-  46   1      
-  47   1         SAVE_SFRPAGE = SFRPAGE;
-  48   1         SFRPAGE = 0;
-  49   1         IE_EA = 0;                          // Disable interrupts
-  50   1      
-  51   1         VDM0CN = 0x80;                      // Enable VDD monitor
-C51 COMPILER V9.53.0.0   EFM8LB1_FLASHPRIMITIVES                                           01/23/2018 16:19:48 PAGE 2   
+  41          // FLASH_ByteRead
+  42          //-----------------------------------------------------------------------------
+  43          //
+  44          // Return Value :
+  45          //      uint8_t - byte read from flash
+  46          // Parameters   :
+  47          //   1) FLADDR addr - address of the byte to read to
+  48          //                    valid range is from 0x0000 to 0x1FFF for 8 kB devices
+  49          //                    valid range is from 0x0000 to 0x0FFF for 4 kB devices
+  50          //                    valid range is from 0x0000 to 0x07FF for 2 kB devices
+  51          //
+C51 COMPILER V9.53.0.0   EFM8LB1_FLASHPRIMITIVES                                           01/24/2018 13:59:38 PAGE 2   
 
-  52   1      
-  53   1         RSTSRC = 0x02;                      // Enable VDD monitor as a reset source
-  54   1      
-  55   1         pwrite = (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_XDATA)) addr;
-  56   1      
-  57   1         FLKEY  = 0xA5;                      // Key Sequence 1
-  58   1         FLKEY  = 0xF1;                      // Key Sequence 2
-  59   1         PSCTL |= 0x01;                      // PSWE = 1 which enables writes
-  60   1      
-  61   1         VDM0CN = 0x80;                      // Enable VDD monitor
-  62   1      
-  63   1         RSTSRC = 0x02;                      // Enable VDD monitor as a reset source
-  64   1         *pwrite = byte;                     // Write the byte
-  65   1      
-  66   1         PSCTL &= ~0x01;                     // PSWE = 0 which disable writes
-  67   1      
-  68   1         SFRPAGE = SAVE_SFRPAGE;
-  69   1         IE_EA = EA_SAVE;                    // Restore interrupts
-  70   1      }
-  71          
-  72          //-----------------------------------------------------------------------------
-  73          // FLASH_ByteRead
-  74          //-----------------------------------------------------------------------------
-  75          //
-  76          // Return Value :
-  77          //      uint8_t - byte read from flash
-  78          // Parameters   :
-  79          //   1) FLADDR addr - address of the byte to read to
-  80          //                    valid range is from 0x0000 to 0x1FFF for 8 kB devices
-  81          //                    valid range is from 0x0000 to 0x0FFF for 4 kB devices
-  82          //                    valid range is from 0x0000 to 0x07FF for 2 kB devices
-  83          //
-  84          // This routine reads a <byte> from the linear flash address <addr>.
-  85          //
-  86          //-----------------------------------------------------------------------------
-  87          uint8_t FLASH_ByteRead (FLADDR addr)
-  88          {
-  89   1              uint8_t SAVE_SFRPAGE;
-  90   1      
-  91   1         bool EA_SAVE = IE_EA;                // Preserve IE_EA
-  92   1         SI_VARIABLE_SEGMENT_POINTER(pread, uint8_t, const SI_SEG_CODE); // Flash read pointer
-  93   1         uint8_t byte;
-  94   1         SAVE_SFRPAGE = SFRPAGE;
-  95   1         SFRPAGE = 0;
-  96   1      
-  97   1         IE_EA = 0;                          // Disable interrupts
+  52          // This routine reads a <byte> from the linear flash address <addr>.
+  53          //
+  54          //-----------------------------------------------------------------------------
+  55          uint8_t FLASH_ByteRead (FLADDR addr)
+  56          {
+  57   1              uint8_t SAVE_SFRPAGE;
+  58   1      
+  59   1         bool EA_SAVE = IE_EA;                // Preserve IE_EA
+  60   1         SI_VARIABLE_SEGMENT_POINTER(pread, uint8_t, const SI_SEG_CODE); // Flash read pointer
+  61   1         uint8_t byte;
+  62   1         SAVE_SFRPAGE = SFRPAGE;
+  63   1         SFRPAGE = 0;
+  64   1      
+  65   1         IE_EA = 0;                          // Disable interrupts
+  66   1      
+  67   1         pread = (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, const SI_SEG_CODE)) addr;
+  68   1      
+  69   1         byte = *pread;                      // Read the byte
+  70   1      
+  71   1         SFRPAGE = SAVE_SFRPAGE;
+  72   1         IE_EA = EA_SAVE;                    // Restore interrupts
+  73   1      
+  74   1         return byte;
+  75   1      }
+  76          
+  77          //-----------------------------------------------------------------------------
+  78          // FLASH_PageErase
+  79          //-----------------------------------------------------------------------------
+  80          //
+  81          // Return Value : None
+  82          // Parameters   :
+  83          //   1) FLADDR addr - address of any byte in the page to erase
+  84          //                    valid range is from 0x0000 to 0x1FFF for 8 kB devices
+  85          //                    valid range is from 0x0000 to 0x0FFF for 4 kB devices
+  86          //                    valid range is from 0x0000 to 0x07FF for 2 kB devices
+  87          //
+  88          // This routine erases the flash page containing the linear flash address
+  89          // <addr>.  Note that the page of flash page containing the Lock Byte cannot be
+  90          // erased if the Lock Byte is set.
+  91          //
+  92          //-----------------------------------------------------------------------------
+  93          void FLASH_PageErase (FLADDR addr)
+  94          {
+  95   1         bool EA_SAVE = IE_EA;                // Preserve IE_EA
+  96   1         uint8_t SAVE_SFRPAGE;
+  97   1         SI_VARIABLE_SEGMENT_POINTER(pwrite, uint8_t, SI_SEG_XDATA); // Flash write pointer
   98   1      
-  99   1         pread = (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, const SI_SEG_CODE)) addr;
- 100   1      
- 101   1         byte = *pread;                      // Read the byte
+  99   1         SAVE_SFRPAGE = SFRPAGE;
+ 100   1         SFRPAGE = 0;
+ 101   1         IE_EA = 0;                          // Disable interrupts
  102   1      
- 103   1         SFRPAGE = SAVE_SFRPAGE;
- 104   1         IE_EA = EA_SAVE;                    // Restore interrupts
- 105   1      
- 106   1         return byte;
- 107   1      }
- 108          
- 109          //-----------------------------------------------------------------------------
- 110          // FLASH_PageErase
- 111          //-----------------------------------------------------------------------------
- 112          //
- 113          // Return Value : None
- 114          // Parameters   :
-C51 COMPILER V9.53.0.0   EFM8LB1_FLASHPRIMITIVES                                           01/23/2018 16:19:48 PAGE 3   
+ 103   1         VDM0CN = 0x80;                      // Enable VDD monitor
+ 104   1      
+ 105   1         RSTSRC = 0x02;                      // Enable VDD monitor as a reset source
+ 106   1      
+ 107   1         pwrite = (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_XDATA)) addr;
+ 108   1      
+ 109   1         FLKEY  = 0xA5;                      // Key Sequence 1
+ 110   1         FLKEY  = 0xF1;                      // Key Sequence 2
+ 111   1         PSCTL |= 0x03;                      // PSWE = 1; PSEE = 1
+ 112   1      
+ 113   1         VDM0CN = 0x80;                      // Enable VDD monitor
+ 114   1      
+C51 COMPILER V9.53.0.0   EFM8LB1_FLASHPRIMITIVES                                           01/24/2018 13:59:38 PAGE 3   
 
- 115          //   1) FLADDR addr - address of any byte in the page to erase
- 116          //                    valid range is from 0x0000 to 0x1FFF for 8 kB devices
- 117          //                    valid range is from 0x0000 to 0x0FFF for 4 kB devices
- 118          //                    valid range is from 0x0000 to 0x07FF for 2 kB devices
- 119          //
- 120          // This routine erases the flash page containing the linear flash address
- 121          // <addr>.  Note that the page of flash page containing the Lock Byte cannot be
- 122          // erased if the Lock Byte is set.
- 123          //
- 124          //-----------------------------------------------------------------------------
- 125          void FLASH_PageErase (FLADDR addr)
- 126          {
- 127   1         bool EA_SAVE = IE_EA;                // Preserve IE_EA
- 128   1         uint8_t SAVE_SFRPAGE;
- 129   1         SI_VARIABLE_SEGMENT_POINTER(pwrite, uint8_t, SI_SEG_XDATA); // Flash write pointer
- 130   1      
- 131   1         SAVE_SFRPAGE = SFRPAGE;
- 132   1         SFRPAGE = 0;
- 133   1         IE_EA = 0;                          // Disable interrupts
- 134   1      
- 135   1         VDM0CN = 0x80;                      // Enable VDD monitor
- 136   1      
- 137   1         RSTSRC = 0x02;                      // Enable VDD monitor as a reset source
- 138   1      
- 139   1         pwrite = (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_XDATA)) addr;
- 140   1      
- 141   1         FLKEY  = 0xA5;                      // Key Sequence 1
- 142   1         FLKEY  = 0xF1;                      // Key Sequence 2
- 143   1         PSCTL |= 0x03;                      // PSWE = 1; PSEE = 1
- 144   1      
- 145   1         VDM0CN = 0x80;                      // Enable VDD monitor
- 146   1      
- 147   1         RSTSRC = 0x02;                      // Enable VDD monitor as a reset source
- 148   1         *pwrite = 0;                        // Initiate page erase
- 149   1      
- 150   1         PSCTL &= ~0x03;                     // PSWE = 0; PSEE = 0
- 151   1      
- 152   1         SFRPAGE = SAVE_SFRPAGE;
- 153   1         IE_EA = EA_SAVE;                    // Restore interrupts
- 154   1      }
+ 115   1         RSTSRC = 0x02;                      // Enable VDD monitor as a reset source
+ 116   1         *pwrite = 0;                        // Initiate page erase
+ 117   1      
+ 118   1         PSCTL &= ~0x03;                     // PSWE = 0; PSEE = 0
+ 119   1      
+ 120   1         SFRPAGE = SAVE_SFRPAGE;
+ 121   1         IE_EA = EA_SAVE;                    // Restore interrupts
+ 122   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

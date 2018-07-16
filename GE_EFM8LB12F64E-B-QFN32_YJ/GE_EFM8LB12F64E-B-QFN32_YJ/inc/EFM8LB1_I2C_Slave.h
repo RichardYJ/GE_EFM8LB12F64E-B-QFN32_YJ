@@ -1,10 +1,3 @@
-//-----------------------------------------------------------------------------
-// EFM8LB2_I2C_Slave.h
-//-----------------------------------------------------------------------------
-// Copyright 2015 Silicon Laboratories, Inc.
-// http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
-//
-// Header for main file:
 
 #ifndef I2C_SLAVE_H_
 #define I2C_SLAVE_H_
@@ -16,51 +9,34 @@
 //-----------------------------------------------------------------------------
 // Global Constants
 //-----------------------------------------------------------------------------
-#define  SYSCLK               24500000 // System clock frequency in Hz
+#define  SYSCLK               24500000 
 
-#define  WRITE                    0x00 // SMBus WRITE command
-#define  READ                     0x01 // SMBus READ command
+#define  WRITE                    0x00 
+#define  READ                     0x01 
 
-#define  SLAVE_ADDR               0x50 //0xF0 // Device addresses (7 bits,
-                                       // lsb is a don't care).
-                                       // Set (SLAVE_ADDR>>1) to sfr I2C0SLAD
+#define  SLAVE_ADDR               0x50 
 
-#define  I2C_STATUS_VECTOR_MASK  0x0F   // NACK, START, STOP, WR, RD
+#define  I2C_STATUS_VECTOR_MASK  0x0F  
 // I2C States
-#define  I2C_ADDR_RD    0x09			// Valid Slave Address + Master Read Request
-#define  I2C_ADDR_WR    0x0A			// Valid Slave Address + Master Write Request
-#define  I2C_RD_DATA    0x01			// Transfer data from Slave (Also can check B4 to see what ACK we just received from master)
-#define  I2C_WR_DATA    0x02			// Write data to Slave (Also can check B4 to see what ACK(ACK/NACK) we just sent)
+#define  I2C_ADDR_RD    0x09			
+#define  I2C_ADDR_WR    0x0A			
+#define  I2C_RD_DATA    0x01			
+#define  I2C_WR_DATA    0x02			
 #define  I2C_STO        0x04
 #define  I2C_STOSTA     0x0C
 #define  I2C_STOSTARD   0x0D
 
-// End status vector definition
 
 //-----------------------------------------------------------------------------
 // Global VARIABLES
 //-----------------------------------------------------------------------------
-extern uint8_t I2C_DATA[16];               // Global holder for SMBus data.
-                                       // All receive data is written
-                                       // here;
-                                       // all transmit data is read
-                                       // from here
+extern uint8_t I2C_DATA[16];          
 
-extern bool DATA_READY;                 // Set to '1' by the SMBus ISR
-                                       // when a new data byte has been
-                                       // received.
-extern uint8_t i2cReceivedData;		  // Global holder for I2C data.
-									  // All receive data is written
-									  // here;
-
-extern bool dataReady;				  // Set to '1' by the I2C ISR
-									  // when a new data byte has been
-									  // received.
-
-extern uint8_t sendDataValue;		  // Transmit the data value 0-255 repeatedly.
-extern uint8_t sendDataCnt;			  // Transmit data counter. Count the Tx data
-									  // in a I2C transaction.
-
-extern bool txDataReady; 			  // Set to '1' indicate that Tx data ready.
+extern bool DATA_READY;               
+extern uint8_t i2cReceivedData;		  
+extern bool dataReady;				  
+extern uint8_t sendDataValue;		  
+extern uint8_t sendDataCnt;			  
+extern bool txDataReady; 			  
 
 #endif // SMBUS_SLAVE_H_

@@ -1,4 +1,21 @@
-
+//-----------------------------------------------------------------------------
+// EFM8LB1_FlashPrimitives.c
+//-----------------------------------------------------------------------------
+// Copyright 2015 Silicon Laboratories, Inc.
+// http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
+//
+// Program Description:
+//
+// This program contains several useful utilities for writing and updating
+// flash memory.
+//
+// Target:         EFM8LB1
+// Tool chain:     Keil C51
+//
+// Release 1.0
+//    -Initial Revision (ST)
+//    -19 AUG 2015
+//
 
 //-----------------------------------------------------------------------------
 // Includes
@@ -6,35 +23,50 @@
 #include <SI_EFM8LB1_Register_Enums.h>
 #include "EFM8LB1_FlashPrimitives.h"
 
+//-----------------------------------------------------------------------------
+// FLASH_ByteWrite
+//-----------------------------------------------------------------------------
+//
+// Return Value : None
+// Parameters   :
+//   1) FLADDR addr - address of the byte to write to
+//                    valid range is from 0x0000 to 0x1FFF for 8 kB devices
+//                    valid range is from 0x0000 to 0x0FFF for 4 kB devices
+//                    valid range is from 0x0000 to 0x07FF for 2 kB devices
+//   2) uint8_t - byte to write to flash.
+//
+// This routine writes <byte> to the linear flash address <addr>.
+//
+//-----------------------------------------------------------------------------
 void FLASH_ByteWrite (FLADDR addr, uint8_t byte)
 {
-   bool EA_SAVE = IE_EA;                
+   bool EA_SAVE = IE_EA;                // Preserve IE_EA
    uint8_t SAVE_SFRPAGE;
-   SI_VARIABLE_SEGMENT_POINTER(pwrite, uint8_t, SI_SEG_XDATA); 
+   SI_VARIABLE_SEGMENT_POINTER(pwrite, uint8_t, SI_SEG_XDATA); // Flash write pointer
 
    SAVE_SFRPAGE = SFRPAGE;
    SFRPAGE = 0;
-   IE_EA = 0;                         
+   IE_EA = 0;                          // Disable interrupts
 
-   VDM0CN = 0x80;                     
+   VDM0CN = 0x80;                      // Enable VDD monitor
 
-   RSTSRC = 0x02;                     
+   RSTSRC = 0x02;                      // Enable VDD monitor as a reset source
 
    pwrite = (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_XDATA)) addr;
 
-   FLKEY  = 0xA5;                     
-   FLKEY  = 0xF1;                     
-   PSCTL |= 0x01;                     
+   FLKEY  = 0xA5;                      // Key Sequence 1
+   FLKEY  = 0xF1;                      // Key Sequence 2
+   PSCTL |= 0x01;                      // PSWE = 1 which enables writes
 
-   VDM0CN = 0x80;                     
+   VDM0CN = 0x80;                      // Enable VDD monitor
 
-   RSTSRC = 0x02;                     
-   *pwrite = byte;                    
+   RSTSRC = 0x02;                      // Enable VDD monitor as a reset source
+   *pwrite = byte;                     // Write the byte
 
-   PSCTL &= ~0x01;                    
+   PSCTL &= ~0x01;                     // PSWE = 0 which disable writes
 
    SFRPAGE = SAVE_SFRPAGE;
-   IE_EA = EA_SAVE;                   
+   IE_EA = EA_SAVE;                    // Restore interrupts
 }
 
 //-----------------------------------------------------------------------------

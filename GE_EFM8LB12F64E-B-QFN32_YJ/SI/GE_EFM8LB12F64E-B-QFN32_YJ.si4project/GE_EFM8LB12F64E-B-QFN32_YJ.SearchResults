@@ -1,3 +1,3 @@
----- flash_test Matches (2 in 1 files) ----
-GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) line 915 : void flash_test (void)
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 	flash_test();
+---- flash_program Matches (2 in 1 files) ----
+GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) line 837 : void flash_program(void)
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : //	flash_program();

@@ -25,15 +25,23 @@ extern uint8_t EEPROM_Buffer[];
 //-----------------------------------------------------------------------------
 // Global Variables
 //-----------------------------------------------------------------------------
+// Global holder for SMBus data
+// All receive data is written here
 uint8_t SMB_DATA_IN[NUM_BYTES_RD];
 
+// Global holder for SMBus data.
+// All transmit data is read from here
 uint8_t SMB_DATA_OUT[NUM_BYTES_WR];
 
-uint8_t TARGET;                        
+uint8_t TARGET;                        // Target SMBus slave address
 
-#define TEMP_CAL_ADDRESS_LOW    0xFFD4  
-#define TEMP_CAL_ADDRESS_HIGH   0xFFD5  
+#define TEMP_CAL_ADDRESS_LOW    0xFFD4  // Address in flash where the
+                                        // temp cal low byte value is stored
 
+#define TEMP_CAL_ADDRESS_HIGH   0xFFD5  // Address in flash where the
+                                        // temp cal high byte value is stored
+
+// Calibration value for the temperature sensor at 0 degrees C, stored in CODE space
 SI_LOCATED_VARIABLE_NO_INIT(TEMPSENSOR_0C_LOW, uint8_t const, SI_SEG_CODE, TEMP_CAL_ADDRESS_LOW);
 SI_LOCATED_VARIABLE_NO_INIT(TEMPSENSOR_0C_HIGH, uint8_t const, SI_SEG_CODE, TEMP_CAL_ADDRESS_HIGH);
 
@@ -43,26 +51,33 @@ SI_LOCATED_VARIABLE_NO_INIT(TEMPSENSOR_0C_HIGH, uint8_t const, SI_SEG_CODE, TEMP
 SI_LOCATED_VARIABLE_NO_INIT(flash_write_array[512], uint8_t, SI_SEG_XDATA, START_ADDRESS);
 
 
-volatile bool SMB_BUSY;                 
+volatile bool SMB_BUSY;                 // Software flag to indicate when the
+// SMB_Read() or SMB_Write() functions
+// have claimed the SMBus
 
-volatile bool SMB_RW;                   
+volatile bool SMB_RW;                   // Software flag to indicate the
+// direction of the current transfer
 
-uint16_t NUM_ERRORS;                   
+uint16_t NUM_ERRORS;                   // Counter for the number of errors.
 volatile uint8_t nWR;
 
-uint8_t i2cReceivedData;               
+uint8_t i2cReceivedData;               // Global holder for I2C data.
+// All receive data is written
+// here;
 
-bool dataReady = 0;                    
+bool dataReady = 0;                    // Set to '1' by the I2C ISR
+// when a new data byte has been
+// received.
 
-bool txDataReady = 1;                 
-uint8_t sendDataValue = 0;          
-uint8_t sendDataCnt = 0;            
-bool CONV_COMPLETE = 0;             
+bool txDataReady = 1;                 // Set to '1' indicate that Tx data ready.
+uint8_t sendDataValue = 0;          // Transmit the data value 0-255 repeatedly.
+uint8_t sendDataCnt = 0;             // Transmit data counter. Count the Tx data
+bool CONV_COMPLETE = 0;                 // ADC result ready flag
 extern bool bTx_4th_byte_nack;
-uint32_t ADC_AVG = 0;               
+uint32_t ADC_AVG = 0;                  // The Averaged ADC temp sensor result
 uint8_t test_write_buff[256] = {0xcc};
 
-
+// in a I2C transaction.
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 consts uint8_t fw_content[] = { 
@@ -533,9 +548,11 @@ bool SMB_Write(void);
 bool SMB_Read(void);
 void T0_Waitms(uint8_t ms);
 
-SI_SBIT(BC_EN, SFR_P2, 2);           
-#define BC_DISCONNECTED 0              
-#define BC_CONNECTED    1              
+SI_SBIT(BC_EN, SFR_P2, 2);            // Board Controller Enable
+#define BC_DISCONNECTED 0              // 0 = Board Controller disconnected
+                                       //     to EFM8 UART pins
+#define BC_CONNECTED    1              // 1 = Board Controller connected
+                                       //     to EFM8 UART pins
 void test_tempsensor (void)
 {
   int32_t temp_scaled;                // Stores scaled temperature value
@@ -617,15 +634,29 @@ void rst(void)
 {
 	uint8_t i=9;
 
+//			showReg();
+
+
+
 
 			P1SKIP |= 1<<3|1<<2;
 			P1MDIN =0xff;
-
+//			showReg();
 			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
 					| P1MDOUT_B2__PUSH_PULL | P1MDOUT_B3__PUSH_PULL
 					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
 					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
 
+#if 0
+			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
+					| P1MDOUT_B2__OPEN_DRAIN | P1MDOUT_B3__PUSH_PULL
+					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
+					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
+			P1|=(1<<2);
+			showReg();
+//			P1&=~(1<<6);
+//			P1|=(1<<6);
+#endif
 			
 			while(1)
 			{
@@ -633,10 +664,10 @@ void rst(void)
 				{
 					break;
 				}
-				P1&=~(1<<3);
-
+				P1&=~(1<<3);//SCL L
+	//			P1&=~(1<<2);	//SDA L
 				_nop_();
-				P1|=(1<<3);	
+				P1|=(1<<3);	//SCL H
 				_nop_();
 
 			}
@@ -663,32 +694,49 @@ void rst(void)
 					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
 					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
 
-			SMB0CF &= ~0x80;
+			SMB0CF &= ~0x80;				 // Reset communication
 			SMB0CF |= 0x80;
 			SMB0CN0_STA = 0;
 			SMB0CN0_STO = 0;
 			SMB0CN0_ACK = 0;
 			
-			SMB_BUSY = 0;
+			SMB_BUSY = 0;// Free SMBus
 
 
 #endif			
+//			showReg();
+
 
 }
 
+//-----------------------------------------------------------------------------
+// SMB_Write
+//-----------------------------------------------------------------------------
+//
+// Return Value : None
+// Parameters   : None
+//
+// Writes a single byte to the slave with address specified by the <TARGET>
+// variable.
+// Calling sequence:
+// 1) Write target slave address to the <TARGET> variable
+// 2) Write outgoing data to the <SMB_DATA_OUT> variable array
+// 3) Call SMB_Write()
+//
+//-----------------------------------------------------------------------------
 bool SMB_Write(void) {
 	uint32_t lcnt = 0;
 
-
+//	smbFCT[0] = SMB0CN0;
 	while (SMB_BUSY)
-		;                  
-	SMB_BUSY = 1;         
-	SMB_RW = 0;           
-	SMB0CN0_STA = 1;       
+		;                    // Wait for SMBus to be free.
+	SMB_BUSY = 1;                       // Claim SMBus (set to busy)
+	SMB_RW = 0;                         // Mark this transfer as a WRITE
+	SMB0CN0_STA = 1;                    // Start transfer
 	while (SMB_BUSY)
 	{
 		lcnt++;
-		if(lcnt>0xff)
+		if(lcnt>0xff)//0x2d
 		{
 
 			lcnt = 0;
@@ -696,20 +744,37 @@ bool SMB_Write(void) {
 			return false;
 		}
 	}
-	return true;     
+	return true;                    // Wait for transfer to complete
 }
 
-
+//-----------------------------------------------------------------------------
+// SMB_Read
+//-----------------------------------------------------------------------------
+//
+// Return Value : None
+// Parameters   : None
+//
+// Reads a single byte from the slave with address specified by the <TARGET>
+// variable.
+// Calling sequence:
+// 1) Write target slave address to the <TARGET> variable
+// 2) Call SMB_Write()
+// 3) Read input data from <SMB_DATA_IN> variable array
+//
+//-----------------------------------------------------------------------------
 bool SMB_Read(void) {
 	uint32_t lcnt = 0;
 
 	while (SMB_BUSY)
-		;                    
-	SMB_BUSY = 1;           
-	SMB_RW = 1;             
+		;                    // Wait for bus to be free.
+	SMB_BUSY = 1;                       // Claim SMBus (set to busy)
+	SMB_RW = 1;                         // Mark this transfer as a READ
 
-	SMB0CN0_STA = 1;         
-
+	SMB0CN0_STA = 1;                    // Start transfer
+#if 0
+	while (SMB_BUSY)
+		;                    // Wait for transfer to complete
+#else
 	while (SMB_BUSY)
 	{
 		lcnt++;
@@ -721,12 +786,13 @@ bool SMB_Read(void) {
 			return false;
 		}
 	}
+#endif
 	return true;
 }
 
 bool SMB0_I2C_MasterWrite(uint16_t RegAddr, uint16_t RegValue) {
 	nWR = 4;
-	TARGET = TARGET_ADDR;			 
+	TARGET = TARGET_ADDR;			 // Target the Slave for next SMBus
 	SMB_DATA_OUT[0] = (RegAddr >> 8) & 0xff;
 	SMB_DATA_OUT[1] = RegAddr & 0xff;
 	SMB_DATA_OUT[2] = (RegValue >> 8) & 0xff;
@@ -734,15 +800,17 @@ bool SMB0_I2C_MasterWrite(uint16_t RegAddr, uint16_t RegValue) {
 #if MY_PRINTF_EN == 1
 	printf("Wr ");
 	printf("%04x",RegAddr);
+//	printf("%x",SMB_DATA_OUT[1]);
 	printf(" ");
 	printf("%04x",RegValue);
+//	printf("%x",SMB_DATA_OUT[3]);
 	printf("\r\n");
 #endif
 
 	while(!SMB_Write())
 	{
 #if MY_PRINTF_EN == 1
-		printf("SMB0_I2C_MasterWrite  ERROR!!!!!!");					 
+		printf("SMB0_I2C_MasterWrite  ERROR!!!!!!");					 // Initiate SMBus write
 #endif		
 	}
 	return true;
@@ -751,25 +819,25 @@ bool SMB0_I2C_MasterWrite(uint16_t RegAddr, uint16_t RegValue) {
 uint16_t SMB0_I2C_MasterRead(uint16_t RegAddr) {
 	uint16_t sRes;
 start:	nWR = 2;
-	TARGET = TARGET_ADDR;			 
+	TARGET = TARGET_ADDR;			 // Target the Slave for next SMBus
 	SMB_DATA_OUT[0] = (RegAddr >> 8) & 0xff;
 	SMB_DATA_OUT[1] = RegAddr & 0xff;
-	SMB_Write();					 
+	SMB_Write();					 // Initiate SMBus write
 	TARGET = TARGET_ADDR;
-
+//	SMB_Read();
 	if(!SMB_Read())
 	{
 #if MY_PRINTF_EN == 1
-		printf("SMB0_I2C_MasterRead  ERROR!!!!!!");					 
+		printf("SMB0_I2C_MasterRead  ERROR!!!!!!");					 // Initiate SMBus write
 #endif
 		goto start;
 	}
 	sRes = (SMB_DATA_IN[0] << 8) & 0xff00 | SMB_DATA_IN[1] & 0xff;
-
+//	sRes = SMB_DATA_IN[0] << 8 | SMB_DATA_IN[1];
 #if MY_PRINTF_EN == 1	  //yj20170414
 	 printf("Rd ");
 	 printf("%04x",RegAddr);
-
+//	 printf("%x",SMB_DATA_OUT[1]);
 	 printf("==");
 	 printf("%04x",sRes);
 	 printf("\r\n");
@@ -834,6 +902,14 @@ void GE_set_polarity(void) {
 }
 
 
+void flash_program(void)
+{
+
+
+	FLASH_Write(START_ADDRESS, test_write_buff, sizeof(test_write_buff));
+
+
+}
 
 
 void flash_test (void)
@@ -856,15 +932,18 @@ void flash_test (void)
 
    temp_byte = FLASH_ByteRead(0xfbff);
 
-   FLASH_ByteWrite(START_ADDRESS, 0xA5);
+   FLASH_ByteWrite(START_ADDRESS, 0xA5);//   10100101
+   // Initially erase the test page of flash
+//   FLASH_PageErase(0x1600);
 
+   // BEGIN TEST===============================================================
 
 
 
    
 
 
-
+   // Check if able to write and read a series of bytes------------------------
    FLASH_Write(START_ADDRESS, test_write_buff, sizeof(test_write_buff));
 
    FLASH_Read(test_read_buff, START_ADDRESS, sizeof(test_write_buff));
@@ -877,8 +956,12 @@ void flash_test (void)
       }
    }
 
+   // Check if able to write and read a series of bytes------------------------
+//   FLASH_Write(START_ADDRESS, test_write_buff0, sizeof(test_write_buff0));
+   
+//   FLASH_PageErase(START_ADDRESS);
 
-
+   // Check if able to Write and Read the flash--------------------------------
    FLASH_ByteWrite(START_ADDRESS, 0xA5);
 
    temp_byte = FLASH_ByteRead(START_ADDRESS);
@@ -888,7 +971,7 @@ void flash_test (void)
       error_flag = 1;
    }
 
-
+   // Check if able to Erase a page of the flash-------------------------------
    FLASH_PageErase(START_ADDRESS);
 
    temp_byte = FLASH_ByteRead(START_ADDRESS);
@@ -1465,84 +1548,202 @@ printf("Load Firmware End......");
 
 
 
+//-----------------------------------------------------------------------------
+// Main Routine
+//-----------------------------------------------------------------------------
+//
+// Main routine performs all configuration tasks, then loops forever sending
+// and receiving SMBus data to the slave.
+//
+//-----------------------------------------------------------------------------
 void main(void) {
-	volatile uint8_t data_count;        
-	uint16_t i;                      
+	volatile uint8_t data_count;        // SMB_DATA_IN and SMB_DATA_OUT counter
+	uint16_t i;                          // Dummy variable counters
 	volatile uint16_t sI2C_rd;
 	
 //	test_tempsensor();
 
 //	flash_test();
+//	flash_program();
 
 	enter_BusFreeMode_from_RESET();
 	UART1_initStdio(24500000, 115200);
 
-	DISP_EN = DISP_BC_DRIVEN;          
+	DISP_EN = DISP_BC_DRIVEN;           // EFM8 does not drive display
 
-
+	// If slave is holding SDA low because of an improper SMBus reset or error
 	while (!SDA) {
-		XBR2 = XBR2_XBARE__ENABLED;      
-		SCL = 0;                         
+		// Provide clock pulses to allow the slave to advance out
+		// of its current state. This will allow it to release SDA.
+		XBR2 = XBR2_XBARE__ENABLED;      // Enable Crossbar
+		SCL = 0;                         // Drive the clock low
 		for (i = 0; i < 255; i++)
-			;        
-		SCL = 1;     
+			;        // Hold the clock low
+		SCL = 1;                         // Release the clock
 		while (!SCL)
-			;        
+			;                     // Wait for open-drain
+								  // clock output to rise
 		for (i = 0; i < 10; i++)
-			;        
-		XBR2 = XBR2_XBARE__DISABLED;     
+			;         // Hold the clock high
+		XBR2 = XBR2_XBARE__DISABLED;     // Disable Crossbar
 	}
 
 	enter_DefaultMode_from_BusFreeMode();
 
 	LED1 = LED_OFF;
 
+	// TEST CODE----------------------------------------------------------------
 
-
-	NUM_ERRORS = 0;                   
+	NUM_ERRORS = 0;                     // Error counter
 	{
 		IE_EA = 0;
 		SFRPAGE = PG3_PAGE;
-		I2C0CN0 &= ~I2C0CN0_BUSY__BMASK;
+		I2C0CN0 &= ~I2C0CN0_BUSY__BMASK; 	   // Clear BUSY bit
+//		I2C0FCN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
 	    I2C0CN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
 
 		IE_EA = 1;
 	}
 
 
+//	FLASH_PageErase(START_ADDRESS);
+//	flash_test();
 	test_tempsensor();
 
+//	flash_write_array[512]={0};
 
 	
+//	while (1) 
+	{
+#if 1
 
-	PIC_MAIN();
+#ifndef TEST_I2C2
+		{
+			PIC_MAIN();
+		}
+#endif
 
+		// SMBus Write Sequence
 
+		SMB_DATA_OUT[0] = 0x98;
+		SMB_DATA_OUT[1] = 0x11;
+		SMB_DATA_OUT[2] = 0xab;
+		SMB_DATA_OUT[3] = 0xcd;
 
-	T0_Waitms(500);                 
+		TARGET = TARGET_ADDR;             // Target the Slave for next SMBus
+										  // transfer
+		SMB_Write();                     // Initiate SMBus write
 
+		// SMBus Read Sequence
+		TARGET = TARGET_ADDR;             // Target the Slave for next SMBus
+										  // transfer
+//      SMB_Read();
+
+		// Check transfer data
+		for (data_count = 0; data_count < NUM_BYTES_RD; data_count++) {
+			// Received data match transmit data?
+			if (SMB_DATA_IN[data_count] != SMB_DATA_OUT[data_count]) {
+				NUM_ERRORS++;              // Increment error counter if no
+										   // match
+			}
+		}
+#if 0
+		// Indicate that an error has occurred (LED no longer lit)
+		if (NUM_ERRORS > 0)
+		{
+			LED1 = LED_OFF;
+		}
+		else
+#endif
+#else
+//		for (i = 0; i < 255; i++) 
+		{
+#if 1		
+			sI2C_rd = SMB0_I2C_MasterRead(0);
+			
+			SMB0_I2C_MasterWrite(0x980d, 0xabcd);
+			sI2C_rd = SMB0_I2C_MasterRead(0x980d);
+			if (0xabcd != sI2C_rd)
+			printf( "SMB0_I2C    ===============Read================== 0x9811 ============Error!!!->0x%02X \r\n ", sI2C_rd);
+
+			
+
+			sI2C_rd = SMB0_I2C_MasterRead(0x00);
+			/*while(1)*/SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
+			if (0x204c != sI2C_rd)
+				printf( "SMB0_I2C    ===============Read================== 0x0 ============Error!!!->0x%02X \r\n ", sI2C_rd);
+//			else
+//				printf("SMB0_I2C Read 0x0 OK  !\r\n");
+
+#endif
+//			if (1 == SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/)) {
+//				sI2C_rd = SMB0_I2C_MasterRead(0x9811);
+//				if (i != sI2C_rd)
+//					LED1 = !LED1;
+//					printf(						"SMB0_I2C ================Write========================= 0x9811 ============Error!!!\r\n");
+//				else {
+//					LED1 = !LED1;
+//					printf("SMB0_I2C Write & Read 0x9811 OK !\r\n");
+//				}
+		}
+
+#if 0
+
+#endif
+
+#endif
+		{
+//			LED1 = !LED1;
+		}
+
+		// Run to here to view the SMB_DATA_IN and SMB_DATA_OUT variable arrays
+
+		T0_Waitms(500);                  // Wait 50 ms until the next cycle
+										 // so that LED blinks slow enough to see
+	}
+
+	// END TEST CODE------------------------------------------------------------
 
 }
 
+//-----------------------------------------------------------------------------
+// Support Functions
+//-----------------------------------------------------------------------------
+
+
+
+//-----------------------------------------------------------------------------
+// T0_Waitms
+//-----------------------------------------------------------------------------
+//
+// Return Value : None
+// Parameters   :
+//   1) uint8_t ms - number of milliseconds to wait
+//                        range is full range of character: 0 to 255
+//
+// Configure Timer0 to wait for <ms> milliseconds using SYSCLK as its time
+// base.
+//
+//-----------------------------------------------------------------------------
 void T0_Waitms(uint8_t ms) {
-	TCON &= ~0x30;                      
-	TMOD &= ~0x0f;                      
+	TCON &= ~0x30;                      // Stop Timer0; Clear TCON_TF0
+	TMOD &= ~0x0f;                      // 16-bit free run mode
 	TMOD |= 0x01;
 
-	CKCON0 |= 0x04;                     
+	CKCON0 |= 0x04;                     // Timer0 counts SYSCLKs
 
 	while (ms) {
-		TCON_TR0 = 0;                   
-		TH0 = ((-SYSCLK / 1000) >> 8);  
+		TCON_TR0 = 0;                    // Stop Timer0
+		TH0 = ((-SYSCLK / 1000) >> 8);     // Overflow in 1ms
 		TL0 = ((-SYSCLK / 1000) & 0xFF);
-		TCON_TF0 = 0;                   
-		TCON_TR0 = 1;                   
+		TCON_TF0 = 0;                    // Clear overflow indicator
+		TCON_TR0 = 1;                    // Start Timer0
 		while (!TCON_TF0)
-			;               
-		ms--;               
+			;               // Wait for overflow
+		ms--;                            // Update ms counter
 	}
 
-	TCON_TR0 = 0;           
+	TCON_TR0 = 0;                       // Stop Timer0
 }
 
 

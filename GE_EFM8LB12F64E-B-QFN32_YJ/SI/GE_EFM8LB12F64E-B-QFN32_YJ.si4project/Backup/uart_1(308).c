@@ -1,31 +1,36 @@
+/**************************************************************************//**
+ * Copyright (c) 2016 by Silicon Laboratories Inc. All rights reserved.
+ *
+ * http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
+ *****************************************************************************/
 
 #include "uart_1.h"
 
 #if EFM8PDL_UART1_AUTO_PAGE == 1
-
+// declare variable needed for autopage enter/exit
 #define DECL_PAGE uint8_t savedPage
-
+// enter autopage section
 #define SET_PAGE(p)     do                                                    \
                         {                                                     \
-                          savedPage = SFRPAGE;     \
-                          SFRPAGE = (p);                    \
+                          savedPage = SFRPAGE;  /* save current SFR page */   \
+                          SFRPAGE = (p);        /* set SFR page */            \
                         } while(0)
-
+// exit autopage section
 #define RESTORE_PAGE    do                                                    \
                         {                                                     \
-                          SFRPAGE = savedPage;    \
+                          SFRPAGE = savedPage;  /* restore saved SFR page */  \
                         } while(0)
 
 #else
 #define DECL_PAGE
 #define SET_PAGE(x)
 #define RESTORE_PAGE
-#endif 
+#endif //EFM8PDL_UART1_AUTO_PAGE
 
-
+// SFR page used to access UART1 registers
 #define UART1_SFR_PAGE 0x20
 
-
+// Clock prescaler values for baud rate initialization
 #define NUM_PRESC 8
 static const uint8_t PRESC[NUM_PRESC]      = {1, 4, 8, 12, 16, 24, 32, 48};
 static const uint8_t PRESC_ENUM[NUM_PRESC] = {SBCON1_BPS__DIV_BY_1,  SBCON1_BPS__DIV_BY_4,  SBCON1_BPS__DIV_BY_8,  SBCON1_BPS__DIV_BY_12,
@@ -38,24 +43,30 @@ static void UART1_initBaudRate(uint32_t sysclk, uint32_t baudrate)
   DECL_PAGE;
   SET_PAGE(UART1_SFR_PAGE);
 
-  min_presc = ((*((uint16_t*)(&sysclk)) >> 1) + baudrate) / baudrate; 
+  // Calculate baud rate prescaler and baud rate reload
+  // value to maximize precision.
+  // See reference manual for calculation details
+  min_presc = ((*((uint16_t*)(&sysclk)) >> 1) + baudrate) / baudrate; // calculate minimum prescaler necessary
   for(i = 0; i < NUM_PRESC; ++i)
   {
-    if(PRESC[i] >= min_presc) 
+    if(PRESC[i] >= min_presc) // use a prescaler that is equal or just greater than the minimum
     {
-      reload  = ((1 << 16) - (sysclk / (2 * baudrate * PRESC[i]))); 
+      reload  = ((1 << 16) - (sysclk / (2 * baudrate * PRESC[i]))); // calculate reload value using prescaler
       SBRLH1  = (reload >> 8) & 0xFF;
       SBRLL1  = reload & 0xFF;
-      SBCON1 |= (SBCON1_BREN__ENABLED | PRESC_ENUM[i]); 
+      SBCON1 |= (SBCON1_BREN__ENABLED | PRESC_ENUM[i]); // enable baud rate with calculated prescaler
       RESTORE_PAGE;
       return;
     }
   }
 
-
+  // Baud rate is too small to be match
   while(1);
 }
 
+//=========================================================
+// Runtime API
+//=========================================================
 
 #if (EFM8PDL_UART1_AUTO_PAGE == 1)
 uint8_t UART1_getIntFlags(void)
@@ -125,7 +136,7 @@ void UART1_writeWithExtraBit(uint16_t value)
   DECL_PAGE;
   SET_PAGE(UART1_SFR_PAGE);
 
-
+  // Calculate shift and mask for data length
   shift = ((SMOD1 & SMOD1_SDL__FMASK) >> SMOD1_SDL__SHIFT) + 5;
   mask = 0xFF >> (8 - shift);
 
@@ -142,7 +153,7 @@ uint16_t UART1_readWithExtraBit(void)
   DECL_PAGE;
   SET_PAGE(UART1_SFR_PAGE);
 
-
+  // Calculate shift and mask for data length
   shift = ((SMOD1 & SMOD1_SDL__FMASK) >> SMOD1_SDL__SHIFT) + 5;
   mask = 0xFF >> (8 - shift);
 
@@ -318,6 +329,9 @@ void UART1_enableAutobaud(bool enable)
   RESTORE_PAGE;
 }
 
+//=========================================================
+// Initialization API
+//=========================================================
 
 void UART1_init(uint32_t sysclk, uint32_t baudrate, 
                 UART1_DataLen_t datalen, UART1_StopLen_t stoplen, 
@@ -417,6 +431,9 @@ void UART1_initRxFifo(UART1_RxFiFoThreshold_t rxth, UART1_RxFifoTimeout_t rxto,
   RESTORE_PAGE;
 }
 
+//=========================================================
+// Buffer Access API
+//=========================================================
 #if EFM8PDL_UART1_USE_BUFFER == 1
 
 SI_SEGMENT_VARIABLE(txRemaining, static uint8_t, SI_SEG_XDATA) = 0;
@@ -429,22 +446,24 @@ SI_INTERRUPT(UART1_ISR, UART1_IRQn)
 #if (EFM8PDL_UART1_USE_ERR_CALLBACK == 1)
   uint8_t discard;
   uint8_t errors;
-#endif 
+#endif //EFM8PDL_UART1_USE_ERR_CALLBACK
 
-  
+  // If auto-baud sync word detected to set baudrate, clear flag and disable auto-baud detection
   if (UART1LIN & UART1_AUTOBAUD_IF)
   {
     UART1LIN &= ~(UART1_AUTOBAUD_IF | UART1LIN_AUTOBDE__ENABLED | UART1LIN_SYNCDIE__ENABLED);
   }
   
 
-  
+  // If rx fifo request interrupt is set and enabled
   if ((UART1FCN1 & UART1_RFRQ_IF) && (UART1FCN0 & UART1FCN0_RFRQE__ENABLED))
   {
+    // Read bytes as long as rx fifo count is not zero and there
+	// is room in the tx buffer
     while (rxRemaining && ((UART1FCT & UART1FCT_RXCNT__FMASK) >> UART1FCT_RXCNT__SHIFT))
     {
 #if (EFM8PDL_UART1_USE_ERR_CALLBACK == 1)
-
+      // If parity or overrun error, clear flags, and call user
       errors = SCON1 & (UART1_RXOVR_EF | UART1_PARITY_EF);
       if(errors)
       {
@@ -452,13 +471,13 @@ SI_INTERRUPT(UART1_ISR, UART1_IRQn)
         UART1_transferErrorCb(errors);
       }
 
-
+      // Store byte if there is no parity error a
       if (errors & UART1_PARITY_EF)
       {
         discard = SBUF1;
       }
       else
-#endif 
+#endif //EFM8PDL_UART1_USE_ERR_CALLBACK
       {
         *rxBuffer = SBUF1;
          ++rxBuffer;
@@ -471,13 +490,16 @@ SI_INTERRUPT(UART1_ISR, UART1_IRQn)
     }
     if(!rxRemaining)
     {
+      // Flush Fifo if there is no room available in rx buffer
       UART1FCN0 |= UART1FCN0_RFLSH__FLUSH;
     }
   }
 
-
+  // If tx fifo request interrupt is set and enabled
   if ((UART1FCN1 &  UART1_TFRQ_IF) && (UART1FCN0 & UART1FCN0_TFRQE__ENABLED))
   {
+    // Write bytes as long as the tx fifo is not full and there
+    // is room in the tx buffer
     while (txRemaining && (UART1FCN1 & UART1FCN1_TXNF__NOT_FULL))
     {
       SBUF1 = *txBuffer;
@@ -494,17 +516,18 @@ SI_INTERRUPT(UART1_ISR, UART1_IRQn)
 void UART1_writeBuffer(SI_VARIABLE_SEGMENT_POINTER(buffer, uint8_t, EFM8PDL_UART1_RX_BUFTYPE),
                        uint8_t length)
 {
-
+  // Initialize internal data
   txBuffer = buffer;
   txRemaining = length;
 
-
+  // Enable tx fifo interrupts to kick off transfer
   UART1FCN0 |= UART1FCN0_TFRQE__ENABLED;
 }
 
 void UART1_readBuffer(SI_VARIABLE_SEGMENT_POINTER(buffer, uint8_t, EFM8PDL_UART1_TX_BUFTYPE),
                       uint8_t length)
 {
+  // Initialize internal data
   rxBuffer = buffer;
   rxRemaining = length;
 }
@@ -531,8 +554,11 @@ uint8_t UART1_rxBytesRemaining(void)
   return rxRemaining;
 }
 
-#endif 
+#endif //EFM8PDL_UART1_USE_BUFFER
 
+//=========================================================
+// STDIO API
+//=========================================================
 #if EFM8PDL_UART1_USE_STDIO == 1
 char putchar(char c){
   DECL_PAGE;

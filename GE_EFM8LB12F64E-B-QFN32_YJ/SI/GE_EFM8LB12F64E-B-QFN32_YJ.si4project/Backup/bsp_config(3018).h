@@ -21,14 +21,19 @@
 #define BSP_LED_ON              0
 #define BSP_LED_OFF             1
 
+// BSP_DISP_EN settings
+#define BSP_DISP_BC_DRIVEN      0      // Board Controller drives display
+#define BSP_DISP_EFM8_DRIVEN    1      // EFM8 drives display
 
-#define BSP_DISP_BC_DRIVEN      0      
-#define BSP_DISP_EFM8_DRIVEN    1      
+// BSP_BC_EN settings
+#define BSP_BC_DISCONNECTED     0      // Board Controller disconnected
+                                       //   from EFM8 UART pins
+#define BSP_BC_CONNECTED        1      // Board Controller connected
+                                       //   to EFM8 UART pins
 
-
-#define BSP_BC_DISCONNECTED     0      
-#define BSP_BC_CONNECTED        1      
-
+/////////////////////////////////////////////////////////////////////////////
+// Port sbits
+/////////////////////////////////////////////////////////////////////////////
 
 SI_SBIT(BSP_DISP_EN, SFR_P3, 4);
 SI_SBIT(BSP_DISP_CS, SFR_P2, 6);
