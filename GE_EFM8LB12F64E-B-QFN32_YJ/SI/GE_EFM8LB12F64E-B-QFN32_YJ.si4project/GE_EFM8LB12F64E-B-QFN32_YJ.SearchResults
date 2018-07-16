@@ -1,6 +1,39 @@
----- nWR Matches (5 in 3 files) ----
-EFM8LB1_SMBus_MasterMultibyte.h (inc) line 75 : extern uint8_t nWR;
-GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) line 98 : volatile uint8_t nWR;
-SMB0_I2C_MasterWrite in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 	nWR = 4;
-SMB0_I2C_MasterRead in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 	nWR = 2;
-SI_INTERRUPT in Interrupts.c (src) : 					if (sent_byte_counter <= nWR /*NUM_BYTES_WR*/)
+---- XBR Matches (76 in 2 files) ----
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 		XBR2 = XBR2_XBARE__ENABLED;      // Enable Crossbar
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 		XBR2 = XBR2_XBARE__DISABLED;     // Disable Crossbar
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1CTSE__DISABLED;
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1CTSE__DISABLED;						
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__ENABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1CTSE__DISABLED;
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// $[XBR2 - Port I/O Crossbar 2]
+PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// [XBR2 - Port I/O Crossbar 2]$
+PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// $[XBR0 - Port I/O Crossbar 0]
+PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// [XBR0 - Port I/O Crossbar 0]$
+PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// $[XBR1 - Port I/O Crossbar 1]
+PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// [XBR1 - Port I/O Crossbar 1]$
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// $[XBR2 - Port I/O Crossbar 2]
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 			| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 			| XBR2_URT1CTSE__DISABLED;
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// [XBR2 - Port I/O Crossbar 2]$
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// $[XBR0 - Port I/O Crossbar 0]
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__ENABLED
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 			| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 			| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// [XBR0 - Port I/O Crossbar 0]$
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// $[XBR1 - Port I/O Crossbar 1]
+PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// [XBR1 - Port I/O Crossbar 1]$

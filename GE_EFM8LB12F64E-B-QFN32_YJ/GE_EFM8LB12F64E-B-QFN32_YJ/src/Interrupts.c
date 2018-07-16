@@ -584,6 +584,7 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
 			SMB0CN0_STA = 0;// Manually clear START bit
 			rec_byte_counter = 1;// Reset the counter
 			sent_byte_counter = 1;// Reset the counter
+			rec_byte_counter = SMB0CN0;
 			break;
 
 			// Master Transmitter: Data byte transmitted

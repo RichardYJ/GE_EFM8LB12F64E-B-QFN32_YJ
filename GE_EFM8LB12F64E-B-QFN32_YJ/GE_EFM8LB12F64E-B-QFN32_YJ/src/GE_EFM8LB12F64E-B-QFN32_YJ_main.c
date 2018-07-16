@@ -64,7 +64,7 @@
 #include "InitDevice.h"
 #include "EFM8LB1_SMBus_MasterMultibyte.h"
 #include "EFM8LB1_I2C_Slave.h"
-
+#include <string.h>
 //#define TEST_I2C2
 #define MY_PRINTF_EN 1
 #define DYCALCC 1
@@ -795,7 +795,7 @@ void PIC_MAIN() {
 		{
 			SMB0_I2C_MasterWrite(0x9811, 0xabcd);
 			LED1 = !LED1;
-			T0_Waitms(250);
+//			T0_Waitms(250);
 		}
 	}
 
@@ -1311,6 +1311,179 @@ void main(void) {
 // Support Functions
 //-----------------------------------------------------------------------------
 
+
+void showReg()
+{
+	uint8_t i =0;
+	struct tagFCT{
+		uint8_t smbFCT;
+		uint8_t strREG[20];//[20]
+	}regDtl[20]={0,{0}};
+
+	regDtl[i].smbFCT = SMB0CF;
+	strcpy(regDtl[i].strREG,"SMB0CF");
+	i++;
+	regDtl[i].smbFCT = SMB0TC;
+	strcpy(regDtl[i].strREG,"SMB0TC");
+	i++;
+	regDtl[i].smbFCT = SMB0CN0;
+	strcpy(regDtl[i].strREG,"SMB0CN0");
+	i++;
+	regDtl[i].smbFCT = SMB0ADR;
+	strcpy(regDtl[i].strREG,"SMB0ADR");
+	i++;
+	regDtl[i].smbFCT = SMB0ADM;
+	strcpy(regDtl[i].strREG,"SMB0ADM");
+	i++;
+	regDtl[i].smbFCT = SMB0DAT;
+	strcpy(regDtl[i].strREG,"SMB0DAT");
+	i++;
+	regDtl[i].smbFCT = SMB0FCN0;
+	strcpy(regDtl[i].strREG,"SMB0FCN0");
+	i++;
+	regDtl[i].smbFCT = SMB0FCN1;
+	strcpy(regDtl[i].strREG,"SMB0FCN1");
+	i++;
+	regDtl[i].smbFCT = SMB0RXLN;
+	strcpy(regDtl[i].strREG,"SMB0RXLN");
+	i++;
+	regDtl[i].smbFCT = SMB0FCT;
+	strcpy(regDtl[i].strREG,"SMB0FCT");
+	i++;
+	regDtl[i].smbFCT = P1MASK;
+	strcpy(regDtl[i].strREG,"P1MASK");
+	i++;
+	regDtl[i].smbFCT = P1MAT;
+	strcpy(regDtl[i].strREG,"P1MAT");
+	i++;
+	regDtl[i].smbFCT = P1;
+	strcpy(regDtl[i].strREG,"P1");
+	i++;
+	regDtl[i].smbFCT = P1MDIN;
+	strcpy(regDtl[i].strREG,"P1MDIN");
+	i++;
+	regDtl[i].smbFCT = P1MDOUT;
+	strcpy(regDtl[i].strREG,"P1MDOUT");
+	i++;
+	regDtl[i].smbFCT = P1SKIP;
+	strcpy(regDtl[i].strREG,"P1SKIP");
+	i++;
+
+}
+
+
+
+void rst(void)
+{
+
+#if 0
+			SMB0FCN0|=0x40;
+			SMB0CN0=0;
+
+
+			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__DISABLED
+					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
+					| XBR2_URT1CTSE__DISABLED;
+			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
+					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+
+			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
+					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
+					| XBR2_URT1CTSE__DISABLED;						
+			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__ENABLED
+					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+
+			SMB0CF &= ~0x80;                 // Reset communication
+			SMB0CF |= 0x80;
+			SMB0CN0_STA = 0;
+			SMB0CN0_STO = 0;
+			SMB0CN0_ACK = 0;
+			SMB_BUSY = 0;// Free SMBus
+
+
+			
+			SMB0CF &= ~0x80;                 // Reset communication
+			SMB0CF |= 0x80;
+			SMB0CN0_STO = 1;
+#endif
+
+			showReg();
+
+/*			
+			smbFCT[i++] = SMB0TC;
+			smbFCT[i++] = SMB0CN0;
+			smbFCT[i++] = SMB0ADR;
+			smbFCT[i++] = SMB0ADM;
+			smbFCT[i++] = SMB0DAT;
+			smbFCT[i++] = SMB0FCN0;
+			smbFCT[i++] = SMB0FCN1;
+			smbFCT[i++] = SMB0RXLN;
+			smbFCT[i++] = SMB0FCT;
+
+			smbFCT[i++] = P1MASK;
+			smbFCT[i++] = P1MAT;
+			smbFCT[i++] = P1;
+			smbFCT[i++] = P1MDIN;
+			smbFCT[i++] = P1MDOUT;
+			smbFCT[i++] = P1SKIP;
+*/
+			SMB0CF &= ~0x80;
+#if 0 			
+			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
+					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
+					| XBR2_URT1CTSE__DISABLED;
+			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
+					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+#else
+			P1SKIP |= 1<<2|1<<3;
+			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
+					| P1MDOUT_B2__PUSH_PULL | P1MDOUT_B3__PUSH_PULL
+					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
+					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
+#endif
+			P1&=~(1<<6);
+			P1|=(1<<6);
+
+			
+
+//			P1&=~(1<<3);
+			P1&=~(1<<3);
+			P1&=~(1<<2);
+			_nop_();
+			P1|=(1<<3);
+			_nop_();
+			P1&=~(1<<3);
+			P1&=~(1<<2);
+			_nop_();
+			P1|=(1<<3);
+			_nop_();
+			P1|=(1<<2);
+#if 1			
+//			smbFCT[i++] = P1;
+			P1SKIP &= ~(1<<2|1<<3);
+			
+			P1MDOUT = P1MDOUT_B0__OPEN_DRAIN | P1MDOUT_B1__OPEN_DRAIN
+					| P1MDOUT_B2__OPEN_DRAIN | P1MDOUT_B3__OPEN_DRAIN
+					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
+					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
+
+			SMB0CF &= ~0x80;				 // Reset communication
+			SMB0CF |= 0x80;
+			SMB0CN0_STA = 0;
+			SMB0CN0_STO = 0;
+			SMB0CN0_ACK = 0;
+			
+			SMB_BUSY = 0;// Free SMBus
+
+
+#endif			
+			showReg();
+
+
+}
 //-----------------------------------------------------------------------------
 // SMB_Write
 //-----------------------------------------------------------------------------
@@ -1327,12 +1500,25 @@ void main(void) {
 //
 //-----------------------------------------------------------------------------
 void SMB_Write(void) {
+	uint32_t lcnt = 0;
+	
+
+//	smbFCT[0] = SMB0CN0;
 	while (SMB_BUSY)
 		;                    // Wait for SMBus to be free.
 	SMB_BUSY = 1;                       // Claim SMBus (set to busy)
 	SMB_RW = 0;                         // Mark this transfer as a WRITE
 	SMB0CN0_STA = 1;                    // Start transfer
 	while (SMB_BUSY)
+	{
+		lcnt++;
+		if(lcnt>0xffff)
+		{
+
+			lcnt = 0;
+			rst();
+		}
+	}
 		;                    // Wait for transfer to complete
 }
 
