@@ -1,11 +1,1 @@
----- LED1 Matches (14 in 4 files) ----
-EFM8LB1_I2C_Slave.h (inc) line 16 : SI_SBIT (LED1, SFR_P1, 4);             // LED green
-EFM8LB1_SMBus_MasterMultibyte.h (inc) line 18 : SI_SBIT (LED1, SFR_P1, 4);             // LED green
-GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) line 41 : //       toggling LED1 on and off each time a value is sent and received.
-PIC_MAIN in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			LED1 = !LED1;
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 	LED1 = LED_OFF;
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			LED1 = LED_OFF;
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : //					LED1 = !LED1;
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : //					LED1 = !LED1;
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			LED1 = !LED1;
-SI_INTERRUPT in Interrupts.c (src) : 		LED1 = 0;
+---- int Matches (0 in 0 files) ----
