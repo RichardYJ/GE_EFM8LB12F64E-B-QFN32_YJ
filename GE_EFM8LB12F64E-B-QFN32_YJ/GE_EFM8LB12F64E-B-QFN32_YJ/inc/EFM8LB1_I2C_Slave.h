@@ -12,15 +12,6 @@
 //-----------------------------------------------------------------------------
 // Pin Definitions
 //-----------------------------------------------------------------------------
-#if 0
-SI_SBIT (LED1, SFR_P1, 4);             // LED green
-#define LED_ON   0
-#define LED_OFF  1
-
-SI_SBIT (DISP_EN, SFR_P2, 3);          // Display Enable
-#define DISP_BC_DRIVEN   0             // 0 = Board Controller drives display
-#define DISP_EFM8_DRIVEN 1             // 1 = EFM8 drives display
-#endif
 
 //-----------------------------------------------------------------------------
 // Global Constants

@@ -1,1 +1,9 @@
----- regDtl Matches (0 in 0 files) ----
+---- EEPROM_Buffer Matches (8 in 1 files) ----
+Interrupts.c (src) line 30 : uint8_t EEPROM_Buffer[] =
+SI_INTERRUPT in Interrupts.c (src) : 		t = EEPROM_Buffer[eepromAddress++];
+SI_INTERRUPT in Interrupts.c (src) : 		if(sizeof(EEPROM_Buffer) <= eepromAddress)
+SI_INTERRUPT in Interrupts.c (src) : 			t = EEPROM_Buffer[eepromAddress++];
+SI_INTERRUPT in Interrupts.c (src) : 			if(sizeof(EEPROM_Buffer) <= eepromAddress)
+SI_INTERRUPT in Interrupts.c (src) : 					eepromAddress = I2C1_slaveWriteData+128*EEPROM_Buffer[127];
+SI_INTERRUPT in Interrupts.c (src) : 				EEPROM_Buffer[eepromAddress++] = I2C1_slaveWriteData;
+SI_INTERRUPT in Interrupts.c (src) : 				if(sizeof(EEPROM_Buffer) <= eepromAddress)

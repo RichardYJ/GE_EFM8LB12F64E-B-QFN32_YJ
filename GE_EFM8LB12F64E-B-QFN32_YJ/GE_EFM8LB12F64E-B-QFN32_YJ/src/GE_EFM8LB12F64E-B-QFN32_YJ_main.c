@@ -1,60 +1,3 @@
-//-----------------------------------------------------------------------------
-// EFM8LB1_SMBus_MasterMultibyte.c
-//-----------------------------------------------------------------------------
-// Copyright 2014 Silicon Laboratories, Inc.
-// http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
-//
-// Program Description:
-//
-// Example software to demonstrate the SMBus interface in Master mode.
-// - Interrupt-driven SMBus implementation
-// - Only master states defined (no slave or arbitration)
-// - multiple-byte SMBus data holders used for each transmit and receive
-// - SCL frequency defined by <SMB_FREQUENCY> constant
-// - SMB0CN0_ARBLOST support included
-// - supports multiple-byte writes and multiple-byte reads
-//
-// Resources:
-//   SYSCLK - 24.5 MHz HFOSC0 / 1
-//   SMBus  - SMBus master, SCL = 10 kHz
-//   Timer1 - SMBus clock source
-//   Timer3 - SMBus SCL low timeout detection
-//   P0.0   - SMBus SDA
-//   P0.1   - SMBus SCL
-//   P1.4   - LED green
-//   P3.4   - Display enable
-//
-//-----------------------------------------------------------------------------
-// How To Test: EFM8LB1 STK (SMBus Master) + EFM8LB1 STK (SMBus Slave)
-//-----------------------------------------------------------------------------
-// 1) Connect the device first EFM8LB1 STK to second EFM8LB1 STK running the
-//    corresponding SMBus_Slave code.
-// 2) Place the switch in "AEM" mode.
-// 3) Connect the EFM8LB1 STK board to a PC using a mini USB cable.
-// 4) Compile and download code to the first EFM8LB1 STK board.
-//    In Simplicity Studio IDE, select Run -> Debug from the menu bar,
-//    click the Debug button in the quick menu, or press F11.
-// 5) Run the code.
-//    In Simplicity Studio IDE, select Run -> Resume from the menu bar,
-//    click the Resume button in the quick menu, or press F8.
-// 6) a. The test will indicate proper communication with the slave by
-//       toggling LED1 on and off each time a value is sent and received.
-//    b. The best method to view the proper functionality is to run to
-//       the indicated line of code in the TEST CODE section of main and
-//       view the SMB_DATA_IN and SMB_DATA_OUT variables in the Watch
-//       Window.
-//
-// Target:         EFM8LB1
-// Tool chain:     Generic
-//
-// Release 0.1 (ST)
-//    - Initial Revision
-//    - 06 MAR 2015
-//
-
-//-----------------------------------------------------------------------------
-// Includes
-//-----------------------------------------------------------------------------
 #include "bsp.h"
 #include "uart_1.h"
 #include "InitDevice.h"
@@ -73,6 +16,8 @@
 #define ONE ((uint16_t)1)
 #define SCALE                     100L // Scale for temp calculations
 #define ABS(num) (num < 0 ? -num: num)
+//data uint16_t START_ADDRESS = 0xf800;
+#define START_ADDRESS          0xf800
 
 
 extern uint8_t EEPROM_Buffer[];
@@ -100,6 +45,10 @@ uint8_t TARGET;                        // Target SMBus slave address
 SI_LOCATED_VARIABLE_NO_INIT(TEMPSENSOR_0C_LOW, uint8_t const, SI_SEG_CODE, TEMP_CAL_ADDRESS_LOW);
 SI_LOCATED_VARIABLE_NO_INIT(TEMPSENSOR_0C_HIGH, uint8_t const, SI_SEG_CODE, TEMP_CAL_ADDRESS_HIGH);
 
+//-----------------------------------------------------------------------------
+// Global Variables
+//-----------------------------------------------------------------------------
+SI_LOCATED_VARIABLE_NO_INIT(flash_write_array[512], uint8_t, SI_SEG_XDATA, START_ADDRESS);
 
 
 volatile bool SMB_BUSY;                 // Software flag to indicate when the
@@ -126,6 +75,7 @@ uint8_t sendDataCnt = 0;             // Transmit data counter. Count the Tx data
 bool CONV_COMPLETE = 0;                 // ADC result ready flag
 extern bool bTx_4th_byte_nack;
 uint32_t ADC_AVG = 0;                  // The Averaged ADC temp sensor result
+uint8_t test_write_buff[256] = {0xcc};
 
 // in a I2C transaction.
 
@@ -631,7 +581,7 @@ void test_tempsensor (void)
   // format the temperature calibration value
   tempsensor_0c = (TEMPSENSOR_0C_HIGH << 8) | TEMPSENSOR_0C_LOW;
 
-  while (1)                           // Spin forever
+//  while (1)                           // Spin forever
   {
     PCON0 |= PCON0_IDLE__IDLE;       // Put the CPU in Idle mode while waiting
     // for conversions to complete
@@ -951,10 +901,7 @@ void GE_set_polarity(void) {
 
 }
 
-//data uint16_t START_ADDRESS = 0xf800;
-#define START_ADDRESS          0xf800
 
-uint8_t test_write_buff[256] = {0xcc};
 void flash_program(void)
 {
 
@@ -1083,6 +1030,7 @@ void PIC_MAIN() {
 	uint16_t TotalError = 0;
 	int16_t section;
 	int16_t len_script;
+	uint16_t rValue;
 
 #if 0///**/
 	EN_1V0 = 0;
@@ -1441,15 +1389,64 @@ printf("Load Firmware End......");
 #endif
 #endif
 	printf("MCU START OK......");
-
-#if 1///**/
-
-flash_program();
+	LED1 = LED_ON;
 
 
-#else
+
+	FLASH_Read(flash_write_array, START_ADDRESS, sizeof(flash_write_array));
+
 	while (1)
 	{
+		switch(EEPROM_Buffer[78])
+		{
+		
+
+			case 2:
+				SMB0_I2C_MasterWrite( (EEPROM_Buffer[74]<<8)|EEPROM_Buffer[75], (EEPROM_Buffer[76]<<8)| EEPROM_Buffer[77] );
+				EEPROM_Buffer[78] = 0;	  //complete
+			break;
+
+			case 1:
+#if MY_PRINTF_EN == 1
+				printf("\r\n");
+				printf("zhuanfa 0x");
+				printf(EEPROM_Buffer[74]);
+				printf(EEPROM_Buffer[75]);
+				printf("\r\n");
+#endif                    
+				rValue = SMB0_I2C_MasterRead( (EEPROM_Buffer[74]<<8)|EEPROM_Buffer[75] );
+#if MY_PRINTF_EN == 1         
+				printf("read: ");
+				uart_send_hex16(rValue);			//tH);//
+				printf("\r\n");
+#endif
+				EEPROM_Buffer[76] = rValue >> 8;
+				EEPROM_Buffer[77] = rValue & 0x00ff;
+				EEPROM_Buffer[78] = 0;	  //complete
+			break;
+			
+			case 3:
+				EEPROM_Buffer[77] = flash_write_array[EEPROM_Buffer[75]];
+//				EEPROM_Buffer[77] = DATAEE_ReadByte(EEPROM_Buffer[76]);
+				EEPROM_Buffer[78] = 0 ;    //complete
+			break;
+			
+			case 4:
+				flash_write_array[EEPROM_Buffer[75]]=EEPROM_Buffer[77];
+				if(255==EEPROM_Buffer[75])
+				{
+					FLASH_PageErase(START_ADDRESS);
+					FLASH_Write(START_ADDRESS, flash_write_array, sizeof(flash_write_array)/2);
+				}
+				EEPROM_Buffer[78] = 0 ;    //complete
+			break;
+
+			default:
+				
+			break;
+		}
+
+#if 0		
 		if( EEPROM_Buffer[78] == 2 )				//write  xxxxxx11;2
 		{
 			GE_I2C2_ByteHLWrite( EEPROM_Buffer[74], EEPROM_Buffer[75], EEPROM_Buffer[76], EEPROM_Buffer[77] );
@@ -1475,6 +1472,10 @@ flash_program();
 			EEPROM_Buffer[77] = rValue & 0x00ff;
 			EEPROM_Buffer[78] = 0;    //complete
 		}
+#endif
+
+
+		
 #if 0		
 		x++;
 		if(x > 30000)	//history:	x>10 
@@ -1538,7 +1539,6 @@ flash_program();
 #endif
 	}
 
-#endif
 
 	while(1);
 	
@@ -1557,7 +1557,6 @@ flash_program();
 //
 //-----------------------------------------------------------------------------
 void main(void) {
-	volatile uint8_t dat;               // Test counter
 	volatile uint8_t data_count;        // SMB_DATA_IN and SMB_DATA_OUT counter
 	uint16_t i;                          // Dummy variable counters
 	volatile uint16_t sI2C_rd;
@@ -1566,7 +1565,6 @@ void main(void) {
 
 //	flash_test();
 //	flash_program();
-	FLASH_PageErase(START_ADDRESS);
 
 	enter_BusFreeMode_from_RESET();
 	UART1_initStdio(24500000, 115200);
@@ -1596,19 +1594,23 @@ void main(void) {
 
 	// TEST CODE----------------------------------------------------------------
 
-	dat = 0;                            // Output data counter
 	NUM_ERRORS = 0;                     // Error counter
 	{
 		IE_EA = 0;
 		SFRPAGE = PG3_PAGE;
 		I2C0CN0 &= ~I2C0CN0_BUSY__BMASK; 	   // Clear BUSY bit
-		I2C0FCN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
+//		I2C0FCN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
+	    I2C0CN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
+
 		IE_EA = 1;
 	}
 
 
+	FLASH_PageErase(START_ADDRESS);
 	flash_test();
 	test_tempsensor();
+
+//	flash_write_array[512]={0};
 
 	
 //	while (1) 
@@ -1622,18 +1624,12 @@ void main(void) {
 #endif
 
 		// SMBus Write Sequence
-#if 0
-		for (data_count = 0; data_count < NUM_BYTES_WR; data_count++)
-		{
-			SMB_DATA_OUT[data_count] = dat; // Define next outgoing byte
-			dat++;
-		}
-#else
+
 		SMB_DATA_OUT[0] = 0x98;
 		SMB_DATA_OUT[1] = 0x11;
 		SMB_DATA_OUT[2] = 0xab;
 		SMB_DATA_OUT[3] = 0xcd;
-#endif
+
 		TARGET = TARGET_ADDR;             // Target the Slave for next SMBus
 										  // transfer
 		SMB_Write();                     // Initiate SMBus write

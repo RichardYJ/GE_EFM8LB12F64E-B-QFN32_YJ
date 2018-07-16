@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 1   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE INITDEVICE
@@ -63,7 +63,7 @@ line level    source
   49   1              SFRPAGE = 0x00;
   50   1              P2MDOUT = P2MDOUT_B0__OPEN_DRAIN | P2MDOUT_B1__OPEN_DRAIN
   51   1                              | P2MDOUT_B2__OPEN_DRAIN | P2MDOUT_B3__PUSH_PULL
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 2   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 2   
 
   52   1                              | P2MDOUT_B4__OPEN_DRAIN | P2MDOUT_B5__OPEN_DRAIN
   53   1                              | P2MDOUT_B6__OPEN_DRAIN;
@@ -128,7 +128,7 @@ line level    source
  112   1      
  113   1              // $[CLKSEL - Clock Select]
  114   1              /***********************************************************************
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 3   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 3   
 
  115   1               - Clock derived from the Internal High Frequency Oscillator 0
  116   1               - SYSCLK is equal to selected clock source divided by 1
@@ -193,7 +193,7 @@ line level    source
  175   1               - P0.3 pin is skipped by the crossbar
  176   1               - P0.4 pin is skipped by the crossbar
  177   1               - P0.5 pin is skipped by the crossbar
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 4   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 4   
 
  178   1               - P0.6 pin is skipped by the crossbar
  179   1               - P0.7 pin is skipped by the crossbar
@@ -258,7 +258,7 @@ line level    source
  238   1              // $[P1MAT - Port 1 Match]
  239   1              // [P1MAT - Port 1 Match]$
  240   1      
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 5   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 5   
 
  241   1      }
  242          
@@ -323,7 +323,7 @@ line level    source
  301   1               ***********************************************************************/
  302   1              TL0 = (0x13 << TL0_TL0__SHIFT);
  303   1              // [TL0 - Timer 0 Low Byte]$
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 6   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 6   
 
  304   1      
  305   1              // $[TH1 - Timer 1 High Byte]
@@ -388,7 +388,7 @@ line level    source
  364   1              /***********************************************************************
  365   1               - Timer 3 Reload Low Byte = 0x9E
  366   1               ***********************************************************************/
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 7   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 7   
 
  367   1              TMR3RLL = (0x9E << TMR3RLL_TMR3RLL__SHIFT);
  368   1              // [TMR3RLL - Timer 3 Reload Low Byte]$
@@ -453,7 +453,7 @@ line level    source
  427          extern void SMBUS_0_enter_DefaultMode_from_BusFreeMode(void) {
  428   1              // $[SMB0FCN0 - SMBus0 FIFO Control 0]
  429   1              // [SMB0FCN0 - SMBus0 FIFO Control 0]$
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 8   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 8   
 
  430   1      
  431   1              // $[SMB0RXLN - SMBus0 Receive Length Counter]
@@ -518,7 +518,7 @@ line level    source
  490   1              // $[EIP1H - Extended Interrupt Priority 1 High]
  491   1              // [EIP1H - Extended Interrupt Priority 1 High]$
  492   1      
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 9   
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 9   
 
  493   1              // $[EIP1 - Extended Interrupt Priority 1 Low]
  494   1              // [EIP1 - Extended Interrupt Priority 1 Low]$
@@ -583,7 +583,7 @@ line level    source
  553   1              SBRLL1 = (0x96 << SBRLL1_BRL__SHIFT);
  554   1              // [SBRLL1 - UART1 Baud Rate Generator Low Byte]$
  555   1      
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 10  
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 10  
 
  556   1              // $[UART1LIN - UART1 LIN Configuration]
  557   1              // [UART1LIN - UART1 LIN Configuration]$
@@ -648,7 +648,7 @@ line level    source
  616   1              TMR4CN0 |= TMR4CN0_TR4_save;
  617   1              // [Timer Restoration]$
  618   1      
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 11  
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 11  
 
  619   1      }
  620          
@@ -713,7 +713,7 @@ line level    source
  679   1              /***********************************************************************
  680   1               - The ADC0 ground reference is the GND pin
  681   1               - The ADC0 voltage reference is the internal voltage reference
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 12  
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 12  
 
  682   1               - Power Up Delay Time = 0x03
  683   1               ***********************************************************************/
@@ -778,7 +778,7 @@ line level    source
  742   1      
  743   1              // $[TMR5CN1 - Timer 5 Control 1]
  744   1              // [TMR5CN1 - Timer 5 Control 1]$
-C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/18/2018 15:40:42 PAGE 13  
+C51 COMPILER V9.53.0.0   INITDEVICE                                                        01/23/2018 13:31:34 PAGE 13  
 
  745   1      
  746   1              // $[TMR5CN0 - Timer 5 Control]
