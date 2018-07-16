@@ -13,6 +13,11 @@
 typedef enum {
 	SLAVE_NORMAL_DATA, SLAVE_DATA_ADDRESS,
 } SLAVE_WRITE_DATA_TYPE;
+	
+extern volatile uint8_t nWR;
+uint8_t arr_GBG[50]={0};
+uint8_t iArry = 0;
+
 
 #if 1//开放就会影响SMBUS0?         第一次测试时SMBUS0停止了（不能确定），后面每次测试都是成功的，SMBUS0频率为10.008KHZ,LED1好像是不能点亮了。
 volatile uint8_t I2C1_slaveWriteData = 0x16;
@@ -598,6 +603,8 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
 						SMB0CN0_STO = 1; // Set SMB0CN0_STO to terminate transfer
 						SMB_BUSY = 0;// And free SMBus interface
 					}
+//					arr_GBG[iArry]={nWR};
+//					iArry++;
 				}
 				else {}                 // If this transfer is a READ,
 										// proceed with transfer without

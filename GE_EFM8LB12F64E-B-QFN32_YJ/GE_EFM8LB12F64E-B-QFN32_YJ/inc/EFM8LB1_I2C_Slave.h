@@ -30,7 +30,7 @@ SI_SBIT (DISP_EN, SFR_P2, 3);          // Display Enable
 #define  WRITE                    0x00 // SMBus WRITE command
 #define  READ                     0x01 // SMBus READ command
 
-#define  SLAVE_ADDR               0x10 //0xF0 // Device addresses (7 bits,
+#define  SLAVE_ADDR               0x50 //0xF0 // Device addresses (7 bits,
                                        // lsb is a don't care).
                                        // Set (SLAVE_ADDR>>1) to sfr I2C0SLAD
 

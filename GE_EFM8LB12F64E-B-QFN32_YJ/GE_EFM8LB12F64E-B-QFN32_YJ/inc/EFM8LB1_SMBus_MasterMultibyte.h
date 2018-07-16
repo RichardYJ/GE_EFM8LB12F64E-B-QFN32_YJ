@@ -37,7 +37,7 @@ SI_SBIT (DISP_EN, SFR_P3, 4);          // Display Enable
 #define  READ                     0x01 // SMBus READ command
 
 // Device addresses (7 bits, lsb is a don't care)
-#define  SLAVE_ADDR               0x10 // Device address for slave target
+#define  TARGET_ADDR               0x10 // Device address for slave target
 
 // Status vector - top 4 bits only
 #define  SMB_MTSTA                0xE0 // (MT) start transmitted
@@ -72,7 +72,6 @@ extern volatile bool SMB_RW;            // Software flag to indicate the
                                        // direction of the current transfer
 
 extern uint16_t NUM_ERRORS;            // Counter for the number of errors.
-extern uint8_t nWR;
 
 #endif // SMBUS_MASTER_MULTIBYTE_H_
 //-----------------------------------------------------------------------------
