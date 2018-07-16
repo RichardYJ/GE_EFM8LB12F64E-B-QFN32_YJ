@@ -22,20 +22,23 @@
 // useful place to disable the watchdog timer, which is enable by default
 // and may trigger before main() in some instances.
 //-----------------------------------------------------------------------------
-void SiLabs_Startup(void) {
-	// $[SiLabs Startup]
-	// [SiLabs Startup]$
+void SiLabs_Startup (void)
+{
+  // $[SiLabs Startup]
+  // [SiLabs Startup]$
 }
 
 //-----------------------------------------------------------------------------
 // main() Routine
 // ----------------------------------------------------------------------------
-int main(void) {
-	// Call hardware initialization routine
-	enter_DefaultMode_from_RESET();
-
-	while (1) {
-// $[Generated Run-time code]
-// [Generated Run-time code]$
-	}
+int main (void)
+{
+  // Call hardware initialization routine
+  enter_DefaultMode_from_RESET();
+  
+  while (1) 
+  {
+    // $[Generated Run-time code]
+    // [Generated Run-time code]$
+  }                             
 }
