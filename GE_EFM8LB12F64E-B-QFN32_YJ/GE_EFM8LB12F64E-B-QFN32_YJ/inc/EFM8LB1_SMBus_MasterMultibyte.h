@@ -15,7 +15,7 @@
 SI_SBIT (SDA, SFR_P1, 2);              // SMBus on P1.2
 SI_SBIT (SCL, SFR_P1, 3);              // and P1.3
 
-SI_SBIT (LED1, SFR_P1, 4);             // LED green
+SI_SBIT (LED1, SFR_P1, 6);             // LED green
 #define LED_ON   0
 #define LED_OFF  1
 
@@ -72,6 +72,7 @@ extern volatile bool SMB_RW;            // Software flag to indicate the
                                        // direction of the current transfer
 
 extern uint16_t NUM_ERRORS;            // Counter for the number of errors.
+
 
 #endif // SMBUS_MASTER_MULTIBYTE_H_
 //-----------------------------------------------------------------------------

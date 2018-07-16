@@ -46,11 +46,11 @@
     <property object="TIMER01_0" propertyId="timer01.timer0highbyte.timer0highbyte" value="56"/>
     <property object="TIMER01_0" propertyId="timer01.timer0lowbyte.timer0lowbyte" value="19"/>
     <property object="TIMER01_0" propertyId="timer01.timer0mode0:13bitcountertimer.timerinitvalue" value="1811"/>
-    <property object="TIMER01_0" propertyId="timer01.timer1highbyte.timer1highbyte" value="52"/>
+    <property object="TIMER01_0" propertyId="timer01.timer1highbyte.timer1highbyte" value="250"/>
     <property object="TIMER01_0" propertyId="timer01.timer1lowbyte.timer1lowbyte" value="52"/>
-    <property object="TIMER01_0" propertyId="timer01.timer1mode2:8bitcountertimerwithautoreload.targetoverflowfrequency" value="30000"/>
+    <property object="TIMER01_0" propertyId="timer01.timer1mode2:8bitcountertimerwithautoreload.targetoverflowfrequency" value="1048575"/>
     <property object="TIMER01_0" propertyId="timer01.timer1mode2:8bitcountertimerwithautoreload.timerinitvalue" value="52"/>
-    <property object="TIMER01_0" propertyId="timer01.timer1mode2:8bitcountertimerwithautoreload.timerreloadvalue" value="52"/>
+    <property object="TIMER01_0" propertyId="timer01.timer1mode2:8bitcountertimerwithautoreload.timerreloadvalue" value="250"/>
     <property object="TIMER16_2" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER16_3" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER16_3" propertyId="timer16.control.runcontrol" value="Start"/>

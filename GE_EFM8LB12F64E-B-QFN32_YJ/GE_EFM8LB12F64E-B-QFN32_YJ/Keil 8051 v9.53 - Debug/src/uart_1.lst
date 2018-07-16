@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 1   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE UART_1
@@ -63,7 +63,7 @@ line level    source
   47   1        // value to maximize precision.
   48   1        // See reference manual for calculation details
   49   1        min_presc = ((*((uint16_t*)(&sysclk)) >> 1) + baudrate) / baudrate; // calculate minimum prescaler neces
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 2   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 2   
 
              -sary
   50   1        for(i = 0; i < NUM_PRESC; ++i)
@@ -128,7 +128,7 @@ line level    source
  108   1        DECL_PAGE;
  109   1        SET_PAGE(UART1_SFR_PAGE);
  110   1        SCON1_TI = 1;
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 3   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 3   
 
  111   1        RESTORE_PAGE;
  112   1      }
@@ -193,7 +193,7 @@ line level    source
  171   1        uint8_t val;
  172   1        DECL_PAGE;
  173   1        SET_PAGE(UART1_SFR_PAGE);
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 4   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 4   
 
  174   1        val = (SCON1 & (UART1_RXOVR_EF | UART1_PARITY_EF));
  175   1        RESTORE_PAGE;
@@ -258,7 +258,7 @@ line level    source
  234   1        txcnt = (UART1FCT & UART1FCT_TXCNT__FMASK) >> UART1FCT_TXCNT__SHIFT;
  235   1        RESTORE_PAGE;
  236   1        return txcnt;
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 5   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 5   
 
  237   1      }
  238          
@@ -323,7 +323,7 @@ line level    source
  297          
  298          uint8_t UART1_getAutobaudIntFlag(void)
  299          {
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 6   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 6   
 
  300   1        uint8_t val;
  301   1        DECL_PAGE;
@@ -388,7 +388,7 @@ line level    source
  360   1        SMOD1 = SMOD1_SDL__8_BITS | stoplen | featbit | partype | mcen;
  361   1        UART1LIN = (UART1LIN_AUTOBDE__ENABLED | UART1LIN_SYNCDIE__ENABLED);
  362   1        SBCON1 = (SBCON1_BREN__ENABLED | presc);
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 7   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 7   
 
  363   1        RESTORE_PAGE;
  364   1      }
@@ -453,7 +453,7 @@ line level    source
  423   1      
  424   1        UART1FCN1 &= ~(UART1FCN1_RFRQ__BMASK
  425   1                       | UART1FCN1_RXTO__FMASK
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 8   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 8   
 
  426   1                       | UART1FCN1_RIE__BMASK);
  427   1        UART1FCN1 |= (UART1FCN1_RFRQ__SET
@@ -518,7 +518,7 @@ line level    source
                       {
                         UART1_receiveCompleteCb();
                       }
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 9   
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 9   
 
                     }
                   }
@@ -583,7 +583,7 @@ line level    source
                 return txRemaining;
               }
               
-C51 COMPILER V9.53.0.0   UART_1                                                            01/05/2018 17:09:52 PAGE 10  
+C51 COMPILER V9.53.0.0   UART_1                                                            01/08/2018 12:32:09 PAGE 10  
 
               uint8_t UART1_rxBytesRemaining(void)
               {

@@ -17,6 +17,7 @@ typedef enum {
 extern volatile uint8_t nWR;
 uint8_t arr_GBG[50]={0};
 uint8_t iArry = 0;
+bool bTx_4th_byte_nack = false;
 
 
 #if 1//开放就会影响SMBUS0?         第一次测试时SMBUS0停止了（不能确定），后面每次测试都是成功的，SMBUS0频率为10.008KHZ,LED1好像是不能点亮了。
@@ -604,8 +605,6 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
 						SMB0CN0_STO = 1; // Set SMB0CN0_STO to terminate transfer
 						SMB_BUSY = 0;// And free SMBus interface
 					}
-//					arr_GBG[iArry]={nWR};
-//					iArry++;
 				}
 				else {}                 // If this transfer is a READ,
 										// proceed with transfer without
@@ -615,6 +614,12 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
 			}
 			else                       // If slave NACK,
 			{
+				if(bTx_4th_byte_nack)
+				{
+					SMB0CN0_STO = 1; // Set SMB0CN0_STO to terminate transfer
+					SMB_BUSY = 0;// And free SMBus interface
+					break;
+				}
 				SMB0CN0_STO = 1;        // Send STOP condition, followed
 				SMB0CN0_STA = 1;// By a START
 				NUM_ERRORS++;// Indicate error
@@ -666,7 +671,7 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
 		SMB_BUSY = 0;// Free SMBus
 
 		FAIL = 0;
-		LED1 = 0;
+//		LED1 = 0;
 
 		NUM_ERRORS++;// Indicate an error occurred
 	}

@@ -108,6 +108,8 @@ bool dataReady = 0;                    // Set to '1' by the I2C ISR
 bool txDataReady = 1;                 // Set to '1' indicate that Tx data ready.
 uint8_t sendDataValue = 0;          // Transmit the data value 0-255 repeatedly.
 uint8_t sendDataCnt = 0;             // Transmit data counter. Count the Tx data
+extern bool bTx_4th_byte_nack;
+
 // in a I2C transaction.
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -631,9 +633,239 @@ void SiLabs_Startup(void) {
 //-----------------------------------------------------------------------------
 // Function Prototypes
 //-----------------------------------------------------------------------------
-void SMB_Write(void);
-void SMB_Read(void);
+bool SMB_Write(void);
+bool SMB_Read(void);
 void T0_Waitms(uint8_t ms);
+
+void showReg()
+{
+	uint8_t i =0;
+	struct tagFCT{
+		uint8_t smbFCT;
+		uint8_t strREG[20];//[20]
+	}regDtl[20]={0,{0}};
+
+	regDtl[i].smbFCT = SMB0CF;
+	strcpy(regDtl[i].strREG,"SMB0CF");
+	i++;
+	regDtl[i].smbFCT = SMB0TC;
+	strcpy(regDtl[i].strREG,"SMB0TC");
+	i++;
+	regDtl[i].smbFCT = SMB0CN0;
+	strcpy(regDtl[i].strREG,"SMB0CN0");
+	i++;
+	regDtl[i].smbFCT = SMB0ADR;
+	strcpy(regDtl[i].strREG,"SMB0ADR");
+	i++;
+	regDtl[i].smbFCT = SMB0ADM;
+	strcpy(regDtl[i].strREG,"SMB0ADM");
+	i++;
+	regDtl[i].smbFCT = SMB0DAT;
+	strcpy(regDtl[i].strREG,"SMB0DAT");
+	i++;
+	regDtl[i].smbFCT = SMB0FCN0;
+	strcpy(regDtl[i].strREG,"SMB0FCN0");
+	i++;
+	regDtl[i].smbFCT = SMB0FCN1;
+	strcpy(regDtl[i].strREG,"SMB0FCN1");
+	i++;
+	regDtl[i].smbFCT = SMB0RXLN;
+	strcpy(regDtl[i].strREG,"SMB0RXLN");
+	i++;
+	regDtl[i].smbFCT = SMB0FCT;
+	strcpy(regDtl[i].strREG,"SMB0FCT");
+	i++;
+	regDtl[i].smbFCT = P1MASK;
+	strcpy(regDtl[i].strREG,"P1MASK");
+	i++;
+	regDtl[i].smbFCT = P1MAT;
+	strcpy(regDtl[i].strREG,"P1MAT");
+	i++;
+	regDtl[i].smbFCT = P1;
+	strcpy(regDtl[i].strREG,"P1");
+	i++;
+	regDtl[i].smbFCT = P1MDIN;
+	strcpy(regDtl[i].strREG,"P1MDIN");
+	i++;
+	regDtl[i].smbFCT = P1MDOUT;
+	strcpy(regDtl[i].strREG,"P1MDOUT");
+	i++;
+	regDtl[i].smbFCT = P1SKIP;
+	strcpy(regDtl[i].strREG,"P1SKIP");
+	i++;
+
+}
+
+
+
+void rst(void)
+{
+	uint8_t i=9;
+
+//			showReg();
+
+
+
+
+			P1SKIP |= 1<<3|1<<2;
+//			P1SKIP &=~(1<<2);
+			P1MDIN =0xff;
+//			showReg();
+			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
+					| P1MDOUT_B2__PUSH_PULL | P1MDOUT_B3__PUSH_PULL
+					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
+					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
+			P1|=1<<2;
+//			showReg();
+
+#if 0
+			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
+					| P1MDOUT_B2__OPEN_DRAIN | P1MDOUT_B3__PUSH_PULL
+					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
+					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
+			P1|=(1<<2);
+			showReg();
+//			P1&=~(1<<6);
+//			P1|=(1<<6);
+#endif
+			
+			while(1)
+			{
+//				i = P1;
+//				i = (0 == i&(1<<2));
+				if((0 == (P1&(1<<2)))|| 0 ==i--)//
+				{
+//					i =9;
+					break;
+				}
+				P1&=~(1<<3);//SCL L
+	//			P1&=~(1<<2);	//SDA L
+				_nop_();
+				P1|=(1<<3);	//SCL H
+				_nop_();
+
+			}
+//			showReg();
+
+			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
+					| P1MDOUT_B2__PUSH_PULL | P1MDOUT_B3__PUSH_PULL
+					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
+					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
+//			showReg();
+
+			{//stop
+				P1&=~(1<<3);
+				P1&=~(1<<2);
+				_nop_();
+				P1|=(1<<3);
+				_nop_();
+				P1|=(1<<2);
+				_nop_();
+			}
+//			showReg();
+#if 1			
+			P1SKIP &= ~(1<<2|1<<3);
+			
+			P1MDOUT = P1MDOUT_B0__OPEN_DRAIN | P1MDOUT_B1__OPEN_DRAIN
+					| P1MDOUT_B2__OPEN_DRAIN | P1MDOUT_B3__OPEN_DRAIN
+					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
+					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
+
+			SMB0CF &= ~0x80;				 // Reset communication
+			SMB0CF |= 0x80;
+			SMB0CN0_STA = 0;
+			SMB0CN0_STO = 0;
+			SMB0CN0_ACK = 0;
+			
+			SMB_BUSY = 0;// Free SMBus
+
+
+#endif			
+//			showReg();
+
+
+}
+
+//-----------------------------------------------------------------------------
+// SMB_Write
+//-----------------------------------------------------------------------------
+//
+// Return Value : None
+// Parameters   : None
+//
+// Writes a single byte to the slave with address specified by the <TARGET>
+// variable.
+// Calling sequence:
+// 1) Write target slave address to the <TARGET> variable
+// 2) Write outgoing data to the <SMB_DATA_OUT> variable array
+// 3) Call SMB_Write()
+//
+//-----------------------------------------------------------------------------
+bool SMB_Write(void) {
+	uint32_t lcnt = 0;
+
+//	smbFCT[0] = SMB0CN0;
+	while (SMB_BUSY)
+		;                    // Wait for SMBus to be free.
+	SMB_BUSY = 1;                       // Claim SMBus (set to busy)
+	SMB_RW = 0;                         // Mark this transfer as a WRITE
+	SMB0CN0_STA = 1;                    // Start transfer
+	while (SMB_BUSY)
+	{
+		lcnt++;
+		if(lcnt>0xffff)
+		{
+
+			lcnt = 0;
+			rst();
+			return false;
+		}
+	}
+	return true;                    // Wait for transfer to complete
+}
+
+//-----------------------------------------------------------------------------
+// SMB_Read
+//-----------------------------------------------------------------------------
+//
+// Return Value : None
+// Parameters   : None
+//
+// Reads a single byte from the slave with address specified by the <TARGET>
+// variable.
+// Calling sequence:
+// 1) Write target slave address to the <TARGET> variable
+// 2) Call SMB_Write()
+// 3) Read input data from <SMB_DATA_IN> variable array
+//
+//-----------------------------------------------------------------------------
+bool SMB_Read(void) {
+	uint32_t lcnt = 0;
+
+	while (SMB_BUSY)
+		;                    // Wait for bus to be free.
+	SMB_BUSY = 1;                       // Claim SMBus (set to busy)
+	SMB_RW = 1;                         // Mark this transfer as a READ
+
+	SMB0CN0_STA = 1;                    // Start transfer
+#if 0
+	while (SMB_BUSY)
+		;                    // Wait for transfer to complete
+#else
+	while (SMB_BUSY)
+	{
+		lcnt++;
+		if(lcnt>0xffff)
+		{
+
+			lcnt = 0;
+			rst();
+			return false;
+		}
+	}
+#endif
+	return true;
+}
 
 bool SMB0_I2C_MasterWrite(uint16_t RegAddr, uint16_t RegValue) {
 	nWR = 4;
@@ -644,19 +876,24 @@ bool SMB0_I2C_MasterWrite(uint16_t RegAddr, uint16_t RegValue) {
 	SMB_DATA_OUT[3] = RegValue & 0xff;
 //	SMB_DATA_OUT[3] = ((RegValue >> 8) & 0xff);
 //	SMB_DATA_OUT[2] = (RegValue);
-	SMB_Write();					 // Initiate SMBus write
-	return 1;
+	while(!SMB_Write())printf("SMB0_I2C_MasterWrite  ERROR!!!!!!");					 // Initiate SMBus write
+	return true;
 }
 
 uint16_t SMB0_I2C_MasterRead(uint16_t RegAddr) {
 	uint16_t sRes;
-	nWR = 2;
+start:	nWR = 2;
 	TARGET = TARGET_ADDR;			 // Target the Slave for next SMBus
 	SMB_DATA_OUT[0] = (RegAddr >> 8) & 0xff;
 	SMB_DATA_OUT[1] = RegAddr & 0xff;
 	SMB_Write();					 // Initiate SMBus write
 	TARGET = TARGET_ADDR;
-	SMB_Read();
+//	SMB_Read();
+	while(!SMB_Read())
+	{
+		printf("SMB0_I2C_MasterRead  ERROR!!!!!!");					 // Initiate SMBus write
+		goto start;
+	}
 	sRes = (SMB_DATA_IN[0] << 8) & 0xff00 | SMB_DATA_IN[1] & 0xff;
 //	sRes = SMB_DATA_IN[0] << 8 | SMB_DATA_IN[1];
 	return sRes;
@@ -782,7 +1019,12 @@ void PIC_MAIN() {
 
 	b_data = (int*) &fw_content[0]; //point to the program memory table:	fw_content
 
-	{
+
+	
+	TotalError = SMB0_I2C_MasterRead(0);
+	printf("0地址值为：0x%04x", TotalError);
+#if 0	
+	if(0){
 	//	TotalError = sizeof(uint32_t);
 		TotalError = SMB0_I2C_MasterRead(0);
 		printf("0地址值为：0x%04x", TotalError);
@@ -798,6 +1040,7 @@ void PIC_MAIN() {
 //			T0_Waitms(250);
 		}
 	}
+#endif
 
 	len = get_int32(b_data + 6);  // 0x00, 0x00, 0x15, 0x64	   12/2
 #if MY_PRINTF_EN == 1
@@ -858,12 +1101,10 @@ void PIC_MAIN() {
 #endif
 
 #if 1
-	SMB0_I2C_MasterWrite(0x980d>>4, 0x0888>>4);		//software reset
-//	SMB0_I2C_MasterWrite(0x980d, 0x0999);		//software reset
-//	SMB0_I2C_MasterWrite(0x980d, 0x0888);		//software reset
-//	SMB0_I2C_MasterWrite(0x980d, 0x0777);		//software reset
-
-//	SMB0_I2C_MasterWrite(0x980d, 0x0000);		//software reset
+	bTx_4th_byte_nack = true;
+	SMB0_I2C_MasterWrite(0x980d, 0x0888);		//software reset
+	SMB0_I2C_MasterWrite(0x980d, 0x0000);		//software reset
+	bTx_4th_byte_nack = false;
 
 	T0_Waitms(500);
 #endif
@@ -1294,7 +1535,7 @@ void main(void) {
 
 #endif
 		{
-			LED1 = !LED1;
+//			LED1 = !LED1;
 		}
 
 		// Run to here to view the SMB_DATA_IN and SMB_DATA_OUT variable arrays
@@ -1312,242 +1553,6 @@ void main(void) {
 //-----------------------------------------------------------------------------
 
 
-void showReg()
-{
-	uint8_t i =0;
-	struct tagFCT{
-		uint8_t smbFCT;
-		uint8_t strREG[20];//[20]
-	}regDtl[20]={0,{0}};
-
-	regDtl[i].smbFCT = SMB0CF;
-	strcpy(regDtl[i].strREG,"SMB0CF");
-	i++;
-	regDtl[i].smbFCT = SMB0TC;
-	strcpy(regDtl[i].strREG,"SMB0TC");
-	i++;
-	regDtl[i].smbFCT = SMB0CN0;
-	strcpy(regDtl[i].strREG,"SMB0CN0");
-	i++;
-	regDtl[i].smbFCT = SMB0ADR;
-	strcpy(regDtl[i].strREG,"SMB0ADR");
-	i++;
-	regDtl[i].smbFCT = SMB0ADM;
-	strcpy(regDtl[i].strREG,"SMB0ADM");
-	i++;
-	regDtl[i].smbFCT = SMB0DAT;
-	strcpy(regDtl[i].strREG,"SMB0DAT");
-	i++;
-	regDtl[i].smbFCT = SMB0FCN0;
-	strcpy(regDtl[i].strREG,"SMB0FCN0");
-	i++;
-	regDtl[i].smbFCT = SMB0FCN1;
-	strcpy(regDtl[i].strREG,"SMB0FCN1");
-	i++;
-	regDtl[i].smbFCT = SMB0RXLN;
-	strcpy(regDtl[i].strREG,"SMB0RXLN");
-	i++;
-	regDtl[i].smbFCT = SMB0FCT;
-	strcpy(regDtl[i].strREG,"SMB0FCT");
-	i++;
-	regDtl[i].smbFCT = P1MASK;
-	strcpy(regDtl[i].strREG,"P1MASK");
-	i++;
-	regDtl[i].smbFCT = P1MAT;
-	strcpy(regDtl[i].strREG,"P1MAT");
-	i++;
-	regDtl[i].smbFCT = P1;
-	strcpy(regDtl[i].strREG,"P1");
-	i++;
-	regDtl[i].smbFCT = P1MDIN;
-	strcpy(regDtl[i].strREG,"P1MDIN");
-	i++;
-	regDtl[i].smbFCT = P1MDOUT;
-	strcpy(regDtl[i].strREG,"P1MDOUT");
-	i++;
-	regDtl[i].smbFCT = P1SKIP;
-	strcpy(regDtl[i].strREG,"P1SKIP");
-	i++;
-
-}
-
-
-
-void rst(void)
-{
-
-#if 0
-			SMB0FCN0|=0x40;
-			SMB0CN0=0;
-
-
-			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__DISABLED
-					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
-					| XBR2_URT1CTSE__DISABLED;
-			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
-					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-
-			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
-					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
-					| XBR2_URT1CTSE__DISABLED;						
-			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__ENABLED
-					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-
-			SMB0CF &= ~0x80;                 // Reset communication
-			SMB0CF |= 0x80;
-			SMB0CN0_STA = 0;
-			SMB0CN0_STO = 0;
-			SMB0CN0_ACK = 0;
-			SMB_BUSY = 0;// Free SMBus
-
-
-			
-			SMB0CF &= ~0x80;                 // Reset communication
-			SMB0CF |= 0x80;
-			SMB0CN0_STO = 1;
-#endif
-
-			showReg();
-
-/*			
-			smbFCT[i++] = SMB0TC;
-			smbFCT[i++] = SMB0CN0;
-			smbFCT[i++] = SMB0ADR;
-			smbFCT[i++] = SMB0ADM;
-			smbFCT[i++] = SMB0DAT;
-			smbFCT[i++] = SMB0FCN0;
-			smbFCT[i++] = SMB0FCN1;
-			smbFCT[i++] = SMB0RXLN;
-			smbFCT[i++] = SMB0FCT;
-
-			smbFCT[i++] = P1MASK;
-			smbFCT[i++] = P1MAT;
-			smbFCT[i++] = P1;
-			smbFCT[i++] = P1MDIN;
-			smbFCT[i++] = P1MDOUT;
-			smbFCT[i++] = P1SKIP;
-*/
-			SMB0CF &= ~0x80;
-#if 0 			
-			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
-					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
-					| XBR2_URT1CTSE__DISABLED;
-			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
-					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-#else
-			P1SKIP |= 1<<2|1<<3;
-			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
-					| P1MDOUT_B2__PUSH_PULL | P1MDOUT_B3__PUSH_PULL
-					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
-					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
-#endif
-			P1&=~(1<<6);
-			P1|=(1<<6);
-
-			
-
-//			P1&=~(1<<3);
-			P1&=~(1<<3);
-			P1&=~(1<<2);
-			_nop_();
-			P1|=(1<<3);
-			_nop_();
-			P1&=~(1<<3);
-			P1&=~(1<<2);
-			_nop_();
-			P1|=(1<<3);
-			_nop_();
-			P1|=(1<<2);
-#if 1			
-//			smbFCT[i++] = P1;
-			P1SKIP &= ~(1<<2|1<<3);
-			
-			P1MDOUT = P1MDOUT_B0__OPEN_DRAIN | P1MDOUT_B1__OPEN_DRAIN
-					| P1MDOUT_B2__OPEN_DRAIN | P1MDOUT_B3__OPEN_DRAIN
-					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
-					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
-
-			SMB0CF &= ~0x80;				 // Reset communication
-			SMB0CF |= 0x80;
-			SMB0CN0_STA = 0;
-			SMB0CN0_STO = 0;
-			SMB0CN0_ACK = 0;
-			
-			SMB_BUSY = 0;// Free SMBus
-
-
-#endif			
-			showReg();
-
-
-}
-//-----------------------------------------------------------------------------
-// SMB_Write
-//-----------------------------------------------------------------------------
-//
-// Return Value : None
-// Parameters   : None
-//
-// Writes a single byte to the slave with address specified by the <TARGET>
-// variable.
-// Calling sequence:
-// 1) Write target slave address to the <TARGET> variable
-// 2) Write outgoing data to the <SMB_DATA_OUT> variable array
-// 3) Call SMB_Write()
-//
-//-----------------------------------------------------------------------------
-void SMB_Write(void) {
-	uint32_t lcnt = 0;
-	
-
-//	smbFCT[0] = SMB0CN0;
-	while (SMB_BUSY)
-		;                    // Wait for SMBus to be free.
-	SMB_BUSY = 1;                       // Claim SMBus (set to busy)
-	SMB_RW = 0;                         // Mark this transfer as a WRITE
-	SMB0CN0_STA = 1;                    // Start transfer
-	while (SMB_BUSY)
-	{
-		lcnt++;
-		if(lcnt>0xffff)
-		{
-
-			lcnt = 0;
-			rst();
-		}
-	}
-		;                    // Wait for transfer to complete
-}
-
-//-----------------------------------------------------------------------------
-// SMB_Read
-//-----------------------------------------------------------------------------
-//
-// Return Value : None
-// Parameters   : None
-//
-// Reads a single byte from the slave with address specified by the <TARGET>
-// variable.
-// Calling sequence:
-// 1) Write target slave address to the <TARGET> variable
-// 2) Call SMB_Write()
-// 3) Read input data from <SMB_DATA_IN> variable array
-//
-//-----------------------------------------------------------------------------
-void SMB_Read(void) {
-	while (SMB_BUSY)
-		;                    // Wait for bus to be free.
-	SMB_BUSY = 1;                       // Claim SMBus (set to busy)
-	SMB_RW = 1;                         // Mark this transfer as a READ
-
-	SMB0CN0_STA = 1;                    // Start transfer
-
-	while (SMB_BUSY)
-		;                    // Wait for transfer to complete
-}
 
 //-----------------------------------------------------------------------------
 // T0_Waitms

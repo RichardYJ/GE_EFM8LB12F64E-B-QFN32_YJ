@@ -1,39 +1,11 @@
----- XBR Matches (76 in 2 files) ----
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 		XBR2 = XBR2_XBARE__ENABLED;      // Enable Crossbar
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 		XBR2 = XBR2_XBARE__DISABLED;     // Disable Crossbar
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1CTSE__DISABLED;
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1CTSE__DISABLED;						
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__ENABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR2_URT1CTSE__DISABLED;
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-SMB_Write in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 					| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// $[XBR2 - Port I/O Crossbar 2]
-PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// [XBR2 - Port I/O Crossbar 2]$
-PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// $[XBR0 - Port I/O Crossbar 0]
-PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// [XBR0 - Port I/O Crossbar 0]$
-PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// $[XBR1 - Port I/O Crossbar 1]
-PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// [XBR1 - Port I/O Crossbar 1]$
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// $[XBR2 - Port I/O Crossbar 2]
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 			| XBR2_URT1E__ENABLED | XBR2_URT1RTSE__DISABLED
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 			| XBR2_URT1CTSE__DISABLED;
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// [XBR2 - Port I/O Crossbar 2]$
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// $[XBR0 - Port I/O Crossbar 0]
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__ENABLED
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 			| XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 			| XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// [XBR0 - Port I/O Crossbar 0]$
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// $[XBR1 - Port I/O Crossbar 1]
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// [XBR1 - Port I/O Crossbar 1]$
+---- LED1 Matches (14 in 4 files) ----
+EFM8LB1_I2C_Slave.h (inc) line 16 : SI_SBIT (LED1, SFR_P1, 4);             // LED green
+EFM8LB1_SMBus_MasterMultibyte.h (inc) line 18 : SI_SBIT (LED1, SFR_P1, 4);             // LED green
+GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) line 41 : //       toggling LED1 on and off each time a value is sent and received.
+PIC_MAIN in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			LED1 = !LED1;
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 	LED1 = LED_OFF;
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			LED1 = LED_OFF;
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : //					LED1 = !LED1;
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : //					LED1 = !LED1;
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 			LED1 = !LED1;
+SI_INTERRUPT in Interrupts.c (src) : 		LED1 = 0;
