@@ -48,7 +48,7 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
             {
                if (SMB_RW == WRITE)    // If this transfer is a WRITE,
                {
-                  if (sent_byte_counter <= NUM_BYTES_WR)
+				  if (sent_byte_counter <= nWR /*NUM_BYTES_WR*/)
                   {
                      // send data byte
                      SMB0DAT = SMB_DATA_OUT[sent_byte_counter-1];

@@ -117,7 +117,7 @@ uint16_t SMB0_I2C_MasterRead(uint16_t RegAddr) {
 }
 
 
-
+#if 0
 //-----------------------------------------------------------------------------
 // SiLabs_Startup() Routine
 // ----------------------------------------------------------------------------
@@ -144,7 +144,6 @@ void main (void)
    volatile uint8_t dat;               // Test counter
    volatile uint8_t data_count;        // SMB_DATA_IN and SMB_DATA_OUT counter
    uint16_t i;                          // Dummy variable counters
-   volatile uint16_t sI2C_rd;
 
    enter_BusFreeMode_from_RESET();
 
@@ -176,7 +175,6 @@ void main (void)
 
    while (1)
    {
-#if 0   
       // SMBus Write Sequence
 #if 0
       for (data_count = 0; data_count < NUM_BYTES_WR; data_count++)
@@ -217,35 +215,8 @@ void main (void)
       }
       else
 #endif
-#else
-		for (i = 0; i < 255; i++) 
-		{
-#if 1		
-			sI2C_rd = SMB0_I2C_MasterRead(0x00);
-			SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
-
-//			if (0x204c != sI2C_rd)
-			for(i=0;i<32768;i++);
-			LED1 = !LED1;
-//				printf(					"SMB0_I2C    ===============Read================== 0x0 ============Error!!!->0x%02X \r\n ",					sI2C_rd);
-//			else
-//			printf("SMB0_I2C Read 0x0 OK  !\r\n");
-#endif
-//			if (1 == SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/)) {
-//				sI2C_rd = SMB0_I2C_MasterRead(0x9811);
-//				if (i != sI2C_rd)
-//					LED1 = !LED1;
-//					printf(						"SMB0_I2C ================Write========================= 0x9811 ============Error!!!\r\n");
-//				else {
-//					LED1 = !LED1;
-//					printf("SMB0_I2C Write & Read 0x9811 OK !\r\n");
-//				}
-		}
-
-
-#endif
       {
-//         LED1 = !LED1;
+         LED1 = !LED1;
       }
 
       // Run to here to view the SMB_DATA_IN and SMB_DATA_OUT variable arrays

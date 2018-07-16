@@ -45,9 +45,9 @@ SI_SBIT (DISP_EN, SFR_P3, 4);          // Display Enable
 #define  SMB_MRDB                 0x80 // (MR) data byte received
 // End status vector definition
 
-#define  NUM_BYTES_WR                4 // Number of bytes to write
-                                       // Master -> Slave
-#define  NUM_BYTES_RD                3 // Number of bytes to read
+#define  NUM_BYTES_WR                4  	// Number of bytes to write		//I2C2_WRITE D¡ä 5 bytes
+                                       			// Master -> Slave				//I2C2_READ	 D¡ä3+?¨¢3
+#define  NUM_BYTES_RD                2 // Number of bytes to read		
                                        // Master <- Slave
 
 //-----------------------------------------------------------------------------
@@ -72,6 +72,7 @@ extern volatile bool SMB_RW;            // Software flag to indicate the
                                        // direction of the current transfer
 
 extern uint16_t NUM_ERRORS;            // Counter for the number of errors.
+extern uint8_t nWR;
 
 #endif // SMBUS_MASTER_MULTIBYTE_H_
 //-----------------------------------------------------------------------------
