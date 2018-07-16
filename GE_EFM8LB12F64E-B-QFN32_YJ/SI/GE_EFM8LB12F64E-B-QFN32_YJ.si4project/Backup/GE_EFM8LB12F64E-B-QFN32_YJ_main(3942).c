@@ -68,6 +68,8 @@
 //#define TEST_I2C2
 #define MY_PRINTF_EN 1
 #define DYCALCC 1
+#define uart_send_char printf
+#define uart_send_byte printf
 #define ONE ((uint16_t)1)
 
 extern uint8_t EEPROM_Buffer[];
@@ -984,8 +986,8 @@ void PIC_MAIN() {
 		if(0x204c!=TotalError)
 			printf("\r\n0地址值为：0x%04x\r\n", TotalError);
 	}while(0);
-#if 0//test	
-	if(1){
+#if 0	
+	if(0){
 	//	TotalError = sizeof(uint32_t);
 		TotalError = SMB0_I2C_MasterRead(0);
 		printf("0地址值为：0x%04x", TotalError);
@@ -994,17 +996,15 @@ void PIC_MAIN() {
 		TotalError = SMB0_I2C_MasterRead(0x9811);
 		printf("0x9811地址值为：0x%04x", TotalError);
 		TotalError = 0;
-		SMB0_I2C_MasterWrite(0x9f0f, 0x800c);
-		LED1 = !LED1;
 		while(1)
 		{
-			
-			TotalError = SMB0_I2C_MasterRead(0x9f0f);
-			printf("0x9f0f地址值为：0x%04x", TotalError);
+			SMB0_I2C_MasterWrite(0x9811, 0xabcd);
+			LED1 = !LED1;
 //			T0_Waitms(250);
 		}
 	}
 #endif
+	TotalError = 0;
 
 	len = get_int32(b_data + 6);  // 0x00, 0x00, 0x15, 0x64	   12/2
 #if MY_PRINTF_EN == 1
@@ -1073,15 +1073,6 @@ void PIC_MAIN() {
 	T0_Waitms(500);
 #endif
 
-	do{ 
-		TotalError = SMB0_I2C_MasterRead(0);
-		if(0x204c!=TotalError)
-			printf("\r\n0地址值为：0x%04x\r\n", TotalError);
-		else
-			break;
-	}while(1);
-	TotalError = 0;
-
 #if 1    
 	//golden eagle?firmware?????20170330
 
@@ -1096,21 +1087,13 @@ void PIC_MAIN() {
 		for (i = 0; i < 12; i++) //数据搬到 ramAddr 地址
 				{
 #if MY_PRINTF_EN == 1
-			printf("ramAddr=");
-			tH = ramAddr >> 16;
-			tL = ramAddr & 0xFFFF;
-			printf("%04x", tH);
-			printf("%04x", tL);
-			printf("\r\n");
+			printf("\r\n ramAddr=");
+			printf("0x%08x", ramAddr);
 #endif            
 			mdioData = get_int16(b_data + dataAddr);
 #if MY_PRINTF_EN == 1
-			printf("mdioData=");
-			tH =  mdioData>> 16;
-			tL =  mdioData& 0xFFFF;
-			printf("%04x", tH);
-			printf("%04x", tL);
-			printf("\r\n");
+			printf("\r\n mdioData=");
+			printf("0x%08x", mdioData);
 #endif            
 
 			SMB0_I2C_MasterWrite(FW_regAddr_base[0] + i, mdioData);
@@ -1122,10 +1105,7 @@ void PIC_MAIN() {
 
 #if MY_PRINTF_EN == 1
 		printf("checksum =");
-		tH =  checkSum>> 16;
-		tL =  checkSum& 0xFFFF;
-		printf("%04x", tH);
-		printf("%04x", tL);
+		printf("0x%08x", checkSum);
 		printf("\r\n");
 #endif
 		SMB0_I2C_MasterWrite(FW_regAddr_base[0] + 14, (-checkSum) & 0xFFFF);
@@ -1139,12 +1119,7 @@ void PIC_MAIN() {
 			checktime++;
 			if (checktime > 1000)
 #if MY_PRINTF_EN == 1
-				printf("checktime =");
-				tH =  checktime>> 16;
-				tL =  checktime& 0xFFFF;
-				printf("%04x", tH);
-				printf("%04x", tL);
-				printf("\r\n");
+				printf("0x%08x", checktime);
 #endif
 						;
 			status = SMB0_I2C_MasterRead(FW_regAddr_base[0] + 15);
@@ -1153,10 +1128,7 @@ void PIC_MAIN() {
 			TotalError++;
 #if MY_PRINTF_EN == 1
 			printf("checksum error!, total error	= ");
-			tH =  TotalError>> 16;
-			tL =  TotalError& 0xFFFF;
-			printf("%04x", tH);
-			printf("%04x", tL);
+			printf("0x%08x", TotalError);
 			printf("\r\n");
 #endif
 		}
@@ -1175,12 +1147,7 @@ void PIC_MAIN() {
 			checktime++;
 			if (checktime > 1000)
 #if MY_PRINTF_EN == 1
-				printf("checktime =");
-				tH =  checktime>> 16;
-				tL =  checktime& 0xFFFF;
-				printf("%04x", tH);
-				printf("%04x", tL);
-				printf("\r\n");
+				printf("0x%x", checktime)
 #endif
 						;
 			status = SMB0_I2C_MasterRead(FW_regAddr_base[0] + 15);
@@ -1198,17 +1165,10 @@ void PIC_MAIN() {
 	status = SMB0_I2C_MasterRead(0x9814);
 #if MY_PRINTF_EN == 1
 	printf("0x9814's  value:");
-	tH =  status>> 16;
-	tL =  status& 0xFFFF;
-	printf("%04x", tH);
-	printf("%04x", tL);
-
+	printf("0x%08x", status);
 	printf("\r\n");
 	printf("If there is checksum error, total error  = ");
-	tH =  TotalError>> 16;
-	tL =  TotalError& 0xFFFF;
-	printf("%04x", tH);
-	printf("%04x", tL);
+	printf("0x%08x", TotalError);
 	printf("\r\n");
 #endif
 
@@ -1223,10 +1183,7 @@ void PIC_MAIN() {
 		while (0x0500 != status) {
 #if MY_PRINTF_EN == 1
 			printf("load default: 0x9818's	value:");
-			tH =  status>> 16;
-			tL =  status& 0xFFFF;
-			printf("%04x", tH);
-			printf("%04x", tL);
+			printf("0x%08x", status);
 			printf("\r\n");
 #endif
 			T0_Waitms(150);
@@ -1244,10 +1201,7 @@ void PIC_MAIN() {
 		while (0x0500 != status) {
 #if MY_PRINTF_EN == 1
 						printf("load default: 0x9818's	value:");
-						tH =  status>> 16;
-						tL =  status& 0xFFFF;
-						printf("%04x", tH);
-						printf("%04x", tL);
+						printf("0x%08x", status);
 						printf("\r\n");
 #endif
 			T0_Waitms(300);
@@ -1402,10 +1356,6 @@ void PIC_MAIN() {
 #endif		
 #endif
 	}
-
-#else
-	while(1);
-	
 #endif
 
 }
