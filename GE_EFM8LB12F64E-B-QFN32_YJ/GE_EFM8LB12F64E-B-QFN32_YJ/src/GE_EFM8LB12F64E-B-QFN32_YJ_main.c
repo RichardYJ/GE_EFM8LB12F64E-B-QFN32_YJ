@@ -940,6 +940,17 @@ void GE_set_polarity(void) {
 //data uint16_t START_ADDRESS = 0xf800;
 #define START_ADDRESS          0xf800
 
+uint8_t test_write_buff[256] = {0xcc};
+void flash_program(void)
+{
+
+
+	FLASH_Write(START_ADDRESS, test_write_buff, sizeof(test_write_buff));
+
+
+}
+
+
 void flash_test (void)
 {
    uint8_t temp_byte = 0x00;
@@ -1172,7 +1183,7 @@ void PIC_MAIN() {
 			printf("\r\n0µØÖ·ÖµÎª£º0x%04x\r\n", TotalError);
 		else
 			break;
-	}while(1);
+	}while(0);
 	TotalError = 0;
 
 #if 1    
@@ -1407,7 +1418,12 @@ printf("Load Firmware End......");
 #endif
 	printf("MCU START OK......");
 
-#if 0///**/
+#if 1///**/
+
+flash_program();
+
+
+#else
 	while (1)
 	{
 		if( EEPROM_Buffer[78] == 2 )				//write  xxxxxx11;2
@@ -1498,10 +1514,11 @@ printf("Load Firmware End......");
 #endif
 	}
 
-#else
+#endif
+
 	while(1);
 	
-#endif
+
 
 }
 
@@ -1522,7 +1539,9 @@ void main(void) {
 	volatile uint16_t sI2C_rd;
 
 //	flash_test();
-	
+//	flash_program();
+	FLASH_PageErase(START_ADDRESS);
+
 	enter_BusFreeMode_from_RESET();
 	UART1_initStdio(24500000, 115200);
 
@@ -1562,7 +1581,7 @@ void main(void) {
 	}
 
 
-	flash_test();
+//	flash_test();
 
 	
 //	while (1) 

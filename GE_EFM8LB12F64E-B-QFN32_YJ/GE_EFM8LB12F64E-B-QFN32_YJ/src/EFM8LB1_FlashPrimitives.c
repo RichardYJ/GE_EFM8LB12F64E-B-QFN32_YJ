@@ -41,8 +41,11 @@
 void FLASH_ByteWrite (FLADDR addr, uint8_t byte)
 {
    bool EA_SAVE = IE_EA;                // Preserve IE_EA
+   uint8_t SAVE_SFRPAGE;
    SI_VARIABLE_SEGMENT_POINTER(pwrite, uint8_t, SI_SEG_XDATA); // Flash write pointer
 
+   SAVE_SFRPAGE = SFRPAGE;
+   SFRPAGE = 0;
    IE_EA = 0;                          // Disable interrupts
 
    VDM0CN = 0x80;                      // Enable VDD monitor
@@ -62,6 +65,7 @@ void FLASH_ByteWrite (FLADDR addr, uint8_t byte)
 
    PSCTL &= ~0x01;                     // PSWE = 0 which disable writes
 
+   SFRPAGE = SAVE_SFRPAGE;
    IE_EA = EA_SAVE;                    // Restore interrupts
 }
 
@@ -82,9 +86,13 @@ void FLASH_ByteWrite (FLADDR addr, uint8_t byte)
 //-----------------------------------------------------------------------------
 uint8_t FLASH_ByteRead (FLADDR addr)
 {
+	uint8_t SAVE_SFRPAGE;
+
    bool EA_SAVE = IE_EA;                // Preserve IE_EA
    SI_VARIABLE_SEGMENT_POINTER(pread, uint8_t, const SI_SEG_CODE); // Flash read pointer
    uint8_t byte;
+   SAVE_SFRPAGE = SFRPAGE;
+   SFRPAGE = 0;
 
    IE_EA = 0;                          // Disable interrupts
 
@@ -92,6 +100,7 @@ uint8_t FLASH_ByteRead (FLADDR addr)
 
    byte = *pread;                      // Read the byte
 
+   SFRPAGE = SAVE_SFRPAGE;
    IE_EA = EA_SAVE;                    // Restore interrupts
 
    return byte;
@@ -116,8 +125,11 @@ uint8_t FLASH_ByteRead (FLADDR addr)
 void FLASH_PageErase (FLADDR addr)
 {
    bool EA_SAVE = IE_EA;                // Preserve IE_EA
+   uint8_t SAVE_SFRPAGE;
    SI_VARIABLE_SEGMENT_POINTER(pwrite, uint8_t, SI_SEG_XDATA); // Flash write pointer
 
+   SAVE_SFRPAGE = SFRPAGE;
+   SFRPAGE = 0;
    IE_EA = 0;                          // Disable interrupts
 
    VDM0CN = 0x80;                      // Enable VDD monitor
@@ -137,5 +149,6 @@ void FLASH_PageErase (FLADDR addr)
 
    PSCTL &= ~0x03;                     // PSWE = 0; PSEE = 0
 
+   SFRPAGE = SAVE_SFRPAGE;
    IE_EA = EA_SAVE;                    // Restore interrupts
 }
