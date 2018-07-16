@@ -65,8 +65,10 @@
 #include "EFM8LB1_SMBus_MasterMultibyte.h"
 #include "EFM8LB1_I2C_Slave.h"
 #include <string.h>
+#include "EFM8LB1_FlashPrimitives.h"
+
 //#define TEST_I2C2
-#define MY_PRINTF_EN 1
+#define MY_PRINTF_EN 0
 #define DYCALCC 1
 #define ONE ((uint16_t)1)
 
@@ -579,6 +581,30 @@ bool SMB_Write(void);
 bool SMB_Read(void);
 void T0_Waitms(uint8_t ms);
 
+
+
+void FLASH_Write (FLADDR dest, uint8_t *src, uint16_t numbytes)
+{
+   FLADDR i;
+
+   for (i = dest; i < dest+numbytes; i++) {
+      FLASH_ByteWrite (i, *src++);
+   }
+}
+
+
+uint8_t * FLASH_Read (uint8_t *dest, FLADDR src, uint16_t numbytes)
+{
+   FLADDR i;
+
+   for (i = 0; i < numbytes; i++) {
+      *dest++ = FLASH_ByteRead (src+i);
+   }
+   return dest;
+}
+
+
+
 void showReg()
 {
 	uint8_t i =0;
@@ -650,15 +676,12 @@ void rst(void)
 
 
 			P1SKIP |= 1<<3|1<<2;
-//			P1SKIP &=~(1<<2);
 			P1MDIN =0xff;
 //			showReg();
 			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
 					| P1MDOUT_B2__PUSH_PULL | P1MDOUT_B3__PUSH_PULL
 					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
 					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
-//			P1|=1<<2;		//20180109
-//			showReg();
 
 #if 0
 			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
@@ -673,11 +696,8 @@ void rst(void)
 			
 			while(1)
 			{
-//				i = P1;
-//				i = (0 == i&(1<<2));
 				if((0 == (P1&(1<<2)))|| 0 ==i--)//
 				{
-//					i =9;
 					break;
 				}
 				P1&=~(1<<3);//SCL L
@@ -687,15 +707,13 @@ void rst(void)
 				_nop_();
 
 			}
-//			showReg();
 
 			P1MDOUT = P1MDOUT_B0__PUSH_PULL | P1MDOUT_B1__PUSH_PULL
 					| P1MDOUT_B2__PUSH_PULL | P1MDOUT_B3__PUSH_PULL
 					| P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__OPEN_DRAIN
 					| P1MDOUT_B6__PUSH_PULL | P1MDOUT_B7__OPEN_DRAIN;
-//			showReg();
 
-			{//stop
+			{
 				P1&=~(1<<3);
 				P1&=~(1<<2);
 				_nop_();
@@ -704,7 +722,6 @@ void rst(void)
 				P1|=(1<<2);
 				_nop_();
 			}
-//			showReg();
 #if 1			
 			P1SKIP &= ~(1<<2|1<<3);
 			
@@ -755,7 +772,7 @@ bool SMB_Write(void) {
 	while (SMB_BUSY)
 	{
 		lcnt++;
-		if(lcnt>0xff)
+		if(lcnt>0xff)//0x2d
 		{
 
 			lcnt = 0;
@@ -797,7 +814,7 @@ bool SMB_Read(void) {
 	while (SMB_BUSY)
 	{
 		lcnt++;
-		if(lcnt>0xff)
+		if(lcnt>0xff)//0x1d
 		{
 
 			lcnt = 0;
@@ -826,7 +843,12 @@ bool SMB0_I2C_MasterWrite(uint16_t RegAddr, uint16_t RegValue) {
 	printf("\r\n");
 #endif
 
-	while(!SMB_Write())printf("SMB0_I2C_MasterWrite  ERROR!!!!!!");					 // Initiate SMBus write
+	while(!SMB_Write())
+	{
+#if MY_PRINTF_EN == 1
+		printf("SMB0_I2C_MasterWrite  ERROR!!!!!!");					 // Initiate SMBus write
+#endif		
+	}
 	return true;
 }
 
@@ -839,9 +861,11 @@ start:	nWR = 2;
 	SMB_Write();					 // Initiate SMBus write
 	TARGET = TARGET_ADDR;
 //	SMB_Read();
-	while(!SMB_Read())
+	if(!SMB_Read())
 	{
+#if MY_PRINTF_EN == 1
 		printf("SMB0_I2C_MasterRead  ERROR!!!!!!");					 // Initiate SMBus write
+#endif
 		goto start;
 	}
 	sRes = (SMB_DATA_IN[0] << 8) & 0xff00 | SMB_DATA_IN[1] & 0xff;
@@ -913,6 +937,75 @@ void GE_set_polarity(void) {
 
 }
 
+//data uint16_t START_ADDRESS = 0xf800;
+#define START_ADDRESS          0xf800
+
+void flash_test (void)
+{
+   uint8_t temp_byte = 0x00;
+   uint8_t test_write_buff[8] = "ABCDEFG";
+   uint8_t test_write_buff2[3] = "HIJ";
+   uint8_t test_read_buff[8] = {0};
+   uint8_t test_compare_buff[8] = "ABCDEFG";
+   uint8_t i;
+   uint8_t SAVE_SFRPAGE;
+   bool error_flag = 0;
+
+   SAVE_SFRPAGE = SFRPAGE;
+   SFRPAGE = 0;
+
+   DISP_EN = DISP_BC_DRIVEN;
+
+   temp_byte = FLASH_ByteRead(0xfbff);
+
+   FLASH_ByteWrite(START_ADDRESS, 0xA5);
+   // Initially erase the test page of flash
+//   FLASH_PageErase(0x1600);
+	FLASH_PageErase(START_ADDRESS);
+
+   // BEGIN TEST===============================================================
+
+   // Check if able to Write and Read the flash--------------------------------
+   FLASH_ByteWrite(START_ADDRESS, 0xA5);
+
+   temp_byte = FLASH_ByteRead(START_ADDRESS);
+
+   if (temp_byte != 0xA5)
+   {
+      error_flag = 1;
+   }
+
+   // Check if able to Erase a page of the flash-------------------------------
+   FLASH_PageErase(START_ADDRESS);
+
+   temp_byte = FLASH_ByteRead(START_ADDRESS);
+
+   if (temp_byte != 0xFF)
+   {
+      error_flag = 1;
+   }
+
+
+
+
+   // Check if able to write and read a series of bytes------------------------
+   FLASH_Write(START_ADDRESS, test_write_buff, sizeof(test_write_buff));
+
+   FLASH_Read(test_read_buff, START_ADDRESS, sizeof(test_write_buff));
+
+   for (i = 0; i < sizeof(test_write_buff); i++)
+   {
+      if (test_read_buff[i] != test_write_buff[i])
+      {
+         error_flag = 1;
+      }
+   }
+
+   SFRPAGE = SAVE_SFRPAGE;
+}
+
+
+
 void PIC_MAIN() {
 	int16_t prt_Res = -1;
 	uint16_t tH, tL;
@@ -978,13 +1071,13 @@ void PIC_MAIN() {
 
 	b_data = (int16_t*) &fw_content[0]; //point to the program memory table:	fw_content
 
+#if 0//test	
 
 	do{	
 		TotalError = SMB0_I2C_MasterRead(0);
 		if(0x204c!=TotalError)
 			printf("\r\n0µØÖ·ÖµÎª£º0x%04x\r\n", TotalError);
 	}while(0);
-#if 0//test	
 	if(1){
 	//	TotalError = sizeof(uint32_t);
 		TotalError = SMB0_I2C_MasterRead(0);
@@ -1084,6 +1177,7 @@ void PIC_MAIN() {
 
 #if 1    
 	//golden eagle?firmware?????20170330
+	printf("Load Firmware Start......");
 
 	//load firmware
 	for (x = 0; x < section; x++) {
@@ -1264,6 +1358,7 @@ void PIC_MAIN() {
 
 	}
 #endif    
+printf("Load Firmware End......");
 
 //load firmware
 #endif    
@@ -1410,6 +1505,8 @@ void PIC_MAIN() {
 
 }
 
+
+
 //-----------------------------------------------------------------------------
 // Main Routine
 //-----------------------------------------------------------------------------
@@ -1424,6 +1521,8 @@ void main(void) {
 	uint16_t i;                          // Dummy variable counters
 	volatile uint16_t sI2C_rd;
 
+//	flash_test();
+	
 	enter_BusFreeMode_from_RESET();
 	UART1_initStdio(24500000, 115200);
 
@@ -1461,6 +1560,9 @@ void main(void) {
 		I2C0FCN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
 		IE_EA = 1;
 	}
+
+
+	flash_test();
 
 	
 //	while (1) 

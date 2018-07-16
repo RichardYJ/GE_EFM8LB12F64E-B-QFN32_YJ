@@ -27,7 +27,6 @@ extern void enter_BusFreeMode_from_RESET(void) {
 	// Restore the SFRPAGE
 	SFRPAGE = SFRPAGE_save;
 	// [Config Calls]$
-
 }
 
 //================================================================================

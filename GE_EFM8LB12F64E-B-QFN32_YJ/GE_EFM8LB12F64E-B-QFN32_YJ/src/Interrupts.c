@@ -26,7 +26,7 @@ volatile uint8_t I2C1_slaveWriteData = 0x16;
 #if 0
 uint8_t EEPROM_Buffer[3] = { 0, 1, 2 }; //[64] = { 0 };
 #else
-uint8_t EEPROM_Buffer[] =
+pdata uint8_t EEPROM_Buffer[] =
 //uint8_t EEPROM_Buffer[] =
 {
 	17,		//B0

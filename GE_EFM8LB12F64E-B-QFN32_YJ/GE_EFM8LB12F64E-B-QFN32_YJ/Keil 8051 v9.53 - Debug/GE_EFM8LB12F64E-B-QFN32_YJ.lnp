@@ -1,3 +1,4 @@
+"./src/EFM8LB1_FlashPrimitives.OBJ",
 "./src/GE_EFM8LB12F64E-B-QFN32_YJ_main.OBJ",
 "./src/InitDevice.OBJ",
 "./src/Interrupts.OBJ",
