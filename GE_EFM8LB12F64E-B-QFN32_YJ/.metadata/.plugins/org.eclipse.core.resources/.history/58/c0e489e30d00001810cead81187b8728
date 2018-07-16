@@ -1433,7 +1433,7 @@ printf("Load Firmware End......");
 			
 			case 4:
 				flash_write_array[EEPROM_Buffer[75]]=EEPROM_Buffer[77];
-				if(255==EEPROM_Buffer[75])
+				if(255==EEPROM_Buffer[78])
 				{
 					FLASH_PageErase(START_ADDRESS);
 					FLASH_Write(START_ADDRESS, flash_write_array, sizeof(flash_write_array)/2);
@@ -1606,8 +1606,8 @@ void main(void) {
 	}
 
 
-//	FLASH_PageErase(START_ADDRESS);
-//	flash_test();
+	FLASH_PageErase(START_ADDRESS);
+	flash_test();
 	test_tempsensor();
 
 //	flash_write_array[512]={0};

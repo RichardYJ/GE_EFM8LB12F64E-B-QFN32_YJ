@@ -1606,8 +1606,8 @@ void main(void) {
 	}
 
 
-//	FLASH_PageErase(START_ADDRESS);
-//	flash_test();
+	FLASH_PageErase(START_ADDRESS);
+	flash_test();
 	test_tempsensor();
 
 //	flash_write_array[512]={0};

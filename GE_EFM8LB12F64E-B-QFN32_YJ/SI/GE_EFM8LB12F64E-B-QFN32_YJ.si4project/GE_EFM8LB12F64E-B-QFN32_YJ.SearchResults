@@ -1,9 +1,3 @@
----- EEPROM_Buffer Matches (8 in 1 files) ----
-Interrupts.c (src) line 30 : uint8_t EEPROM_Buffer[] =
-SI_INTERRUPT in Interrupts.c (src) : 		t = EEPROM_Buffer[eepromAddress++];
-SI_INTERRUPT in Interrupts.c (src) : 		if(sizeof(EEPROM_Buffer) <= eepromAddress)
-SI_INTERRUPT in Interrupts.c (src) : 			t = EEPROM_Buffer[eepromAddress++];
-SI_INTERRUPT in Interrupts.c (src) : 			if(sizeof(EEPROM_Buffer) <= eepromAddress)
-SI_INTERRUPT in Interrupts.c (src) : 					eepromAddress = I2C1_slaveWriteData+128*EEPROM_Buffer[127];
-SI_INTERRUPT in Interrupts.c (src) : 				EEPROM_Buffer[eepromAddress++] = I2C1_slaveWriteData;
-SI_INTERRUPT in Interrupts.c (src) : 				if(sizeof(EEPROM_Buffer) <= eepromAddress)
+---- flash_test Matches (2 in 1 files) ----
+GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) line 915 : void flash_test (void)
+main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 	flash_test();

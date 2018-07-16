@@ -56,6 +56,8 @@ uint8_t EEPROM_Buffer[] =
 
 		};
 #endif
+uint8_t dbg_Buffer[512]={0};
+static uint16_t k=0;
 //-----------------------------------------------------------------------------
 // I2C0_ISR
 //-----------------------------------------------------------------------------
@@ -87,6 +89,7 @@ SI_INTERRUPT (I2C0_ISR, I2C0_IRQn)
 			j=t;
 		}
 		I2C0DOUT = t;//EEPROM_Buffer[eepromAddress++];
+		dbg_Buffer[k++]=t;
 		if(sizeof(EEPROM_Buffer) <= eepromAddress)
 		{
 			eepromAddress = 0;
@@ -110,6 +113,7 @@ SI_INTERRUPT (I2C0_ISR, I2C0_IRQn)
 				j=t;
 			}
 			I2C0DOUT = t;
+			dbg_Buffer[k++]=t;
 
 			if(sizeof(EEPROM_Buffer) <= eepromAddress)
 			{
