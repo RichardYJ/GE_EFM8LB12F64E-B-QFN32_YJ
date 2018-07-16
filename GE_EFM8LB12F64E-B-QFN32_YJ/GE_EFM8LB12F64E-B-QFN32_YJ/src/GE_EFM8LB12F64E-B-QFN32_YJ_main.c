@@ -71,6 +71,9 @@
 #define MY_PRINTF_EN 0
 #define DYCALCC 1
 #define ONE ((uint16_t)1)
+#define SCALE                     100L // Scale for temp calculations
+#define ABS(num) (num < 0 ? -num: num)
+
 
 extern uint8_t EEPROM_Buffer[];
 
@@ -86,6 +89,18 @@ uint8_t SMB_DATA_IN[NUM_BYTES_RD];
 uint8_t SMB_DATA_OUT[NUM_BYTES_WR];
 
 uint8_t TARGET;                        // Target SMBus slave address
+
+#define TEMP_CAL_ADDRESS_LOW    0xFFD4  // Address in flash where the
+                                        // temp cal low byte value is stored
+
+#define TEMP_CAL_ADDRESS_HIGH   0xFFD5  // Address in flash where the
+                                        // temp cal high byte value is stored
+
+// Calibration value for the temperature sensor at 0 degrees C, stored in CODE space
+SI_LOCATED_VARIABLE_NO_INIT(TEMPSENSOR_0C_LOW, uint8_t const, SI_SEG_CODE, TEMP_CAL_ADDRESS_LOW);
+SI_LOCATED_VARIABLE_NO_INIT(TEMPSENSOR_0C_HIGH, uint8_t const, SI_SEG_CODE, TEMP_CAL_ADDRESS_HIGH);
+
+
 
 volatile bool SMB_BUSY;                 // Software flag to indicate when the
 // SMB_Read() or SMB_Write() functions
@@ -108,7 +123,9 @@ bool dataReady = 0;                    // Set to '1' by the I2C ISR
 bool txDataReady = 1;                 // Set to '1' indicate that Tx data ready.
 uint8_t sendDataValue = 0;          // Transmit the data value 0-255 repeatedly.
 uint8_t sendDataCnt = 0;             // Transmit data counter. Count the Tx data
+bool CONV_COMPLETE = 0;                 // ADC result ready flag
 extern bool bTx_4th_byte_nack;
+uint32_t ADC_AVG = 0;                  // The Averaged ADC temp sensor result
 
 // in a I2C transaction.
 
@@ -581,6 +598,60 @@ bool SMB_Write(void);
 bool SMB_Read(void);
 void T0_Waitms(uint8_t ms);
 
+SI_SBIT(BC_EN, SFR_P2, 2);            // Board Controller Enable
+#define BC_DISCONNECTED 0              // 0 = Board Controller disconnected
+                                       //     to EFM8 UART pins
+#define BC_CONNECTED    1              // 1 = Board Controller connected
+                                       //     to EFM8 UART pins
+void test_tempsensor (void)
+{
+  int32_t temp_scaled;                // Stores scaled temperature value
+  int32_t temp_whole;                 // Stores unscaled whole number portion
+                                      // of temperature for output.
+   uint16_t temp_frac;                 // Stores unscaled decimal portion of
+                                      // temperature for output.
+
+  uint16_t tempsensor_0c;             // Stores the temp sensor cal value at
+                                      // 0C as [high byte][low byte]
+
+//  enter_DefaultMode_from_RESET();
+
+  DISP_EN = DISP_BC_DRIVEN;           // EFM8 does not drive display
+
+  BC_EN = BC_CONNECTED;            // Board controller connected to EFM8
+                                   // UART pins
+
+  //printf requires that the UART be primed by setting TI
+//  SCON0_TI = 1;
+
+  IE_EA = 1;                          // Enable all interrupts
+
+//   RETARGET_PRINTF("\f");                       // Clear the screen before outputs
+
+  // format the temperature calibration value
+  tempsensor_0c = (TEMPSENSOR_0C_HIGH << 8) | TEMPSENSOR_0C_LOW;
+
+  while (1)                           // Spin forever
+  {
+    PCON0 |= PCON0_IDLE__IDLE;       // Put the CPU in Idle mode while waiting
+    // for conversions to complete
+      if(CONV_COMPLETE)
+      {
+        // Calculate the scaled temperature using the formula provided in the datasheet
+        temp_scaled = (((int32_t) ADC_AVG - tempsensor_0c) * SCALE) / 28;
+
+        // Calculate the temp's whole number portion by unscaling
+        temp_whole = temp_scaled / SCALE;
+
+        // The temp_frac value is the unscaled decimal portion of temperature
+        temp_frac = ABS(temp_scaled) % SCALE;
+
+        printf(" T = %ld.%d(C) \n", temp_whole, temp_frac);
+
+        CONV_COMPLETE = 0;
+    }
+  }
+}
 
 
 void FLASH_Write (FLADDR dest, uint8_t *src, uint16_t numbytes)
@@ -605,64 +676,7 @@ uint8_t * FLASH_Read (uint8_t *dest, FLADDR src, uint16_t numbytes)
 
 
 
-void showReg()
-{
-	uint8_t i =0;
-	struct tagFCT{
-		uint8_t smbFCT;
-		uint8_t strREG[20];//[20]
-	}regDtl[20]={0,{0}};
 
-	regDtl[i].smbFCT = SMB0CF;
-	strcpy(regDtl[i].strREG,"SMB0CF");
-	i++;
-	regDtl[i].smbFCT = SMB0TC;
-	strcpy(regDtl[i].strREG,"SMB0TC");
-	i++;
-	regDtl[i].smbFCT = SMB0CN0;
-	strcpy(regDtl[i].strREG,"SMB0CN0");
-	i++;
-	regDtl[i].smbFCT = SMB0ADR;
-	strcpy(regDtl[i].strREG,"SMB0ADR");
-	i++;
-	regDtl[i].smbFCT = SMB0ADM;
-	strcpy(regDtl[i].strREG,"SMB0ADM");
-	i++;
-	regDtl[i].smbFCT = SMB0DAT;
-	strcpy(regDtl[i].strREG,"SMB0DAT");
-	i++;
-	regDtl[i].smbFCT = SMB0FCN0;
-	strcpy(regDtl[i].strREG,"SMB0FCN0");
-	i++;
-	regDtl[i].smbFCT = SMB0FCN1;
-	strcpy(regDtl[i].strREG,"SMB0FCN1");
-	i++;
-	regDtl[i].smbFCT = SMB0RXLN;
-	strcpy(regDtl[i].strREG,"SMB0RXLN");
-	i++;
-	regDtl[i].smbFCT = SMB0FCT;
-	strcpy(regDtl[i].strREG,"SMB0FCT");
-	i++;
-	regDtl[i].smbFCT = P1MASK;
-	strcpy(regDtl[i].strREG,"P1MASK");
-	i++;
-	regDtl[i].smbFCT = P1MAT;
-	strcpy(regDtl[i].strREG,"P1MAT");
-	i++;
-	regDtl[i].smbFCT = P1;
-	strcpy(regDtl[i].strREG,"P1");
-	i++;
-	regDtl[i].smbFCT = P1MDIN;
-	strcpy(regDtl[i].strREG,"P1MDIN");
-	i++;
-	regDtl[i].smbFCT = P1MDOUT;
-	strcpy(regDtl[i].strREG,"P1MDOUT");
-	i++;
-	regDtl[i].smbFCT = P1SKIP;
-	strcpy(regDtl[i].strREG,"P1SKIP");
-	i++;
-
-}
 
 
 
@@ -956,8 +970,10 @@ void flash_test (void)
    uint8_t temp_byte = 0x00;
    uint8_t test_write_buff[8] = "ABCDEFG";
    uint8_t test_write_buff2[3] = "HIJ";
+   uint8_t test_write_buff0[8] = {0};
+   
    uint8_t test_read_buff[8] = {0};
-   uint8_t test_compare_buff[8] = "ABCDEFG";
+   uint8_t test_compare_buff[8] = "ABCDEFG";//1000001
    uint8_t i;
    uint8_t SAVE_SFRPAGE;
    bool error_flag = 0;
@@ -969,12 +985,34 @@ void flash_test (void)
 
    temp_byte = FLASH_ByteRead(0xfbff);
 
-   FLASH_ByteWrite(START_ADDRESS, 0xA5);
+   FLASH_ByteWrite(START_ADDRESS, 0xA5);//   10100101
    // Initially erase the test page of flash
 //   FLASH_PageErase(0x1600);
-	FLASH_PageErase(START_ADDRESS);
 
    // BEGIN TEST===============================================================
+
+
+
+   
+
+
+   // Check if able to write and read a series of bytes------------------------
+   FLASH_Write(START_ADDRESS, test_write_buff, sizeof(test_write_buff));
+
+   FLASH_Read(test_read_buff, START_ADDRESS, sizeof(test_write_buff));
+
+   for (i = 0; i < sizeof(test_write_buff); i++)
+   {
+      if (test_read_buff[i] != test_write_buff[i])
+      {
+         error_flag = 1;
+      }
+   }
+
+   // Check if able to write and read a series of bytes------------------------
+//   FLASH_Write(START_ADDRESS, test_write_buff0, sizeof(test_write_buff0));
+   
+//   FLASH_PageErase(START_ADDRESS);
 
    // Check if able to Write and Read the flash--------------------------------
    FLASH_ByteWrite(START_ADDRESS, 0xA5);
@@ -997,20 +1035,6 @@ void flash_test (void)
    }
 
 
-
-
-   // Check if able to write and read a series of bytes------------------------
-   FLASH_Write(START_ADDRESS, test_write_buff, sizeof(test_write_buff));
-
-   FLASH_Read(test_read_buff, START_ADDRESS, sizeof(test_write_buff));
-
-   for (i = 0; i < sizeof(test_write_buff); i++)
-   {
-      if (test_read_buff[i] != test_write_buff[i])
-      {
-         error_flag = 1;
-      }
-   }
 
    SFRPAGE = SAVE_SFRPAGE;
 }
@@ -1537,6 +1561,8 @@ void main(void) {
 	volatile uint8_t data_count;        // SMB_DATA_IN and SMB_DATA_OUT counter
 	uint16_t i;                          // Dummy variable counters
 	volatile uint16_t sI2C_rd;
+	
+//	test_tempsensor();
 
 //	flash_test();
 //	flash_program();
@@ -1581,7 +1607,8 @@ void main(void) {
 	}
 
 
-//	flash_test();
+	flash_test();
+	test_tempsensor();
 
 	
 //	while (1) 
@@ -1723,18 +1750,4 @@ void T0_Waitms(uint8_t ms) {
 	TCON_TR0 = 0;                       // Stop Timer0
 }
 
-/////////////////////////////////////////// SMBUS0部分测试结果 //////////////////////////////
-#if 0
-//			while(1){
-sI2C_rd = SMB0_I2C_MasterRead(0x00);
-SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
-//				T0_Waitms (50);//不加这个延时，会一直发204c？   有可能是读写操作一遍后要给个延时，一直单一读或者一直单一写应该没有问题。读了之后马上写，再马上读...  这种立即读写的立即循环，感觉会有冲突，会打架，应该是芯片那边原因！
-//			}
-#endif
-
-#if 0
-while(1)SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);//已经测试过单一一直WRITE大量是可以的，没有问题！
-
-#endif
-/////////////////////////////////////////// SMBUS0部分测试结果 //////////////////////////////
 

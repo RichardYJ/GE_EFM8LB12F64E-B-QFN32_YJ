@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 1   
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE INTERRUPTS
@@ -27,396 +27,153 @@ line level    source
   13          typedef enum {
   14                  SLAVE_NORMAL_DATA, SLAVE_DATA_ADDRESS,
   15          } SLAVE_WRITE_DATA_TYPE;
-  16                  
+  16          
   17          extern volatile uint8_t nWR;
-  18          uint8_t arr_GBG[50]={0};
-  19          uint8_t iArry = 0;
-  20          bool bTx_4th_byte_nack = false;
-  21          
-  22          
-  23          #if 1//ø™∑≈æÕª·”∞œÏSMBUS0?         µ⁄“ª¥Œ≤‚ ‘ ±SMBUS0Õ£÷π¡À£®≤ªƒ‹»∑∂®£©£¨∫Û√Ê√ø¥Œ≤‚ ‘∂º «≥…π¶µƒ£¨SMBUS0∆µ¬
+  18          extern uint32_t ADC_AVG;               // Accumulates the ADC samples
+  19          extern bool CONV_COMPLETE;              // ADC accumulated result ready flag
+  20          uint8_t arr_GBG[50] = { 0 };
+  21          uint8_t iArry = 0;
+  22          bool bTx_4th_byte_nack = false;
+  23          
+  24          #if 1//ø™∑≈æÕª·”∞œÏSMBUS0?         µ⁄“ª¥Œ≤‚ ‘ ±SMBUS0Õ£÷π¡À£®≤ªƒ‹»∑∂®£©£¨∫Û√Ê√ø¥Œ≤‚ ‘∂º «≥…π¶µƒ£¨SMBUS0∆µ¬
              - Œ™10.008KHZ,LED1∫√œÒ «≤ªƒ‹µ„¡¡¡À°£
-  24          volatile uint8_t I2C1_slaveWriteData = 0x16;
-  25          //const uint8_t cConst[10];
-  26          #if 0
-              uint8_t EEPROM_Buffer[3] = { 0, 1, 2 }; //[64] = { 0 };
+  25          volatile uint8_t I2C1_slaveWriteData = 0x16;
+  26          //const uint8_t cConst[10];
+  27          #if 0
+              uint8_t EEPROM_Buffer[3] = {0, 1, 2}; //[64] = { 0 };
               #else
-  29          pdata uint8_t EEPROM_Buffer[] =
-  30          //uint8_t EEPROM_Buffer[] =
-  31          {
-  32                  17,             //B0
-  33                  5,
-  34                  6,
-  35                  0,
-  36                  0,
-  37                  0,
-  38                  0,
-  39                  0,
-  40                  0,
-  41                  0,
-  42                  0,
-  43                  0,
-  44                  0,
-  45                  0,
-  46                  0,
-  47                  0,
-  48                  0,
-  49                  0,
-  50                  0,
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 2   
+  30          pdata uint8_t EEPROM_Buffer[] =
+  31          //uint8_t EEPROM_Buffer[] =
+  32                          {
+  33                                          17,             //B0
+  34                                          5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  35                                          0, 0, 0, 0, 0, 0, 0, 0,
+  36          
+  37                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  38                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  39                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  40                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0,
+  41                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  42                                          0,              //B127
+  43          
+  44                                          17, 0, 35,
+  45                                          128,            //136
+  46                                          0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 70, 73, 84,
+  47                                          32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 9, 58, 49, 48,
+  48                                          48, 50, 57, 55, 49, 49, 48, 49, 32, 32, 32, 32, 32, 32, 49, 32,
+  49                                          66, 104, 7, 208, 0, 99,
+  50                                          2,              //CR4=11 SR4=2 AOC=1?®∞24
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 2   
 
-  51                  0,
-  52                  0,
-  53                  0,
-  54                  0,
-  55                  0,
-  56                  0,
-  57                  0,
-  58                  0,
-  59                  0,
-  60                  0,
-  61                  0,
-  62          
-  63                  0,
-  64                  0,
-  65                  0,
-  66                  0,
-  67                  0,
-  68                  0,
-  69                  0,
-  70                  0,
-  71                  0,
-  72                  0,
-  73                  0,
-  74                  0,
-  75                  0,
-  76                  0,
-  77                  0,
-  78                  0,
-  79                  0,
-  80                  0,
-  81                  0,
-  82                  0,
-  83                  0,
-  84                  0,
-  85                  0,
-  86                  0,
-  87                  0,
-  88                  0,
-  89                  0,
-  90                  0,
-  91                  0,
-  92                  0,
-  93                  0,
-  94                  0,
-  95                  0,
-  96                  0,
-  97                  0,
-  98                  0,
-  99                  0,
- 100                  0,
- 101                  0,
- 102                  0,
- 103                  0,
- 104                  0,
- 105                  0,
- 106                  0,
- 107                  0,
- 108                  0,
- 109                  0,
- 110                  0,
- 111                  0,
- 112                  0,
- 113                  0,
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 3   
+  51                                          0, 0, 0, 53, 50, 56, 54, 50, 48, 55, 53, 48, 32, 32, 32, 32, 32,
+  52                                          32, 32, 49, 53, 49, 48, 49, 51, 32, 32, 0, 0, 0, 41,
+  53          
+  54                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  55                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  56          
+  57                          };
+  58          #endif
+  59          
+  60          //-----------------------------------------------------------------------------
+  61          // I2C0_ISR
+  62          //-----------------------------------------------------------------------------
+  63          //
+  64          // I2C0 ISR Content goes here. Remember to clear flag bits:
+  65          // I2C0STAT::I2C0INT (I2C Interrupt)
+  66          //
+  67          //-----------------------------------------------------------------------------
+  68          SI_INTERRUPT (I2C0_ISR, I2C0_IRQn)
+  69          {
+  70   1              static uint16_t eepromAddress = 0;  //for addressing larger than 256Byte
+  71   1              static uint8_t slaveWriteType = SLAVE_NORMAL_DATA;
+  72   1              static uint8_t WriteStat;
+  73   1      
+  74   1              switch (I2C0STAT & I2C_STATUS_VECTOR_MASK) {
+  75   2      
+  76   2                      case I2C_ADDR_RD:
+  77   2                      I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_RD__BMASK);
+  78   2                      I2C0DOUT = EEPROM_Buffer[eepromAddress++];
+  79   2                      if(sizeof(EEPROM_Buffer) <= eepromAddress)
+  80   2                      {
+  81   3                              eepromAddress = 0;
+  82   3                      }
+  83   2                      break;
+  84   2      
+  85   2                      case I2C_ADDR_WR:
+  86   2                      I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_WR__BMASK);
+  87   2                      slaveWriteType = SLAVE_DATA_ADDRESS;
+  88   2                      WriteStat = 1;
+  89   2                      break;
+  90   2      
+  91   2                      case I2C_RD_DATA:
+  92   2                      if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET) {
+  93   3                              I2C0STAT &= ~I2C0STAT_NACK__BMASK;
+  94   3                      } else {
+  95   3                              I2C0DOUT = EEPROM_Buffer[eepromAddress++];
+  96   3                              if(sizeof(EEPROM_Buffer) <= eepromAddress)
+  97   3                              {
+  98   4                                      eepromAddress = 0;
+  99   4                              }
+ 100   3                      }
+ 101   2                      I2C0STAT &= ~I2C0STAT_RD__BMASK;
+ 102   2                      break;
+ 103   2      
+ 104   2                      case I2C_WR_DATA:
+ 105   2                      I2C0STAT &= ~I2C0STAT_WR__BMASK;
+ 106   2      
+ 107   2                      break;
+ 108   2      
+ 109   2                      case I2C_STOSTA:
+ 110   2                      case I2C_STOSTARD:
+ 111   2                      I2C0STAT &= ~I2C0STAT_STOP__BMASK;
+ 112   2                      return;
+ 113   2                      break;
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 3   
 
- 114                  0,
- 115                  0,
- 116                  0,
- 117                  0,
- 118                  0,
- 119                  0,
- 120                  0,
- 121                  0,
- 122                  0,
- 123                  0,
- 124                  0,
- 125                  0,
- 126                  0,
- 127                  0,
- 128                  0,
- 129                  0,
- 130                  0,
- 131                  0,
- 132                  0,
- 133                  0,
- 134                  0,
- 135                  0,
- 136                  0,
- 137                  0,
- 138                  0,
- 139                  0,
- 140                  0,
- 141                  0,
- 142                  0,
- 143                  56,
- 144                  0,
- 145                  0,
- 146                  0,
- 147                  0,
- 148                  0,
- 149                  0,
- 150                  0,
- 151                  0,
- 152                  0,
- 153                  0,
- 154                  0,
- 155                  0,
- 156                  0,
- 157                  0,
- 158                  0,
- 159                  0,
- 160                  0,//B127
- 161          
- 162                  17,
- 163                  0,
- 164                  35,
- 165                  128,//136
- 166                  0,
- 167                  112,
- 168                  0,
- 169                  0,
- 170                  0,
- 171                  0,
- 172                  0,
- 173                  0,
- 174                  0,
- 175                  0,
- 176                  0,
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 4   
-
- 177                  0,
- 178                  0,
- 179                  0,
- 180                  1,
- 181                  8,
- 182                  70,
- 183                  73,
- 184                  84,
- 185                  32,
- 186                  0,
- 187                  0,
- 188                  0,
- 189                  0,
- 190                  0,
- 191                  0,
- 192                  0,
- 193                  0,
- 194                  0,
- 195                  0,
- 196                  0,
- 197                  0,
- 198                  31,
- 199                  0,
- 200                  9,
- 201                  58,
- 202                  49,
- 203                  48,
- 204                  48,
- 205                  50,
- 206                  57,
- 207                  55,
- 208                  49,
- 209                  49,
- 210                  48,
- 211                  49,
- 212                  32,
- 213                  32,
- 214                  32,
- 215                  32,
- 216                  32,
- 217                  32,
- 218                  49,
- 219                  32,
- 220                  66,
- 221                  104,
- 222                  7,
- 223                  208,
- 224                  0,
- 225                  99,
- 226                  2,//CR4=11 SR4=2 AOC=1?®∞24
- 227                  0,
- 228                  0,
- 229                  0,
- 230                  53,
- 231                  50,
- 232                  56,
- 233                  54,
- 234                  50,
- 235                  48,
- 236                  55,
- 237                  53,
- 238                  48,
- 239                  32,
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 5   
-
- 240                  32,
- 241                  32,
- 242                  32,
- 243                  32,
- 244                  32,
- 245                  32,
- 246                  49,
- 247                  53,
- 248                  49,
- 249                  48,
- 250                  49,
- 251                  51,
- 252                  32,
- 253                  32,
- 254                  0,
- 255                  0,
- 256                  0,
- 257                  41,
- 258          
- 259                  0,
- 260                  0,
- 261                  0,
- 262                  0,
- 263                  0,
- 264                  0,
- 265                  0,
- 266                  0,
- 267                  0,
- 268                  0,
- 269                  0,
- 270                  0,
- 271                  0,
- 272                  0,
- 273                  0,
- 274                  0,
- 275                  0,
- 276                  0,
- 277                  0,
- 278                  0,
- 279                  0,
- 280                  0,
- 281                  0,
- 282                  0,
- 283                  0,
- 284                  0,
- 285                  0,
- 286                  0,
- 287                  0,
- 288                  0,
- 289                  0,
- 290                  0,
- 291          
- 292          };
- 293          #endif
- 294          
- 295          //-----------------------------------------------------------------------------
- 296          // I2C0_ISR
- 297          //-----------------------------------------------------------------------------
- 298          //
- 299          // I2C0 ISR Content goes here. Remember to clear flag bits:
- 300          // I2C0STAT::I2C0INT (I2C Interrupt)
- 301          //
- 302          //-----------------------------------------------------------------------------
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 6   
-
- 303          SI_INTERRUPT (I2C0_ISR, I2C0_IRQn)
- 304          {
- 305   1              static uint16_t eepromAddress = 0;  //for addressing larger than 256Byte
- 306   1              static uint8_t slaveWriteType = SLAVE_NORMAL_DATA;
- 307   1              static uint8_t WriteStat;
- 308   1      
- 309   1              switch (I2C0STAT & I2C_STATUS_VECTOR_MASK) {
- 310   2      
- 311   2                      case I2C_ADDR_RD:
- 312   2                      I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_RD__BMASK);
- 313   2                      I2C0DOUT = EEPROM_Buffer[eepromAddress++];
- 314   2                      if(sizeof(EEPROM_Buffer) <= eepromAddress)
- 315   2                      {
- 316   3                              eepromAddress = 0;
- 317   3                      }
- 318   2                      break;
- 319   2      
- 320   2                      case I2C_ADDR_WR:
- 321   2                      I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_WR__BMASK);
- 322   2                      slaveWriteType = SLAVE_DATA_ADDRESS;
- 323   2                      WriteStat = 1;
- 324   2                      break;
- 325   2      
- 326   2                      case I2C_RD_DATA:
- 327   2                      if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET) {
- 328   3                              I2C0STAT &= ~I2C0STAT_NACK__BMASK;
- 329   3                      } else {
- 330   3                              I2C0DOUT = EEPROM_Buffer[eepromAddress++];
- 331   3                              if(sizeof(EEPROM_Buffer) <= eepromAddress)
- 332   3                              {
- 333   4                                      eepromAddress = 0;
- 334   4                              }
- 335   3                      }
- 336   2                      I2C0STAT &= ~I2C0STAT_RD__BMASK;
- 337   2                      break;
- 338   2      
- 339   2                      case I2C_WR_DATA:
- 340   2                      I2C0STAT &= ~I2C0STAT_WR__BMASK;
- 341   2      
- 342   2                      break;
- 343   2      
- 344   2                      case I2C_STOSTA:
- 345   2                      case I2C_STOSTARD:
- 346   2                      I2C0STAT &= ~I2C0STAT_STOP__BMASK;
- 347   2                      return;
- 348   2                      break;
- 349   2      
- 350   2                      case I2C_STO:
- 351   2                      I2C0STAT &= ~I2C0STAT_STOP__BMASK;
- 352   2                      break;
- 353   2                      default:
- 354   2                      break;
- 355   2              }
- 356   1      
- 357   1              while((I2C0FCN1 & I2C0FCN1_RXE__BMASK) == I2C0FCN1_RXE__NOT_EMPTY) {
- 358   2                      I2C1_slaveWriteData = I2C0DIN;
- 359   2                      if(1==WriteStat&&80!=I2C1_slaveWriteData)
- 360   2                      {
- 361   3                              switch(slaveWriteType)
- 362   3                              {
- 363   4                                      case SLAVE_DATA_ADDRESS:
- 364   4                                      if(I2C1_slaveWriteData>=128)
- 365   4                                      {
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 7   
-
- 366   5                                              eepromAddress = I2C1_slaveWriteData+128*EEPROM_Buffer[127];
- 367   5                                      }
- 368   4                                      else
- 369   4                                      {
- 370   5                                              eepromAddress = I2C1_slaveWriteData;
- 371   5                                      }
- 372   4                                      break;
- 373   4      
- 374   4                                      case SLAVE_NORMAL_DATA:
- 375   4                                      default:
- 376   4                                      EEPROM_Buffer[eepromAddress++] = I2C1_slaveWriteData;
- 377   4      
- 378   4                                      if(sizeof(EEPROM_Buffer) <= eepromAddress)
- 379   4                                      {
- 380   5                                              eepromAddress = 0;
- 381   5                                      }
- 382   4                                      break;
- 383   4                              }
- 384   3      
- 385   3                              slaveWriteType = SLAVE_NORMAL_DATA;
- 386   3                      }
- 387   2              }
- 388   1      
- 389   1              I2C0STAT &= ~I2C0STAT_I2C0INT__BMASK;
- 390   1      
- 391   1      }
- 392          #else
+ 114   2      
+ 115   2                      case I2C_STO:
+ 116   2                      I2C0STAT &= ~I2C0STAT_STOP__BMASK;
+ 117   2                      break;
+ 118   2                      default:
+ 119   2                      break;
+ 120   2              }
+ 121   1      
+ 122   1              while((I2C0FCN1 & I2C0FCN1_RXE__BMASK) == I2C0FCN1_RXE__NOT_EMPTY) {
+ 123   2                      I2C1_slaveWriteData = I2C0DIN;
+ 124   2                      if(1==WriteStat&&80!=I2C1_slaveWriteData)
+ 125   2                      {
+ 126   3                              switch(slaveWriteType)
+ 127   3                              {
+ 128   4                                      case SLAVE_DATA_ADDRESS:
+ 129   4                                      if(I2C1_slaveWriteData>=128)
+ 130   4                                      {
+ 131   5                                              eepromAddress = I2C1_slaveWriteData+128*EEPROM_Buffer[127];
+ 132   5                                      }
+ 133   4                                      else
+ 134   4                                      {
+ 135   5                                              eepromAddress = I2C1_slaveWriteData;
+ 136   5                                      }
+ 137   4                                      break;
+ 138   4      
+ 139   4                                      case SLAVE_NORMAL_DATA:
+ 140   4                                      default:
+ 141   4                                      EEPROM_Buffer[eepromAddress++] = I2C1_slaveWriteData;
+ 142   4      
+ 143   4                                      if(sizeof(EEPROM_Buffer) <= eepromAddress)
+ 144   4                                      {
+ 145   5                                              eepromAddress = 0;
+ 146   5                                      }
+ 147   4                                      break;
+ 148   4                              }
+ 149   3      
+ 150   3                              slaveWriteType = SLAVE_NORMAL_DATA;
+ 151   3                      }
+ 152   2              }
+ 153   1      
+ 154   1              I2C0STAT &= ~I2C0STAT_I2C0INT__BMASK;
+ 155   1      
+ 156   1      }
+ 157          #else
               
               //-----------------------------------------------------------------------------
               // I2C0_ISR
@@ -436,6 +193,8 @@ line level    source
                               // Firmware fill the TX FIFO until the TX FIFO full, and it should
                               // locate at the beginning of the ISR, because the switch below may
                               // consume so much system cycle.
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 4   
+
                               while((I2C0FCN1 & I2C0FCN1_TXNF__BMASK) == I2C0FCN1_TXNF__NOT_FULL)
                               {
                                       if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET)
@@ -453,8 +212,6 @@ line level    source
                               }
                               // The TFRQ will not set I2C0INT bit, so don't need to clear
                               // the I2C0INT when TFRQ happen.
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 8   
-
                               // Other interrupts may be generated while dealing with the TFRQ,
                               // so just return to avoid clearing other interrupts.
                               return;
@@ -464,7 +221,7 @@ line level    source
                       {
                               while((I2C0FCN1 & I2C0FCN1_RXE__BMASK) == I2C0FCN1_RXE__NOT_EMPTY)
                               { // Read data out
-                                      i2cReceivedData   = I2C0DIN;
+                                      i2cReceivedData = I2C0DIN;
                                       // This example only supports host write 1 byte to slave
                                       // If want slave to accept more than 1 byte, use a buffer to save the data from FIFO
                                       dataReady = 1;
@@ -478,95 +235,97 @@ line level    source
                       {
               
                               case I2C_ADDR_RD:  // START+ADDR+R
-                                      I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_RD__BMASK);
-                                      // The data be written to FIFO within Transmit FIFO Request (TFRQ) service routines.
-                                      break;
+                              I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_RD__BMASK);
+                              // The data be written to FIFO within Transmit FIFO Request (TFRQ) service routines.
+                              break;
               
-                              case I2C_ADDR_WR: // START+ADDR+W
-                                      I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_WR__BMASK);
-                                      break;
+                              case I2C_ADDR_WR:// START+ADDR+W
+                              I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_WR__BMASK);
+                              break;
               
                               case I2C_RD_DATA:
-                                      // Check for NACK
-                                      if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET)
-                                      {
-                                              // Master did not NACK
-                                              // Stopping transfer of data
-                                              // Flush FIFO if there is data in it
-                                              I2C0STAT &= ~I2C0STAT_NACK__BMASK;
-                                      }
-                                      I2C0STAT &= ~I2C0STAT_RD__BMASK;
-                                      break;
+                              // Check for NACK
+                              if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET)
+                              {
+                                      // Master did not NACK
+                                      // Stopping transfer of data
+                                      // Flush FIFO if there is data in it
+                                      I2C0STAT &= ~I2C0STAT_NACK__BMASK;
+                              }
+                              I2C0STAT &= ~I2C0STAT_RD__BMASK;
+                              break;
               
                               case I2C_WR_DATA:  // FIFO is full, whatever slave ACK/NACK master
-                                      I2C0STAT &= ~I2C0STAT_WR__BMASK;
-                                      break;
+                              I2C0STAT &= ~I2C0STAT_WR__BMASK;
+                              break;
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 5   
+
               
                               case I2C_STOSTA:
                               case I2C_STOSTARD:
-                                      I2C0STAT &= ~I2C0STAT_STOP__BMASK;
-                                      txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
-                                      // One byte be shifted to the Shift register, also need to reload it.
-                                      if(sendDataCnt > 2)
-                                      {
-                                              txCnt += 1;
-                                      }
+                              I2C0STAT &= ~I2C0STAT_STOP__BMASK;
+                              txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
+                              // One byte be shifted to the Shift register, also need to reload it.
+                              if(sendDataCnt > 2)
+                              {
+                                      txCnt += 1;
+                              }
               
-                                      if(txCnt > 0)
+                              if(txCnt > 0)
+                              {
+                                      I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
+                                      if(txCnt >= 2)
                                       {
-                                              I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
-                                              if(txCnt >= 2)
-                                              {
-                                                      I2C0DOUT = sendDataValue-txCnt;
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 9   
-
-                                                      I2C0DOUT = sendDataValue-txCnt+1;
-                                                      sendDataValue = sendDataValue-(txCnt-2);
-                                                      sendDataCnt = 2;
-                                              }
-                                              else if(txCnt == 1)
-                                              {
-                                                      I2C0DOUT = sendDataValue-txCnt;
-                                                      sendDataCnt = 1;
-                                              }
+                                              I2C0DOUT = sendDataValue-txCnt;
+                                              I2C0DOUT = sendDataValue-txCnt+1;
+                                              sendDataValue = sendDataValue-(txCnt-2);
+                                              sendDataCnt = 2;
                                       }
-                                      //
-                                      //      STOP Condition received.
-                                      //
-                                      return;         // START Flag set, so re-enter ISR
-                                      break;
+                                      else if(txCnt == 1)
+                                      {
+                                              I2C0DOUT = sendDataValue-txCnt;
+                                              sendDataCnt = 1;
+                                      }
+                              }
+                              //
+                              //      STOP Condition received.
+                              //
+                              return;// START Flag set, so re-enter ISR
+                              break;
               
                               case I2C_STO:
-                                      I2C0STAT &= ~I2C0STAT_STOP__BMASK;
-                                      txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
-                                      // One byte be shifted to the Shift register, also need to reload it.
-                                      if(sendDataCnt > 2)
-                                      {
-                                              txCnt += 1;
-                                      }
+                              I2C0STAT &= ~I2C0STAT_STOP__BMASK;
+                              txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
+                              // One byte be shifted to the Shift register, also need to reload it.
+                              if(sendDataCnt > 2)
+                              {
+                                      txCnt += 1;
+                              }
               
-                                      if(txCnt > 0)
+                              if(txCnt > 0)
+                              {
+                                      I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
+                                      if(txCnt >= 2)
                                       {
-                                              I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
-                                              if(txCnt >= 2)
-                                              {
-                                                      I2C0DOUT = sendDataValue-txCnt;
-                                                      I2C0DOUT = sendDataValue-txCnt+1;
-                                                      sendDataValue = sendDataValue-(txCnt-2);
-                                                      sendDataCnt = 2;
-                                              }
-                                              else if(txCnt == 1)
-                                              {
-                                                      I2C0DOUT = sendDataValue-txCnt;
-                                                      sendDataCnt = 1;
-                                              }
+                                              I2C0DOUT = sendDataValue-txCnt;
+                                              I2C0DOUT = sendDataValue-txCnt+1;
+                                              sendDataValue = sendDataValue-(txCnt-2);
+                                              sendDataCnt = 2;
                                       }
-                                      //
-                                      //      STOP Condition received.
-                                      //
-                                      break;
+                                      else if(txCnt == 1)
+                                      {
+                                              I2C0DOUT = sendDataValue-txCnt;
+                                              sendDataCnt = 1;
+                                      }
+                              }
+                              //
+                              //      STOP Condition received.
+                              //
+                              break;
                               default:
-                                      break;
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 6   
+
+                              break;
                       }
               
                       // Clear I2C interrupt flag
@@ -574,192 +333,196 @@ line level    source
               
               }
               
-              
               #endif
- 548          
- 549          
- 550          
- 551          
- 552          
- 553          
- 554          
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 10  
+ 312          
+ 313          // SMBUS0_ISR
+ 314          //-----------------------------------------------------------------------------
+ 315          //
+ 316          // SMBUS0 ISR Content goes here. Remember to clear flag bits:
+ 317          // SMB0CN0::SI (SMBus Interrupt Flag)
+ 318          //
+ 319          //-----------------------------------------------------------------------------
+ 320          SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
+ 321          {
+ 322   1              bool FAIL = 0;                       // Used by the ISR to flag failed
+ 323   1                                                                                       // transfers
+ 324   1      
+ 325   1              static uint8_t sent_byte_counter;
+ 326   1              static uint8_t rec_byte_counter;
+ 327   1      
+ 328   1              if (SMB0CN0_ARBLOST == 0)                // Check for errors
+ 329   1              {
+ 330   2                      // Normal operation
+ 331   2                      switch (SMB0CN0 & 0xF0)// Status vector
+ 332   2                      {
+ 333   3                              // Master Transmitter/Receiver: START condition transmitted.
+ 334   3                              case SMB_MTSTA:
+ 335   3                              SMB0DAT = TARGET<<1;// Load address of the target slave
+ 336   3                              SMB0DAT &= 0xFE;        // Clear the LSB of the address for the
+ 337   3                                                                      // R/W bit
+ 338   3                              SMB0DAT |= (uint8_t) SMB_RW;// Load R/W bit
+ 339   3                              SMB0CN0_STA = 0;// Manually clear START bit
+ 340   3                              rec_byte_counter = 1;// Reset the counter
+ 341   3                              sent_byte_counter = 1;// Reset the counter
+ 342   3                              break;
+ 343   3      
+ 344   3                              // Master Transmitter: Data byte transmitted
+ 345   3                              case SMB_MTDB:
+ 346   3                              if (SMB0CN0_ACK)// Slave SMB0CN0_ACK?
+ 347   3                              {
+ 348   4                                      if (SMB_RW == WRITE)    // If this transfer is a WRITE,
+ 349   4                                      {
+ 350   5                                              if (sent_byte_counter <= nWR /*NUM_BYTES_WR*/)
+ 351   5                                              {
+ 352   6                                                      // send data byte
+ 353   6                                                      SMB0DAT = SMB_DATA_OUT[sent_byte_counter-1];
+ 354   6                                                      sent_byte_counter++;
+ 355   6                                              }
+ 356   5                                              else
+ 357   5                                              {
+ 358   6                                                      SMB0CN0_STO = 1; // Set SMB0CN0_STO to terminate transfer
+ 359   6                                                      SMB_BUSY = 0;// And free SMBus interface
+ 360   6                                              }
+ 361   5                                      }
+ 362   4                                      else {}                 // If this transfer is a READ,
+ 363   4                                                                                      // proceed with transfer without
+ 364   4                                                                                      // writing to SMB0DAT (switch
+ 365   4                                                                                      // to receive mode)
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 7   
 
- 555          
- 556          
- 557          
- 558          
- 559          // SMBUS0_ISR
- 560          //-----------------------------------------------------------------------------
- 561          //
- 562          // SMBUS0 ISR Content goes here. Remember to clear flag bits:
- 563          // SMB0CN0::SI (SMBus Interrupt Flag)
- 564          //
- 565          //-----------------------------------------------------------------------------
- 566          SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
- 567          {
- 568   1              bool FAIL = 0;                       // Used by the ISR to flag failed
- 569   1                                                                                       // transfers
- 570   1      
- 571   1              static uint8_t sent_byte_counter;
- 572   1              static uint8_t rec_byte_counter;
- 573   1      
- 574   1              if (SMB0CN0_ARBLOST == 0)// Check for errors
- 575   1              {
- 576   2                      // Normal operation
- 577   2                      switch (SMB0CN0 & 0xF0)// Status vector
- 578   2                      {
- 579   3                              // Master Transmitter/Receiver: START condition transmitted.
- 580   3                              case SMB_MTSTA:
- 581   3                              SMB0DAT = TARGET<<1;// Load address of the target slave
- 582   3                              SMB0DAT &= 0xFE;// Clear the LSB of the address for the
- 583   3                                                              // R/W bit
- 584   3                              SMB0DAT |= (uint8_t) SMB_RW;// Load R/W bit
- 585   3                              SMB0CN0_STA = 0;// Manually clear START bit
- 586   3                              rec_byte_counter = 1;// Reset the counter
- 587   3                              sent_byte_counter = 1;// Reset the counter
- 588   3                              break;
- 589   3      
- 590   3                              // Master Transmitter: Data byte transmitted
- 591   3                              case SMB_MTDB:
- 592   3                              if (SMB0CN0_ACK)// Slave SMB0CN0_ACK?
- 593   3                              {
- 594   4                                      if (SMB_RW == WRITE)    // If this transfer is a WRITE,
- 595   4                                      {
- 596   5                                              if (sent_byte_counter <= nWR /*NUM_BYTES_WR*/)
- 597   5                                              {
- 598   6                                                      // send data byte
- 599   6                                                      SMB0DAT = SMB_DATA_OUT[sent_byte_counter-1];
- 600   6                                                      sent_byte_counter++;
- 601   6                                              }
- 602   5                                              else
- 603   5                                              {
- 604   6                                                      SMB0CN0_STO = 1; // Set SMB0CN0_STO to terminate transfer
- 605   6                                                      SMB_BUSY = 0;// And free SMBus interface
- 606   6                                              }
- 607   5                                      }
- 608   4                                      else {}                 // If this transfer is a READ,
- 609   4                                                                                      // proceed with transfer without
- 610   4                                                                                      // writing to SMB0DAT (switch
- 611   4                                                                                      // to receive mode)
- 612   4      
- 613   4                              }
- 614   3                              else                       // If slave NACK,
- 615   3                              {
- 616   4                                      if(bTx_4th_byte_nack)
- 617   4                                      {
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 11  
+ 366   4      
+ 367   4                              }
+ 368   3                              else                       // If slave NACK,
+ 369   3                              {
+ 370   4                                      if(bTx_4th_byte_nack)
+ 371   4                                      {
+ 372   5                                              SMB0CN0_STO = 1; // Set SMB0CN0_STO to terminate transfer
+ 373   5                                              SMB_BUSY = 0;// And free SMBus interface
+ 374   5                                              break;
+ 375   5                                      }
+ 376   4                                      SMB0CN0_STO = 1;        // Send STOP condition, followed
+ 377   4                                      SMB0CN0_STA = 1;// By a START
+ 378   4                                      NUM_ERRORS++;// Indicate error
+ 379   4                              }
+ 380   3                              break;
+ 381   3      
+ 382   3                              // Master Receiver: byte received
+ 383   3                              case SMB_MRDB:
+ 384   3                              if (rec_byte_counter < NUM_BYTES_RD)
+ 385   3                              {
+ 386   4                                      SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
+ 387   4                                                                                                                         // byte
+ 388   4                                      SMB0CN0_ACK = 1;                                                   // Send SMB0CN0_ACK to indicate byte received
+ 389   4                                      rec_byte_counter++;                                                // Increment the byte counter
+ 390   4                              }
+ 391   3                              else
+ 392   3                              {
+ 393   4                                      SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
+ 394   4                                                                                                                         // byte
+ 395   4                                      SMB_BUSY = 0;                                                      // Free SMBus interface
+ 396   4                                      SMB0CN0_ACK = 0;                                                   // Send NACK to indicate last byte
+ 397   4                                                                                                                         // of this transfer
+ 398   4      
+ 399   4                                      SMB0CN0_STO = 1;                                                   // Send STOP to terminate transfer
+ 400   4                              }
+ 401   3                              break;
+ 402   3      
+ 403   3                              default:
+ 404   3                              FAIL = 1;                  // Indicate failed transfer
+ 405   3                                                                                 // and handle at end of ISR
+ 406   3                              break;
+ 407   3      
+ 408   3                      } // end switch
+ 409   2              }
+ 410   1              else
+ 411   1              {
+ 412   2                      // SMB0CN0_ARBLOST = 1, error occurred... abort transmission
+ 413   2                      FAIL = 1;
+ 414   2              } // end SMB0CN0_ARBLOST if
+ 415   1      
+ 416   1              if (FAIL)// If the transfer failed,
+ 417   1              {
+ 418   2                      SMB0CF &= ~0x80;                 // Reset communication
+ 419   2                      SMB0CF |= 0x80;
+ 420   2                      SMB0CN0_STA = 0;
+ 421   2                      SMB0CN0_STO = 0;
+ 422   2                      SMB0CN0_ACK = 0;
+ 423   2      
+ 424   2                      SMB_BUSY = 0;// Free SMBus
+ 425   2      
+ 426   2                      FAIL = 0;
+ 427   2      //              LED1 = 0;
+ 428   2      
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 8   
 
- 618   5                                              SMB0CN0_STO = 1; // Set SMB0CN0_STO to terminate transfer
- 619   5                                              SMB_BUSY = 0;// And free SMBus interface
- 620   5                                              break;
- 621   5                                      }
- 622   4                                      SMB0CN0_STO = 1;        // Send STOP condition, followed
- 623   4                                      SMB0CN0_STA = 1;// By a START
- 624   4                                      NUM_ERRORS++;// Indicate error
- 625   4                              }
- 626   3                              break;
- 627   3      
- 628   3                              // Master Receiver: byte received
- 629   3                              case SMB_MRDB:
- 630   3                              if (rec_byte_counter < NUM_BYTES_RD)
- 631   3                              {
- 632   4                                      SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
- 633   4                                                                                                                         // byte
- 634   4                                      SMB0CN0_ACK = 1;// Send SMB0CN0_ACK to indicate byte received
- 635   4                                      rec_byte_counter++;// Increment the byte counter
- 636   4                              }
- 637   3                              else
- 638   3                              {
- 639   4                                      SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
- 640   4                                                                                                                         // byte
- 641   4                                      SMB_BUSY = 0;// Free SMBus interface
- 642   4                                      SMB0CN0_ACK = 0;// Send NACK to indicate last byte
- 643   4                                                                      // of this transfer
- 644   4      
- 645   4                                      SMB0CN0_STO = 1;// Send STOP to terminate transfer
- 646   4                              }
- 647   3                              break;
- 648   3      
- 649   3                              default:
- 650   3                              FAIL = 1;                  // Indicate failed transfer
- 651   3                                                                                 // and handle at end of ISR
- 652   3                              break;
- 653   3      
- 654   3                      } // end switch
- 655   2              }
- 656   1              else
- 657   1              {
- 658   2                      // SMB0CN0_ARBLOST = 1, error occurred... abort transmission
- 659   2                      FAIL = 1;
- 660   2              } // end SMB0CN0_ARBLOST if
- 661   1      
- 662   1              if (FAIL)// If the transfer failed,
- 663   1              {
- 664   2                      SMB0CF &= ~0x80;                 // Reset communication
- 665   2                      SMB0CF |= 0x80;
- 666   2                      SMB0CN0_STA = 0;
- 667   2                      SMB0CN0_STO = 0;
- 668   2                      SMB0CN0_ACK = 0;
- 669   2      
- 670   2                      SMB_BUSY = 0;// Free SMBus
- 671   2      
- 672   2                      FAIL = 0;
- 673   2      //              LED1 = 0;
- 674   2      
- 675   2                      NUM_ERRORS++;// Indicate an error occurred
- 676   2              }
- 677   1      
- 678   1              SMB0CN0_SI = 0;                     // Clear interrupt flag
- 679   1      }
- 680          
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/17/2018 15:42:47 PAGE 12  
+ 429   2                      NUM_ERRORS++;// Indicate an error occurred
+ 430   2              }
+ 431   1      
+ 432   1              SMB0CN0_SI = 0;                     // Clear interrupt flag
+ 433   1      }
+ 434          
+ 435          //-----------------------------------------------------------------------------
+ 436          // TIMER3_ISR
+ 437          //-----------------------------------------------------------------------------
+ 438          //
+ 439          // TIMER3 ISR Content goes here. Remember to clear flag bits:
+ 440          // TMR3CN0::TF3H (Timer # High Byte Overflow Flag)
+ 441          // TMR3CN0::TF3L (Timer # Low Byte Overflow Flag)
+ 442          //
+ 443          //-----------------------------------------------------------------------------
+ 444          SI_INTERRUPT (TIMER3_ISR, TIMER3_IRQn)
+ 445          {
+ 446   1              SMB0CF &= ~0x80;                   // Disable SMBus
+ 447   1              SMB0CF |= 0x80;// Re-enable SMBus
+ 448   1              TMR3CN0 &= ~0x80;// Clear Timer3 interrupt-pending
+ 449   1                                         // flag
+ 450   1              SMB0CN0_STA = 0;
+ 451   1              SMB_BUSY = 0;  // Free SMBus
+ 452   1      }
+ 453          
+ 454          //-----------------------------------------------------------------------------
+ 455          // TIMER4_ISR
+ 456          //-----------------------------------------------------------------------------
+ 457          //
+ 458          // TIMER4 ISR Content goes here. Remember to clear flag bits:
+ 459          // TMR4CN0::TF4H (Timer # High Byte Overflow Flag)
+ 460          // TMR4CN0::TF4L (Timer # Low Byte Overflow Flag)
+ 461          //
+ 462          //-----------------------------------------------------------------------------
+ 463          SI_INTERRUPT (TIMER4_ISR, TIMER4_IRQn)
+ 464          {
+ 465   1              SFRPAGE = PG3_PAGE;
+ 466   1      
+ 467   1              I2C0CN0 &= ~I2C0CN0_I2C0EN__BMASK;                      // Disable I2C module
+ 468   1              I2C0CN0 |= I2C0CN0_I2C0EN__ENABLED;// Re-enable I2C module
+ 469   1      
+ 470   1              SFRPAGE = PG2_PAGE;
+ 471   1              TMR4CN0 &= ~TMR4CN0_TF4H__BMASK;// Clear Timer3 interrupt-pending flag
+ 472   1      
+ 473   1      }
+ 474          
+ 475          //-----------------------------------------------------------------------------
+ 476          // ADC0EOC_ISR
+ 477          //-----------------------------------------------------------------------------
+ 478          //
+ 479          // ADC0EOC ISR Content goes here. Remember to clear flag bits:
+ 480          // ADC0CN0::ADINT (Conversion Complete Interrupt Flag)
+ 481          //
+ 482          //-----------------------------------------------------------------------------
+ 483          SI_INTERRUPT (ADC0EOC_ISR, ADC0EOC_IRQn)
+ 484          {
+ 485   1                 ADC0CN0_ADINT = 0;               // Clear ADC0 conv. complete flag
+ 486   1                 ADC_AVG = ADC0/4;
+ 487   1                 CONV_COMPLETE = 1;               // Set result ready flag
+ 488   1      
+ 489   1      }
+ 490          
 
- 681          //-----------------------------------------------------------------------------
- 682          // TIMER3_ISR
- 683          //-----------------------------------------------------------------------------
- 684          //
- 685          // TIMER3 ISR Content goes here. Remember to clear flag bits:
- 686          // TMR3CN0::TF3H (Timer # High Byte Overflow Flag)
- 687          // TMR3CN0::TF3L (Timer # Low Byte Overflow Flag)
- 688          //
- 689          //-----------------------------------------------------------------------------
- 690          SI_INTERRUPT (TIMER3_ISR, TIMER3_IRQn)
- 691          {
- 692   1              SMB0CF &= ~0x80;                   // Disable SMBus
- 693   1              SMB0CF |= 0x80;// Re-enable SMBus
- 694   1              TMR3CN0 &= ~0x80;// Clear Timer3 interrupt-pending
- 695   1                                               // flag
- 696   1              SMB0CN0_STA = 0;
- 697   1              SMB_BUSY = 0;// Free SMBus
- 698   1      }
- 699          
- 700          
- 701          //-----------------------------------------------------------------------------
- 702          // TIMER4_ISR
- 703          //-----------------------------------------------------------------------------
- 704          //
- 705          // TIMER4 ISR Content goes here. Remember to clear flag bits:
- 706          // TMR4CN0::TF4H (Timer # High Byte Overflow Flag)
- 707          // TMR4CN0::TF4L (Timer # Low Byte Overflow Flag)
- 708          //
- 709          //-----------------------------------------------------------------------------
- 710          SI_INTERRUPT (TIMER4_ISR, TIMER4_IRQn)
- 711          {
- 712   1              SFRPAGE = PG3_PAGE;
- 713   1      
- 714   1              I2C0CN0 &= ~I2C0CN0_I2C0EN__BMASK;                      // Disable I2C module
- 715   1              I2C0CN0 |= I2C0CN0_I2C0EN__ENABLED;                     // Re-enable I2C module
- 716   1      
- 717   1              SFRPAGE = PG2_PAGE;
- 718   1              TMR4CN0 &= ~TMR4CN0_TF4H__BMASK;                        // Clear Timer3 interrupt-pending flag
- 719   1      
- 720   1      }
- 721          
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        01/18/2018 15:40:43 PAGE 9   
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    590    ----
+   CODE SIZE        =    664    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     58    ----
    PDATA SIZE       =    256    ----

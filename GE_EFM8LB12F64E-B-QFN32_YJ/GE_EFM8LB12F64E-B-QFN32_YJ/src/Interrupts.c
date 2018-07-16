@@ -13,283 +13,48 @@
 typedef enum {
 	SLAVE_NORMAL_DATA, SLAVE_DATA_ADDRESS,
 } SLAVE_WRITE_DATA_TYPE;
-	
+
 extern volatile uint8_t nWR;
-uint8_t arr_GBG[50]={0};
+extern uint32_t ADC_AVG;               // Accumulates the ADC samples
+extern bool CONV_COMPLETE;              // ADC accumulated result ready flag
+uint8_t arr_GBG[50] = { 0 };
 uint8_t iArry = 0;
 bool bTx_4th_byte_nack = false;
-
 
 #if 1//开放就会影响SMBUS0?         第一次测试时SMBUS0停止了（不能确定），后面每次测试都是成功的，SMBUS0频率为10.008KHZ,LED1好像是不能点亮了。
 volatile uint8_t I2C1_slaveWriteData = 0x16;
 //const uint8_t cConst[10];
 #if 0
-uint8_t EEPROM_Buffer[3] = { 0, 1, 2 }; //[64] = { 0 };
+uint8_t EEPROM_Buffer[3] = {0, 1, 2}; //[64] = { 0 };
 #else
 pdata uint8_t EEPROM_Buffer[] =
 //uint8_t EEPROM_Buffer[] =
-{
-	17,		//B0
-	5,
-	6,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
+		{
+				17,		//B0
+				5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0,
 
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	56,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,//B127
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0,		//B127
 
-	17,
-	0,
-	35,
-	128,//136
-	0,
-	112,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	1,
-	8,
-	70,
-	73,
-	84,
-	32,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	31,
-	0,
-	9,
-	58,
-	49,
-	48,
-	48,
-	50,
-	57,
-	55,
-	49,
-	49,
-	48,
-	49,
-	32,
-	32,
-	32,
-	32,
-	32,
-	32,
-	49,
-	32,
-	66,
-	104,
-	7,
-	208,
-	0,
-	99,
-	2,//CR4=11 SR4=2 AOC=1?ò24
-	0,
-	0,
-	0,
-	53,
-	50,
-	56,
-	54,
-	50,
-	48,
-	55,
-	53,
-	48,
-	32,
-	32,
-	32,
-	32,
-	32,
-	32,
-	32,
-	49,
-	53,
-	49,
-	48,
-	49,
-	51,
-	32,
-	32,
-	0,
-	0,
-	0,
-	41,
+				17, 0, 35,
+				128,		//136
+				0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 70, 73, 84,
+				32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 9, 58, 49, 48,
+				48, 50, 57, 55, 49, 49, 48, 49, 32, 32, 32, 32, 32, 32, 49, 32,
+				66, 104, 7, 208, 0, 99,
+				2,		//CR4=11 SR4=2 AOC=1?ò24
+				0, 0, 0, 53, 50, 56, 54, 50, 48, 55, 53, 48, 32, 32, 32, 32, 32,
+				32, 32, 49, 53, 49, 48, 49, 51, 32, 32, 0, 0, 0, 41,
 
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 
-};
+		};
 #endif
 
 //-----------------------------------------------------------------------------
@@ -435,7 +200,7 @@ SI_INTERRUPT (I2C0_ISR, I2C0_IRQn)
 	{
 		while((I2C0FCN1 & I2C0FCN1_RXE__BMASK) == I2C0FCN1_RXE__NOT_EMPTY)
 		{ // Read data out
-			i2cReceivedData   = I2C0DIN;
+			i2cReceivedData = I2C0DIN;
 			// This example only supports host write 1 byte to slave
 			// If want slave to accept more than 1 byte, use a buffer to save the data from FIFO
 			dataReady = 1;
@@ -449,93 +214,93 @@ SI_INTERRUPT (I2C0_ISR, I2C0_IRQn)
 	{
 
 		case I2C_ADDR_RD:  // START+ADDR+R
-			I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_RD__BMASK);
-			// The data be written to FIFO within Transmit FIFO Request (TFRQ) service routines.
-			break;
+		I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_RD__BMASK);
+		// The data be written to FIFO within Transmit FIFO Request (TFRQ) service routines.
+		break;
 
-		case I2C_ADDR_WR: // START+ADDR+W
-			I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_WR__BMASK);
-			break;
+		case I2C_ADDR_WR:// START+ADDR+W
+		I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_WR__BMASK);
+		break;
 
 		case I2C_RD_DATA:
-			// Check for NACK
-			if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET)
-			{
-				// Master did not NACK
-				// Stopping transfer of data
-				// Flush FIFO if there is data in it
-				I2C0STAT &= ~I2C0STAT_NACK__BMASK;
-			}
-			I2C0STAT &= ~I2C0STAT_RD__BMASK;
-			break;
+		// Check for NACK
+		if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET)
+		{
+			// Master did not NACK
+			// Stopping transfer of data
+			// Flush FIFO if there is data in it
+			I2C0STAT &= ~I2C0STAT_NACK__BMASK;
+		}
+		I2C0STAT &= ~I2C0STAT_RD__BMASK;
+		break;
 
 		case I2C_WR_DATA:  // FIFO is full, whatever slave ACK/NACK master
-			I2C0STAT &= ~I2C0STAT_WR__BMASK;
-			break;
+		I2C0STAT &= ~I2C0STAT_WR__BMASK;
+		break;
 
 		case I2C_STOSTA:
 		case I2C_STOSTARD:
-			I2C0STAT &= ~I2C0STAT_STOP__BMASK;
-			txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
-			// One byte be shifted to the Shift register, also need to reload it.
-			if(sendDataCnt > 2)
-			{
-				txCnt += 1;
-			}
+		I2C0STAT &= ~I2C0STAT_STOP__BMASK;
+		txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
+		// One byte be shifted to the Shift register, also need to reload it.
+		if(sendDataCnt > 2)
+		{
+			txCnt += 1;
+		}
 
-			if(txCnt > 0)
+		if(txCnt > 0)
+		{
+			I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
+			if(txCnt >= 2)
 			{
-				I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
-				if(txCnt >= 2)
-				{
-					I2C0DOUT = sendDataValue-txCnt;
-					I2C0DOUT = sendDataValue-txCnt+1;
-					sendDataValue = sendDataValue-(txCnt-2);
-					sendDataCnt = 2;
-				}
-				else if(txCnt == 1)
-				{
-					I2C0DOUT = sendDataValue-txCnt;
-					sendDataCnt = 1;
-				}
+				I2C0DOUT = sendDataValue-txCnt;
+				I2C0DOUT = sendDataValue-txCnt+1;
+				sendDataValue = sendDataValue-(txCnt-2);
+				sendDataCnt = 2;
 			}
-			//
-			//	STOP Condition received.
-			//
-			return;		// START Flag set, so re-enter ISR
-			break;
+			else if(txCnt == 1)
+			{
+				I2C0DOUT = sendDataValue-txCnt;
+				sendDataCnt = 1;
+			}
+		}
+		//
+		//	STOP Condition received.
+		//
+		return;// START Flag set, so re-enter ISR
+		break;
 
 		case I2C_STO:
-			I2C0STAT &= ~I2C0STAT_STOP__BMASK;
-			txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
-			// One byte be shifted to the Shift register, also need to reload it.
-			if(sendDataCnt > 2)
-			{
-				txCnt += 1;
-			}
+		I2C0STAT &= ~I2C0STAT_STOP__BMASK;
+		txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
+		// One byte be shifted to the Shift register, also need to reload it.
+		if(sendDataCnt > 2)
+		{
+			txCnt += 1;
+		}
 
-			if(txCnt > 0)
+		if(txCnt > 0)
+		{
+			I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
+			if(txCnt >= 2)
 			{
-				I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
-				if(txCnt >= 2)
-				{
-					I2C0DOUT = sendDataValue-txCnt;
-					I2C0DOUT = sendDataValue-txCnt+1;
-					sendDataValue = sendDataValue-(txCnt-2);
-					sendDataCnt = 2;
-				}
-				else if(txCnt == 1)
-				{
-					I2C0DOUT = sendDataValue-txCnt;
-					sendDataCnt = 1;
-				}
+				I2C0DOUT = sendDataValue-txCnt;
+				I2C0DOUT = sendDataValue-txCnt+1;
+				sendDataValue = sendDataValue-(txCnt-2);
+				sendDataCnt = 2;
 			}
-			//
-			//	STOP Condition received.
-			//
-			break;
+			else if(txCnt == 1)
+			{
+				I2C0DOUT = sendDataValue-txCnt;
+				sendDataCnt = 1;
+			}
+		}
+		//
+		//	STOP Condition received.
+		//
+		break;
 		default:
-			break;
+		break;
 	}
 
 	// Clear I2C interrupt flag
@@ -543,18 +308,7 @@ SI_INTERRUPT (I2C0_ISR, I2C0_IRQn)
 
 }
 
-
 #endif
-
-
-
-
-
-
-
-
-
-
 
 // SMBUS0_ISR
 //-----------------------------------------------------------------------------
@@ -571,7 +325,7 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
 	static uint8_t sent_byte_counter;
 	static uint8_t rec_byte_counter;
 
-	if (SMB0CN0_ARBLOST == 0)// Check for errors
+	if (SMB0CN0_ARBLOST == 0)		 // Check for errors
 	{
 		// Normal operation
 		switch (SMB0CN0 & 0xF0)// Status vector
@@ -579,8 +333,8 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
 			// Master Transmitter/Receiver: START condition transmitted.
 			case SMB_MTSTA:
 			SMB0DAT = TARGET<<1;// Load address of the target slave
-			SMB0DAT &= 0xFE;// Clear the LSB of the address for the
-							// R/W bit
+			SMB0DAT &= 0xFE;	// Clear the LSB of the address for the
+								// R/W bit
 			SMB0DAT |= (uint8_t) SMB_RW;// Load R/W bit
 			SMB0CN0_STA = 0;// Manually clear START bit
 			rec_byte_counter = 1;// Reset the counter
@@ -631,18 +385,18 @@ SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
 			{
 				SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
 														   // byte
-				SMB0CN0_ACK = 1;// Send SMB0CN0_ACK to indicate byte received
-				rec_byte_counter++;// Increment the byte counter
+				SMB0CN0_ACK = 1;						   // Send SMB0CN0_ACK to indicate byte received
+				rec_byte_counter++;						   // Increment the byte counter
 			}
 			else
 			{
 				SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
 														   // byte
-				SMB_BUSY = 0;// Free SMBus interface
-				SMB0CN0_ACK = 0;// Send NACK to indicate last byte
-								// of this transfer
+				SMB_BUSY = 0;							   // Free SMBus interface
+				SMB0CN0_ACK = 0;						   // Send NACK to indicate last byte
+														   // of this transfer
 
-				SMB0CN0_STO = 1;// Send STOP to terminate transfer
+				SMB0CN0_STO = 1;						   // Send STOP to terminate transfer
 			}
 			break;
 
@@ -692,11 +446,10 @@ SI_INTERRUPT (TIMER3_ISR, TIMER3_IRQn)
 	SMB0CF &= ~0x80;                   // Disable SMBus
 	SMB0CF |= 0x80;// Re-enable SMBus
 	TMR3CN0 &= ~0x80;// Clear Timer3 interrupt-pending
-					 // flag
+				   // flag
 	SMB0CN0_STA = 0;
-	SMB_BUSY = 0;// Free SMBus
+	SMB_BUSY = 0;  // Free SMBus
 }
-
 
 //-----------------------------------------------------------------------------
 // TIMER4_ISR
@@ -712,10 +465,26 @@ SI_INTERRUPT (TIMER4_ISR, TIMER4_IRQn)
 	SFRPAGE = PG3_PAGE;
 
 	I2C0CN0 &= ~I2C0CN0_I2C0EN__BMASK;			// Disable I2C module
-	I2C0CN0 |= I2C0CN0_I2C0EN__ENABLED;			// Re-enable I2C module
+	I2C0CN0 |= I2C0CN0_I2C0EN__ENABLED;// Re-enable I2C module
 
 	SFRPAGE = PG2_PAGE;
-	TMR4CN0 &= ~TMR4CN0_TF4H__BMASK;			// Clear Timer3 interrupt-pending flag
+	TMR4CN0 &= ~TMR4CN0_TF4H__BMASK;// Clear Timer3 interrupt-pending flag
+
+}
+
+//-----------------------------------------------------------------------------
+// ADC0EOC_ISR
+//-----------------------------------------------------------------------------
+//
+// ADC0EOC ISR Content goes here. Remember to clear flag bits:
+// ADC0CN0::ADINT (Conversion Complete Interrupt Flag)
+//
+//-----------------------------------------------------------------------------
+SI_INTERRUPT (ADC0EOC_ISR, ADC0EOC_IRQn)
+{
+	   ADC0CN0_ADINT = 0;               // Clear ADC0 conv. complete flag
+	   ADC_AVG = ADC0/4;
+	   CONV_COMPLETE = 1;               // Set result ready flag
 
 }
 

@@ -1,8 +1,1 @@
----- XBR2 Matches (7 in 2 files) ----
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 		XBR2 = XBR2_XBARE__ENABLED;      // Enable Crossbar
-main in GE_EFM8LB12F64E-B-QFN32_YJ_main.c (src) : 		XBR2 = XBR2_XBARE__DISABLED;     // Disable Crossbar
-PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// $[XBR2 - Port I/O Crossbar 2]
-PBCFG_0_enter_BusFreeMode_from_RESET in InitDevice.c (src) : 	// [XBR2 - Port I/O Crossbar 2]$
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// $[XBR2 - Port I/O Crossbar 2]
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
-PBCFG_0_enter_DefaultMode_from_BusFreeMode in InitDevice.c (src) : 	// [XBR2 - Port I/O Crossbar 2]$
+---- regDtl Matches (0 in 0 files) ----
