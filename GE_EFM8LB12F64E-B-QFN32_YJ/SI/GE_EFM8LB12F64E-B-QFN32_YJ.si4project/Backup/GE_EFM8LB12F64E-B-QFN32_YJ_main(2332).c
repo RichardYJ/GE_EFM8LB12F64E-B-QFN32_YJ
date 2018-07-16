@@ -63,7 +63,6 @@
 #include <SI_EFM8LB1_Register_Enums.h>                  // SFR declarations
 #include "InitDevice.h"
 #include "EFM8LB1_SMBus_MasterMultibyte.h"
-#include "EFM8LB1_I2C_Slave.h"
 
 //-----------------------------------------------------------------------------
 // Global Variables
@@ -87,34 +86,6 @@ volatile bool SMB_RW;                   // Software flag to indicate the
 
 uint16_t NUM_ERRORS;                   // Counter for the number of errors.
 uint8_t nWR;
-
-
-
-
-
-
-uint8_t i2cReceivedData;               // Global holder for I2C data.
-                                       // All receive data is written
-                                       // here;
-
-bool dataReady = 0;                    // Set to '1' by the I2C ISR
-                                       // when a new data byte has been
-                                       // received.
-
-bool txDataReady = 1;                  // Set to '1' indicate that Tx data ready.
-uint8_t sendDataValue = 0;             // Transmit the data value 0-255 repeatedly.
-uint8_t sendDataCnt = 0;               // Transmit data counter. Count the Tx data
-                                       // in a I2C transaction.
-
-
-
-
-
-
-
-
-
-
 
 //-----------------------------------------------------------------------------
 // Function Prototypes
@@ -208,13 +179,7 @@ void main (void)
 
    dat = 0;                            // Output data counter
    NUM_ERRORS = 0;                     // Error counter
-   	{
-	   IE_EA = 0;
-	   SFRPAGE = PG3_PAGE;
-	   I2C0CN0 &= ~I2C0CN0_BUSY__BMASK; 	   // Clear BUSY bit
-	   I2C0FCN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
-	   IE_EA = 1;
-   	}
+
    while (1)
    {
 #if 0   

@@ -7,17 +7,9 @@
     <property object="CROSSBAR0" propertyId="xbar0.smbus0.clockdata" value="Enabled"/>
     <property object="CROSSBAR0" propertyId="xbar0.uart1.data" value="Enabled"/>
     <property object="DefaultMode" propertyId="mode.diagramLocation" value="281, 296"/>
-    <property object="I2CSLAVE_0" propertyId="ABPeripheral.included" value="true"/>
-    <property object="I2CSLAVE_0" propertyId="i2cslave.control.disablepreload" value="Enabled"/>
-    <property object="I2CSLAVE_0" propertyId="i2cslave.control.enablei2c" value="Enabled"/>
-    <property object="I2CSLAVE_0" propertyId="i2cslave.control.enablepinmode" value="I2C mode"/>
-    <property object="I2CSLAVE_0" propertyId="i2cslave.control.enablescllowtimeout" value="Enabled"/>
-    <property object="I2CSLAVE_0" propertyId="i2cslave.slaveaddress.i2chardwareslaveaddress" value="80"/>
     <property object="INTERRUPT_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="INTERRUPT_0" propertyId="interrupt.extendedinterruptenable1.enablesmbussmb0interrupt" value="Enabled"/>
     <property object="INTERRUPT_0" propertyId="interrupt.extendedinterruptenable1.enabletimer3interrupt" value="Enabled"/>
-    <property object="INTERRUPT_0" propertyId="interrupt.extendedinterruptenable2.enablei2c0slaveinterrupt" value="Enabled"/>
-    <property object="INTERRUPT_0" propertyId="interrupt.extendedinterruptenable2.enabletimer4interrupt" value="Enabled"/>
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enableallinterrupts" value="Enabled"/>
     <property object="P0.0" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.1" propertyId="ports.settings.skip" value="Skipped"/>
@@ -58,12 +50,6 @@
     <property object="TIMER16_3" propertyId="timer16.reloadhighbyte.reloadhighbyte" value="56"/>
     <property object="TIMER16_3" propertyId="timer16.reloadlowbyte.reloadlowbyte" value="158"/>
     <property object="TIMER16_4" propertyId="ABPeripheral.included" value="true"/>
-    <property object="TIMER16_4" propertyId="timer16.control.runcontrol" value="Start"/>
-    <property object="TIMER16_4" propertyId="timer16.control.timerrunningstate" value="Timer is Running"/>
-    <property object="TIMER16_4" propertyId="timer16.initandreloadvalue.targetoverflowfrequency" value="40"/>
-    <property object="TIMER16_4" propertyId="timer16.initandreloadvalue.timerreloadvalue" value="14494"/>
-    <property object="TIMER16_4" propertyId="timer16.reloadhighbyte.reloadhighbyte" value="56"/>
-    <property object="TIMER16_4" propertyId="timer16.reloadlowbyte.reloadlowbyte" value="158"/>
     <property object="TIMER16_5" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER_SETUP_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER_SETUP_0" propertyId="timer_setup.clockcontrol0.timer01prescale" value="SYSCLK / 4"/>

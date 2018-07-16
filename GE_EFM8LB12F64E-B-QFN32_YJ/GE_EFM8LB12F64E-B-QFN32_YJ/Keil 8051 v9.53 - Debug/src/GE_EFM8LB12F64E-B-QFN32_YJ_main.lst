@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 18:25:18 PAGE 1   
+C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 19:38:12 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE GE_EFM8LB12F64E_B_QFN32_YJ_MAIN
@@ -63,7 +63,7 @@ line level    source
   48          // Tool chain:     Generic
   49          //
   50          // Release 0.1 (ST)
-C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 18:25:18 PAGE 2   
+C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 19:38:12 PAGE 2   
 
   51          //    - Initial Revision
   52          //    - 06 MAR 2015
@@ -80,130 +80,165 @@ line level    source
   63          #include <SI_EFM8LB1_Register_Enums.h>                  // SFR declarations
   64          #include "InitDevice.h"
   65          #include "EFM8LB1_SMBus_MasterMultibyte.h"
-  66          
-  67          //-----------------------------------------------------------------------------
-  68          // Global Variables
-  69          //-----------------------------------------------------------------------------
-  70          // Global holder for SMBus data
-  71          // All receive data is written here
-  72          uint8_t SMB_DATA_IN[NUM_BYTES_RD];
-  73          
-  74          // Global holder for SMBus data.
-  75          // All transmit data is read from here
-  76          uint8_t SMB_DATA_OUT[NUM_BYTES_WR];
-  77          
-  78          uint8_t TARGET;                        // Target SMBus slave address
-  79          
-  80          volatile bool SMB_BUSY;                 // Software flag to indicate when the
-  81                                                 // SMB_Read() or SMB_Write() functions
-  82                                                 // have claimed the SMBus
-  83          
-  84          volatile bool SMB_RW;                   // Software flag to indicate the
-  85                                                 // direction of the current transfer
-  86          
-  87          uint16_t NUM_ERRORS;                   // Counter for the number of errors.
-  88          uint8_t nWR;
-  89          
-  90          //-----------------------------------------------------------------------------
-  91          // Function Prototypes
-  92          //-----------------------------------------------------------------------------
-  93          void SMB_Write(void);
-  94          void SMB_Read(void);
-  95          void T0_Waitms(uint8_t ms);
-  96          
-  97          bool SMB0_I2C_MasterWrite(uint16_t RegAddr, uint16_t RegValue) {
-  98   1              nWR = 4;
-  99   1              TARGET = SLAVE_ADDR;                     // Target the Slave for next SMBus
- 100   1              SMB_DATA_OUT[0] = (RegAddr >> 8) & 0xff;
- 101   1              SMB_DATA_OUT[1] = RegAddr&0xff;
- 102   1              SMB_DATA_OUT[2] = (RegValue >> 8) & 0xff;
- 103   1              SMB_DATA_OUT[3] = RegValue&0xff;
- 104   1      //      SMB_DATA_OUT[3] = ((RegValue >> 8) & 0xff);
- 105   1      //      SMB_DATA_OUT[2] = (RegValue);
- 106   1              SMB_Write();                                     // Initiate SMBus write
- 107   1              return 1;
- 108   1      }
+  66          #include "EFM8LB1_I2C_Slave.h"
+  67          
+  68          //-----------------------------------------------------------------------------
+  69          // Global Variables
+  70          //-----------------------------------------------------------------------------
+  71          // Global holder for SMBus data
+  72          // All receive data is written here
+  73          uint8_t SMB_DATA_IN[NUM_BYTES_RD];
+  74          
+  75          // Global holder for SMBus data.
+  76          // All transmit data is read from here
+  77          uint8_t SMB_DATA_OUT[NUM_BYTES_WR];
+  78          
+  79          uint8_t TARGET;                        // Target SMBus slave address
+  80          
+  81          volatile bool SMB_BUSY;                 // Software flag to indicate when the
+  82                                                 // SMB_Read() or SMB_Write() functions
+  83                                                 // have claimed the SMBus
+  84          
+  85          volatile bool SMB_RW;                   // Software flag to indicate the
+  86                                                 // direction of the current transfer
+  87          
+  88          uint16_t NUM_ERRORS;                   // Counter for the number of errors.
+  89          uint8_t nWR;
+  90          
+  91          
+  92          
+  93          
+  94          
+  95          
+  96          uint8_t i2cReceivedData;               // Global holder for I2C data.
+  97                                                 // All receive data is written
+  98                                                 // here;
+  99          
+ 100          bool dataReady = 0;                    // Set to '1' by the I2C ISR
+ 101                                                 // when a new data byte has been
+ 102                                                 // received.
+ 103          
+ 104          bool txDataReady = 1;                  // Set to '1' indicate that Tx data ready.
+ 105          uint8_t sendDataValue = 0;             // Transmit the data value 0-255 repeatedly.
+ 106          uint8_t sendDataCnt = 0;               // Transmit data counter. Count the Tx data
+ 107                                                 // in a I2C transaction.
+ 108          
  109          
- 110          uint16_t SMB0_I2C_MasterRead(uint16_t RegAddr) {
- 111   1              uint16_t sRes;
- 112   1              nWR = 2;
- 113   1              TARGET = SLAVE_ADDR;                     // Target the Slave for next SMBus
-C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 18:25:18 PAGE 3   
+ 110          
+ 111          
+ 112          
+ 113          
+C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 19:38:12 PAGE 3   
 
- 114   1              SMB_DATA_OUT[0] = (RegAddr >> 8) & 0xff;
- 115   1              SMB_DATA_OUT[1] = RegAddr&0xff;
- 116   1              SMB_Write();                                     // Initiate SMBus write
- 117   1              TARGET = SLAVE_ADDR;
- 118   1              SMB_Read();
- 119   1              sRes = (SMB_DATA_IN[0] << 8) & 0xff00 | SMB_DATA_IN[1] & 0xff;
- 120   1      //      sRes = SMB_DATA_IN[0] << 8 | SMB_DATA_IN[1];
- 121   1              return sRes;
- 122   1      }
- 123          
- 124          
+ 114          
+ 115          
+ 116          
+ 117          
+ 118          
+ 119          //-----------------------------------------------------------------------------
+ 120          // Function Prototypes
+ 121          //-----------------------------------------------------------------------------
+ 122          void SMB_Write(void);
+ 123          void SMB_Read(void);
+ 124          void T0_Waitms(uint8_t ms);
  125          
- 126          //-----------------------------------------------------------------------------
- 127          // SiLabs_Startup() Routine
- 128          // ----------------------------------------------------------------------------
- 129          // This function is called immediately after reset, before the initialization
- 130          // code is run in SILABS_STARTUP.A51 (which runs before main() ). This is a
- 131          // useful place to disable the watchdog timer, which is enable by default
- 132          // and may trigger before main() in some instances.
- 133          //-----------------------------------------------------------------------------
- 134          void SiLabs_Startup (void)
- 135          {
- 136   1        // Disable the watchdog here
+ 126          bool SMB0_I2C_MasterWrite(uint16_t RegAddr, uint16_t RegValue) {
+ 127   1              nWR = 4;
+ 128   1              TARGET = SLAVE_ADDR;                     // Target the Slave for next SMBus
+ 129   1              SMB_DATA_OUT[0] = (RegAddr >> 8) & 0xff;
+ 130   1              SMB_DATA_OUT[1] = RegAddr&0xff;
+ 131   1              SMB_DATA_OUT[2] = (RegValue >> 8) & 0xff;
+ 132   1              SMB_DATA_OUT[3] = RegValue&0xff;
+ 133   1      //      SMB_DATA_OUT[3] = ((RegValue >> 8) & 0xff);
+ 134   1      //      SMB_DATA_OUT[2] = (RegValue);
+ 135   1              SMB_Write();                                     // Initiate SMBus write
+ 136   1              return 1;
  137   1      }
- 138           
- 139          //-----------------------------------------------------------------------------
- 140          // Main Routine
- 141          //-----------------------------------------------------------------------------
- 142          //
- 143          // Main routine performs all configuration tasks, then loops forever sending
- 144          // and receiving SMBus data to the slave.
- 145          //
- 146          //-----------------------------------------------------------------------------
- 147          void main (void)
- 148          {
- 149   1         volatile uint8_t dat;               // Test counter
- 150   1         volatile uint8_t data_count;        // SMB_DATA_IN and SMB_DATA_OUT counter
- 151   1         uint16_t i;                          // Dummy variable counters
- 152   1         volatile uint16_t sI2C_rd;
- 153   1      
- 154   1         enter_BusFreeMode_from_RESET();
- 155   1         UART1_initStdio(24500000, 115200);
- 156   1      
- 157   1         DISP_EN = DISP_BC_DRIVEN;           // EFM8 does not drive display
- 158   1      
- 159   1         // If slave is holding SDA low because of an improper SMBus reset or error
- 160   1         while(!SDA)
- 161   1         {
- 162   2            // Provide clock pulses to allow the slave to advance out
- 163   2            // of its current state. This will allow it to release SDA.
- 164   2            XBR2 = XBR2_XBARE__ENABLED;      // Enable Crossbar
- 165   2            SCL = 0;                         // Drive the clock low
- 166   2            for(i = 0; i < 255; i++);        // Hold the clock low
- 167   2            SCL = 1;                         // Release the clock
- 168   2            while(!SCL);                     // Wait for open-drain
- 169   2                                             // clock output to rise
- 170   2            for(i = 0; i < 10; i++);         // Hold the clock high
- 171   2            XBR2 = XBR2_XBARE__DISABLED;     // Disable Crossbar
- 172   2         }
- 173   1      
- 174   1         enter_DefaultMode_from_BusFreeMode();
- 175   1      
- 176   1         LED1 = LED_OFF;
-C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 18:25:18 PAGE 4   
+ 138          
+ 139          uint16_t SMB0_I2C_MasterRead(uint16_t RegAddr) {
+ 140   1              uint16_t sRes;
+ 141   1              nWR = 2;
+ 142   1              TARGET = SLAVE_ADDR;                     // Target the Slave for next SMBus
+ 143   1              SMB_DATA_OUT[0] = (RegAddr >> 8) & 0xff;
+ 144   1              SMB_DATA_OUT[1] = RegAddr&0xff;
+ 145   1              SMB_Write();                                     // Initiate SMBus write
+ 146   1              TARGET = SLAVE_ADDR;
+ 147   1              SMB_Read();
+ 148   1              sRes = (SMB_DATA_IN[0] << 8) & 0xff00 | SMB_DATA_IN[1] & 0xff;
+ 149   1      //      sRes = SMB_DATA_IN[0] << 8 | SMB_DATA_IN[1];
+ 150   1              return sRes;
+ 151   1      }
+ 152          
+ 153          
+ 154          
+ 155          //-----------------------------------------------------------------------------
+ 156          // SiLabs_Startup() Routine
+ 157          // ----------------------------------------------------------------------------
+ 158          // This function is called immediately after reset, before the initialization
+ 159          // code is run in SILABS_STARTUP.A51 (which runs before main() ). This is a
+ 160          // useful place to disable the watchdog timer, which is enable by default
+ 161          // and may trigger before main() in some instances.
+ 162          //-----------------------------------------------------------------------------
+ 163          void SiLabs_Startup (void)
+ 164          {
+ 165   1        // Disable the watchdog here
+ 166   1      }
+ 167           
+ 168          //-----------------------------------------------------------------------------
+ 169          // Main Routine
+ 170          //-----------------------------------------------------------------------------
+ 171          //
+ 172          // Main routine performs all configuration tasks, then loops forever sending
+ 173          // and receiving SMBus data to the slave.
+ 174          //
+ 175          //-----------------------------------------------------------------------------
+ 176          void main (void)
+C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 19:38:12 PAGE 4   
 
- 177   1      
- 178   1         // TEST CODE----------------------------------------------------------------
- 179   1      
- 180   1         dat = 0;                            // Output data counter
- 181   1         NUM_ERRORS = 0;                     // Error counter
+ 177          {
+ 178   1         volatile uint8_t dat;               // Test counter
+ 179   1         volatile uint8_t data_count;        // SMB_DATA_IN and SMB_DATA_OUT counter
+ 180   1         uint16_t i;                          // Dummy variable counters
+ 181   1         volatile uint16_t sI2C_rd;
  182   1      
- 183   1         while (1)
- 184   1         {
- 185   2      #if 0   
+ 183   1         enter_BusFreeMode_from_RESET();
+ 184   1         UART1_initStdio(24500000, 115200);
+ 185   1      
+ 186   1         DISP_EN = DISP_BC_DRIVEN;           // EFM8 does not drive display
+ 187   1      
+ 188   1         // If slave is holding SDA low because of an improper SMBus reset or error
+ 189   1         while(!SDA)
+ 190   1         {
+ 191   2            // Provide clock pulses to allow the slave to advance out
+ 192   2            // of its current state. This will allow it to release SDA.
+ 193   2            XBR2 = XBR2_XBARE__ENABLED;      // Enable Crossbar
+ 194   2            SCL = 0;                         // Drive the clock low
+ 195   2            for(i = 0; i < 255; i++);        // Hold the clock low
+ 196   2            SCL = 1;                         // Release the clock
+ 197   2            while(!SCL);                     // Wait for open-drain
+ 198   2                                             // clock output to rise
+ 199   2            for(i = 0; i < 10; i++);         // Hold the clock high
+ 200   2            XBR2 = XBR2_XBARE__DISABLED;     // Disable Crossbar
+ 201   2         }
+ 202   1      
+ 203   1         enter_DefaultMode_from_BusFreeMode();
+ 204   1      
+ 205   1         LED1 = LED_OFF;
+ 206   1      
+ 207   1         // TEST CODE----------------------------------------------------------------
+ 208   1      
+ 209   1         dat = 0;                            // Output data counter
+ 210   1         NUM_ERRORS = 0;                     // Error counter
+ 211   1              {
+ 212   2                 IE_EA = 0;
+ 213   2                 SFRPAGE = PG3_PAGE;
+ 214   2                 I2C0CN0 &= ~I2C0CN0_BUSY__BMASK;        // Clear BUSY bit
+ 215   2                 I2C0FCN0 |= I2C0FCN0_RFLSH__FLUSH | I2C0FCN0_TFLSH__FLUSH;
+ 216   2                 IE_EA = 1;
+ 217   2              }
+ 218   1         while (1)
+ 219   1         {
+ 220   2      #if 0   
                     // SMBus Write Sequence
               #if 0
                     for (data_count = 0; data_count < NUM_BYTES_WR; data_count++)
@@ -223,6 +258,8 @@ line level    source
               
                     // SMBus Read Sequence
                     TARGET = SLAVE_ADDR;             // Target the Slave for next SMBus
+C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 19:38:12 PAGE 5   
+
                                                      // transfer
               //      SMB_Read();
               
@@ -245,154 +282,152 @@ line level    source
                     else
               #endif
               #else
- 227   2      //              for (i = 0; i < 255; i++) 
- 228   2                      {
- 229   3      #if 1           
- 230   3                              sI2C_rd = SMB0_I2C_MasterRead(0x00);
- 231   3                              SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
- 232   3      
- 233   3                              if (0x204c != sI2C_rd)
- 234   3                                      printf(                                 "SMB0_I2C    ===============Read================== 0x0 ============Error!!!->0x%02X \r\n "
+ 262   2      //              for (i = 0; i < 255; i++) 
+ 263   2                      {
+ 264   3      #if 1           
+ 265   3                              sI2C_rd = SMB0_I2C_MasterRead(0x00);
+ 266   3                              SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/);
+ 267   3      
+ 268   3                              if (0x204c != sI2C_rd)
+ 269   3                                      printf(                                 "SMB0_I2C    ===============Read================== 0x0 ============Error!!!->0x%02X \r\n "
              -,                                        sI2C_rd);
- 235   3      //                      else
- 236   3      //                              printf("SMB0_I2C Read 0x0 OK  !\r\n");
- 237   3      
- 238   3      
-C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 18:25:18 PAGE 5   
-
- 239   3      #endif
- 240   3      //                      if (1 == SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/)) {
- 241   3      //                              sI2C_rd = SMB0_I2C_MasterRead(0x9811);
- 242   3      //                              if (i != sI2C_rd)
- 243   3      //                                      LED1 = !LED1;
- 244   3      //                                      printf(                                         "SMB0_I2C ================Write========================= 0x9811 ============Error!!!\r
+ 270   3      //                      else
+ 271   3      //                              printf("SMB0_I2C Read 0x0 OK  !\r\n");
+ 272   3      
+ 273   3      
+ 274   3      #endif
+ 275   3      //                      if (1 == SMB0_I2C_MasterWrite(0x9811, 0xabcd/*i*/)) {
+ 276   3      //                              sI2C_rd = SMB0_I2C_MasterRead(0x9811);
+ 277   3      //                              if (i != sI2C_rd)
+ 278   3      //                                      LED1 = !LED1;
+ 279   3      //                                      printf(                                         "SMB0_I2C ================Write========================= 0x9811 ============Error!!!\r
              -\n");
- 245   3      //                              else {
- 246   3      //                                      LED1 = !LED1;
- 247   3      //                                      printf("SMB0_I2C Write & Read 0x9811 OK !\r\n");
- 248   3      //                              }
- 249   3                      }
- 250   2      
- 251   2      
- 252   2      #endif
- 253   2            {
- 254   3               LED1 = !LED1;
- 255   3            }
- 256   2      
- 257   2            // Run to here to view the SMB_DATA_IN and SMB_DATA_OUT variable arrays
- 258   2      
- 259   2            T0_Waitms (500);                  // Wait 50 ms until the next cycle
- 260   2                                             // so that LED blinks slow enough to see
- 261   2         }
- 262   1      
- 263   1         // END TEST CODE------------------------------------------------------------
- 264   1      
- 265   1      }
-*** WARNING C280 IN LINE 150 OF D:\WorkSpace\MyCode\GE_EFM8LB12F64E-B-QFN32_YJ\GE_EFM8LB12F64E-B-QFN32_YJ\src\GE_EFM8LB1
-             -2F64E-B-QFN32_YJ_main.c: 'data_count': unreferenced local variable
- 266          
- 267          //-----------------------------------------------------------------------------
- 268          // Support Functions
- 269          //-----------------------------------------------------------------------------
- 270          
- 271          //-----------------------------------------------------------------------------
- 272          // SMB_Write
- 273          //-----------------------------------------------------------------------------
- 274          //
- 275          // Return Value : None
- 276          // Parameters   : None
- 277          //
- 278          // Writes a single byte to the slave with address specified by the <TARGET>
- 279          // variable.
- 280          // Calling sequence:
- 281          // 1) Write target slave address to the <TARGET> variable
- 282          // 2) Write outgoing data to the <SMB_DATA_OUT> variable array
- 283          // 3) Call SMB_Write()
- 284          //
- 285          //-----------------------------------------------------------------------------
- 286          void SMB_Write(void)
- 287          {
- 288   1         while(SMB_BUSY);                    // Wait for SMBus to be free.
- 289   1         SMB_BUSY = 1;                       // Claim SMBus (set to busy)
- 290   1         SMB_RW = 0;                         // Mark this transfer as a WRITE
- 291   1         SMB0CN0_STA = 1;                    // Start transfer
- 292   1      }
- 293          
- 294          //-----------------------------------------------------------------------------
- 295          // SMB_Read
- 296          //-----------------------------------------------------------------------------
- 297          //
- 298          // Return Value : None
-C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 18:25:18 PAGE 6   
+ 280   3      //                              else {
+ 281   3      //                                      LED1 = !LED1;
+ 282   3      //                                      printf("SMB0_I2C Write & Read 0x9811 OK !\r\n");
+ 283   3      //                              }
+ 284   3                      }
+ 285   2      
+ 286   2      
+ 287   2      #endif
+ 288   2            {
+ 289   3               LED1 = !LED1;
+ 290   3            }
+ 291   2      
+ 292   2            // Run to here to view the SMB_DATA_IN and SMB_DATA_OUT variable arrays
+ 293   2      
+ 294   2            T0_Waitms (500);                  // Wait 50 ms until the next cycle
+ 295   2                                             // so that LED blinks slow enough to see
+ 296   2         }
+ 297   1      
+ 298   1         // END TEST CODE------------------------------------------------------------
+ 299   1      
+ 300   1      }
+C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 19:38:12 PAGE 6   
 
- 299          // Parameters   : None
- 300          //
- 301          // Reads a single byte from the slave with address specified by the <TARGET>
- 302          // variable.
- 303          // Calling sequence:
- 304          // 1) Write target slave address to the <TARGET> variable
- 305          // 2) Call SMB_Write()
- 306          // 3) Read input data from <SMB_DATA_IN> variable array
- 307          //
+*** WARNING C280 IN LINE 179 OF D:\WorkSpace\MyCode\GE_EFM8LB12F64E-B-QFN32_YJ\GE_EFM8LB12F64E-B-QFN32_YJ\src\GE_EFM8LB1
+             -2F64E-B-QFN32_YJ_main.c: 'data_count': unreferenced local variable
+ 301          
+ 302          //-----------------------------------------------------------------------------
+ 303          // Support Functions
+ 304          //-----------------------------------------------------------------------------
+ 305          
+ 306          //-----------------------------------------------------------------------------
+ 307          // SMB_Write
  308          //-----------------------------------------------------------------------------
- 309          void SMB_Read(void)
- 310          {
- 311   1         while(SMB_BUSY);                    // Wait for bus to be free.
- 312   1         SMB_BUSY = 1;                       // Claim SMBus (set to busy)
- 313   1         SMB_RW = 1;                         // Mark this transfer as a READ
- 314   1      
- 315   1         SMB0CN0_STA = 1;                    // Start transfer
- 316   1      
- 317   1         while(SMB_BUSY);                    // Wait for transfer to complete
- 318   1      }
- 319          
+ 309          //
+ 310          // Return Value : None
+ 311          // Parameters   : None
+ 312          //
+ 313          // Writes a single byte to the slave with address specified by the <TARGET>
+ 314          // variable.
+ 315          // Calling sequence:
+ 316          // 1) Write target slave address to the <TARGET> variable
+ 317          // 2) Write outgoing data to the <SMB_DATA_OUT> variable array
+ 318          // 3) Call SMB_Write()
+ 319          //
  320          //-----------------------------------------------------------------------------
- 321          // T0_Waitms
- 322          //-----------------------------------------------------------------------------
- 323          //
- 324          // Return Value : None
- 325          // Parameters   :
- 326          //   1) uint8_t ms - number of milliseconds to wait
- 327          //                        range is full range of character: 0 to 255
- 328          //
- 329          // Configure Timer0 to wait for <ms> milliseconds using SYSCLK as its time
- 330          // base.
- 331          //
- 332          //-----------------------------------------------------------------------------
- 333          void T0_Waitms(uint8_t ms)
- 334          {
- 335   1         TCON &= ~0x30;                      // Stop Timer0; Clear TCON_TF0
- 336   1         TMOD &= ~0x0f;                      // 16-bit free run mode
- 337   1         TMOD |=  0x01;
- 338   1      
- 339   1         CKCON0 |= 0x04;                     // Timer0 counts SYSCLKs
- 340   1      
- 341   1         while (ms)
- 342   1         {
- 343   2            TCON_TR0 = 0;                    // Stop Timer0
- 344   2            TH0 = ((-SYSCLK/1000) >> 8);     // Overflow in 1ms
- 345   2            TL0 = ((-SYSCLK/1000) & 0xFF);
- 346   2            TCON_TF0 = 0;                    // Clear overflow indicator
- 347   2            TCON_TR0 = 1;                    // Start Timer0
- 348   2            while (!TCON_TF0);               // Wait for overflow
- 349   2            ms--;                            // Update ms counter
- 350   2         }
+ 321          void SMB_Write(void)
+ 322          {
+ 323   1         while(SMB_BUSY);                    // Wait for SMBus to be free.
+ 324   1         SMB_BUSY = 1;                       // Claim SMBus (set to busy)
+ 325   1         SMB_RW = 0;                         // Mark this transfer as a WRITE
+ 326   1         SMB0CN0_STA = 1;                    // Start transfer
+ 327   1      }
+ 328          
+ 329          //-----------------------------------------------------------------------------
+ 330          // SMB_Read
+ 331          //-----------------------------------------------------------------------------
+ 332          //
+ 333          // Return Value : None
+ 334          // Parameters   : None
+ 335          //
+ 336          // Reads a single byte from the slave with address specified by the <TARGET>
+ 337          // variable.
+ 338          // Calling sequence:
+ 339          // 1) Write target slave address to the <TARGET> variable
+ 340          // 2) Call SMB_Write()
+ 341          // 3) Read input data from <SMB_DATA_IN> variable array
+ 342          //
+ 343          //-----------------------------------------------------------------------------
+ 344          void SMB_Read(void)
+ 345          {
+ 346   1         while(SMB_BUSY);                    // Wait for bus to be free.
+ 347   1         SMB_BUSY = 1;                       // Claim SMBus (set to busy)
+ 348   1         SMB_RW = 1;                         // Mark this transfer as a READ
+ 349   1      
+ 350   1         SMB0CN0_STA = 1;                    // Start transfer
  351   1      
- 352   1         TCON_TR0 = 0;                       // Stop Timer0
+ 352   1         while(SMB_BUSY);                    // Wait for transfer to complete
  353   1      }
  354          
+ 355          //-----------------------------------------------------------------------------
+ 356          // T0_Waitms
+ 357          //-----------------------------------------------------------------------------
+ 358          //
+ 359          // Return Value : None
+ 360          // Parameters   :
+ 361          //   1) uint8_t ms - number of milliseconds to wait
+C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 19:38:12 PAGE 7   
+
+ 362          //                        range is full range of character: 0 to 255
+ 363          //
+ 364          // Configure Timer0 to wait for <ms> milliseconds using SYSCLK as its time
+ 365          // base.
+ 366          //
+ 367          //-----------------------------------------------------------------------------
+ 368          void T0_Waitms(uint8_t ms)
+ 369          {
+ 370   1         TCON &= ~0x30;                      // Stop Timer0; Clear TCON_TF0
+ 371   1         TMOD &= ~0x0f;                      // 16-bit free run mode
+ 372   1         TMOD |=  0x01;
+ 373   1      
+ 374   1         CKCON0 |= 0x04;                     // Timer0 counts SYSCLKs
+ 375   1      
+ 376   1         while (ms)
+ 377   1         {
+ 378   2            TCON_TR0 = 0;                    // Stop Timer0
+ 379   2            TH0 = ((-SYSCLK/1000) >> 8);     // Overflow in 1ms
+ 380   2            TL0 = ((-SYSCLK/1000) & 0xFF);
+ 381   2            TCON_TF0 = 0;                    // Clear overflow indicator
+ 382   2            TCON_TR0 = 1;                    // Start Timer0
+ 383   2            while (!TCON_TF0);               // Wait for overflow
+ 384   2            ms--;                            // Update ms counter
+ 385   2         }
+ 386   1      
+ 387   1         TCON_TR0 = 0;                       // Stop Timer0
+ 388   1      }
+ 389          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    259    ----
+   CODE SIZE        =    272    ----
    CONSTANT SIZE    =     87    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-C51 COMPILER V9.53.0.0   GE_EFM8LB12F64E_B_QFN32_YJ_MAIN                                   12/30/2017 18:25:18 PAGE 7   
-
-   DATA SIZE        =     10       4
+   DATA SIZE        =     13       4
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =      2    ----
+   BIT SIZE         =      4    ----
    EDATA SIZE       =   ----    ----
    HDATA SIZE       =   ----    ----
    XDATA CONST SIZE =   ----    ----

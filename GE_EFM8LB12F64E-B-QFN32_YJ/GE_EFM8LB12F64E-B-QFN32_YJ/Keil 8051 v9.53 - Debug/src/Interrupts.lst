@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 17:39:17 PAGE 1   
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 19:39:52 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE INTERRUPTS
@@ -23,151 +23,331 @@ line level    source
    9          // USER INCLUDES
   10          #include <SI_EFM8LB1_Register_Enums.h>
   11          #include "EFM8LB1_SMBus_MasterMultibyte.h"
-  12          
-  13          //-----------------------------------------------------------------------------
-  14          // SMBUS0_ISR
-  15          //-----------------------------------------------------------------------------
-  16          //
-  17          // SMBUS0 ISR Content goes here. Remember to clear flag bits:
-  18          // SMB0CN0::SI (SMBus Interrupt Flag)
-  19          //
-  20          //-----------------------------------------------------------------------------
-  21          SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
-  22          {
-  23   1         bool FAIL = 0;                       // Used by the ISR to flag failed
-  24   1                                             // transfers
-  25   1      
-  26   1         static uint8_t sent_byte_counter;
-  27   1         static uint8_t rec_byte_counter;
-  28   1      
-  29   1         if (SMB0CN0_ARBLOST == 0)           // Check for errors
-  30   1         {
-  31   2            // Normal operation
-  32   2            switch (SMB0CN0 & 0xF0)          // Status vector
-  33   2            {
-  34   3               // Master Transmitter/Receiver: START condition transmitted.
-  35   3               case SMB_MTSTA:
-  36   3                  SMB0DAT = TARGET<<1;          // Load address of the target slave
-  37   3                  SMB0DAT &= 0xFE;           // Clear the LSB of the address for the
-  38   3                                             // R/W bit
-  39   3                  SMB0DAT |= (uint8_t) SMB_RW;    // Load R/W bit
-  40   3                  SMB0CN0_STA = 0;           // Manually clear START bit
-  41   3                  rec_byte_counter = 1;      // Reset the counter
-  42   3                  sent_byte_counter = 1;     // Reset the counter
-  43   3                  break;
-  44   3      
-  45   3               // Master Transmitter: Data byte transmitted
-  46   3               case SMB_MTDB:
-  47   3                  if (SMB0CN0_ACK)           // Slave SMB0CN0_ACK?
-  48   3                  {
-  49   4                     if (SMB_RW == WRITE)    // If this transfer is a WRITE,
-  50   4                     {
-  51   5                                        if (sent_byte_counter <= nWR /*NUM_BYTES_WR*/)
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 17:39:17 PAGE 2   
+  12          #include "EFM8LB1_I2C_Slave.h"
+  13          
+  14          //-----------------------------------------------------------------------------
+  15          // SMBUS0_ISR
+  16          //-----------------------------------------------------------------------------
+  17          //
+  18          // SMBUS0 ISR Content goes here. Remember to clear flag bits:
+  19          // SMB0CN0::SI (SMBus Interrupt Flag)
+  20          //
+  21          //-----------------------------------------------------------------------------
+  22          SI_INTERRUPT (SMBUS0_ISR, SMBUS0_IRQn)
+  23          {
+  24   1              bool FAIL = 0;                       // Used by the ISR to flag failed
+  25   1                                                                                       // transfers
+  26   1      
+  27   1              static uint8_t sent_byte_counter;
+  28   1              static uint8_t rec_byte_counter;
+  29   1      
+  30   1              if (SMB0CN0_ARBLOST == 0)// Check for errors
+  31   1              {
+  32   2                      // Normal operation
+  33   2                      switch (SMB0CN0 & 0xF0)// Status vector
+  34   2                      {
+  35   3                              // Master Transmitter/Receiver: START condition transmitted.
+  36   3                              case SMB_MTSTA:
+  37   3                              SMB0DAT = TARGET<<1;// Load address of the target slave
+  38   3                              SMB0DAT &= 0xFE;// Clear the LSB of the address for the
+  39   3                                                              // R/W bit
+  40   3                              SMB0DAT |= (uint8_t) SMB_RW;// Load R/W bit
+  41   3                              SMB0CN0_STA = 0;// Manually clear START bit
+  42   3                              rec_byte_counter = 1;// Reset the counter
+  43   3                              sent_byte_counter = 1;// Reset the counter
+  44   3                              break;
+  45   3      
+  46   3                              // Master Transmitter: Data byte transmitted
+  47   3                              case SMB_MTDB:
+  48   3                              if (SMB0CN0_ACK)// Slave SMB0CN0_ACK?
+  49   3                              {
+  50   4                                      if (SMB_RW == WRITE)    // If this transfer is a WRITE,
+  51   4                                      {
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 19:39:52 PAGE 2   
 
-  52   5                        {
-  53   6                           // send data byte
-  54   6                           SMB0DAT = SMB_DATA_OUT[sent_byte_counter-1];
-  55   6                           sent_byte_counter++;
-  56   6                        }
-  57   5                        else
-  58   5                        {
-  59   6                           SMB0CN0_STO = 1;  // Set SMB0CN0_STO to terminate transfer
-  60   6                           SMB_BUSY = 0;     // And free SMBus interface
-  61   6                        }
-  62   5                     }
-  63   4                     else {}                 // If this transfer is a READ,
-  64   4                                             // proceed with transfer without
-  65   4                                             // writing to SMB0DAT (switch
-  66   4                                             // to receive mode)
-  67   4      
-  68   4                  }
-  69   3                  else                       // If slave NACK,
-  70   3                  {
-  71   4                     SMB0CN0_STO = 1;        // Send STOP condition, followed
-  72   4                     SMB0CN0_STA = 1;        // By a START
-  73   4                     NUM_ERRORS++;           // Indicate error
-  74   4                  }
-  75   3                  break;
-  76   3      
-  77   3               // Master Receiver: byte received
-  78   3               case SMB_MRDB:
-  79   3                  if (rec_byte_counter < NUM_BYTES_RD)
-  80   3                  {
-  81   4                     SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
-  82   4                                                                // byte
-  83   4                     SMB0CN0_ACK = 1;        // Send SMB0CN0_ACK to indicate byte received
-  84   4                     rec_byte_counter++;     // Increment the byte counter
-  85   4                  }
-  86   3                  else
-  87   3                  {
-  88   4                     SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
-  89   4                                                                // byte
-  90   4                     SMB_BUSY = 0;           // Free SMBus interface
-  91   4                     SMB0CN0_ACK = 0;        // Send NACK to indicate last byte
-  92   4                                             // of this transfer
-  93   4      
-  94   4                     SMB0CN0_STO = 1;        // Send STOP to terminate transfer
-  95   4                  }
-  96   3                  break;
-  97   3      
-  98   3               default:
-  99   3                  FAIL = 1;                  // Indicate failed transfer
- 100   3                                             // and handle at end of ISR
- 101   3                  break;
- 102   3      
- 103   3            } // end switch
- 104   2         }
- 105   1         else
- 106   1         {
- 107   2            // SMB0CN0_ARBLOST = 1, error occurred... abort transmission
- 108   2            FAIL = 1;
- 109   2         } // end SMB0CN0_ARBLOST if
- 110   1      
- 111   1         if (FAIL)                           // If the transfer failed,
- 112   1         {
- 113   2            SMB0CF &= ~0x80;                 // Reset communication
- 114   2            SMB0CF |= 0x80;
-C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 17:39:17 PAGE 3   
+  52   5                                              if (sent_byte_counter <= nWR /*NUM_BYTES_WR*/)
+  53   5                                              {
+  54   6                                                      // send data byte
+  55   6                                                      SMB0DAT = SMB_DATA_OUT[sent_byte_counter-1];
+  56   6                                                      sent_byte_counter++;
+  57   6                                              }
+  58   5                                              else
+  59   5                                              {
+  60   6                                                      SMB0CN0_STO = 1; // Set SMB0CN0_STO to terminate transfer
+  61   6                                                      SMB_BUSY = 0;// And free SMBus interface
+  62   6                                              }
+  63   5                                      }
+  64   4                                      else {}                 // If this transfer is a READ,
+  65   4                                                                                      // proceed with transfer without
+  66   4                                                                                      // writing to SMB0DAT (switch
+  67   4                                                                                      // to receive mode)
+  68   4      
+  69   4                              }
+  70   3                              else                       // If slave NACK,
+  71   3                              {
+  72   4                                      SMB0CN0_STO = 1;        // Send STOP condition, followed
+  73   4                                      SMB0CN0_STA = 1;// By a START
+  74   4                                      NUM_ERRORS++;// Indicate error
+  75   4                              }
+  76   3                              break;
+  77   3      
+  78   3                              // Master Receiver: byte received
+  79   3                              case SMB_MRDB:
+  80   3                              if (rec_byte_counter < NUM_BYTES_RD)
+  81   3                              {
+  82   4                                      SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
+  83   4                                                                                                                         // byte
+  84   4                                      SMB0CN0_ACK = 1;// Send SMB0CN0_ACK to indicate byte received
+  85   4                                      rec_byte_counter++;// Increment the byte counter
+  86   4                              }
+  87   3                              else
+  88   3                              {
+  89   4                                      SMB_DATA_IN[rec_byte_counter-1] = SMB0DAT; // Store received
+  90   4                                                                                                                         // byte
+  91   4                                      SMB_BUSY = 0;// Free SMBus interface
+  92   4                                      SMB0CN0_ACK = 0;// Send NACK to indicate last byte
+  93   4                                                                      // of this transfer
+  94   4      
+  95   4                                      SMB0CN0_STO = 1;// Send STOP to terminate transfer
+  96   4                              }
+  97   3                              break;
+  98   3      
+  99   3                              default:
+ 100   3                              FAIL = 1;                  // Indicate failed transfer
+ 101   3                                                                                 // and handle at end of ISR
+ 102   3                              break;
+ 103   3      
+ 104   3                      } // end switch
+ 105   2              }
+ 106   1              else
+ 107   1              {
+ 108   2                      // SMB0CN0_ARBLOST = 1, error occurred... abort transmission
+ 109   2                      FAIL = 1;
+ 110   2              } // end SMB0CN0_ARBLOST if
+ 111   1      
+ 112   1              if (FAIL)// If the transfer failed,
+ 113   1              {
+ 114   2                      SMB0CF &= ~0x80;                 // Reset communication
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 19:39:52 PAGE 3   
 
- 115   2            SMB0CN0_STA = 0;
- 116   2            SMB0CN0_STO = 0;
- 117   2            SMB0CN0_ACK = 0;
- 118   2      
- 119   2            SMB_BUSY = 0;                    // Free SMBus
- 120   2      
- 121   2            FAIL = 0;
- 122   2            LED1 = 0;
- 123   2      
- 124   2            NUM_ERRORS++;                    // Indicate an error occurred
- 125   2         }
- 126   1      
- 127   1         SMB0CN0_SI = 0;                     // Clear interrupt flag
- 128   1      }
- 129          
- 130          //-----------------------------------------------------------------------------
- 131          // TIMER3_ISR
- 132          //-----------------------------------------------------------------------------
- 133          //
- 134          // TIMER3 ISR Content goes here. Remember to clear flag bits:
- 135          // TMR3CN0::TF3H (Timer # High Byte Overflow Flag)
- 136          // TMR3CN0::TF3L (Timer # Low Byte Overflow Flag)
- 137          //
- 138          //-----------------------------------------------------------------------------
- 139          SI_INTERRUPT (TIMER3_ISR, TIMER3_IRQn)
- 140          {
- 141   1         SMB0CF  &= ~0x80;                   // Disable SMBus
- 142   1         SMB0CF  |=  0x80;                   // Re-enable SMBus
- 143   1         TMR3CN0 &= ~0x80;                   // Clear Timer3 interrupt-pending
- 144   1                                             // flag
- 145   1         SMB0CN0_STA = 0;
- 146   1         SMB_BUSY = 0;                       // Free SMBus
- 147   1      }
- 148          
+ 115   2                      SMB0CF |= 0x80;
+ 116   2                      SMB0CN0_STA = 0;
+ 117   2                      SMB0CN0_STO = 0;
+ 118   2                      SMB0CN0_ACK = 0;
+ 119   2      
+ 120   2                      SMB_BUSY = 0;// Free SMBus
+ 121   2      
+ 122   2                      FAIL = 0;
+ 123   2                      LED1 = 0;
+ 124   2      
+ 125   2                      NUM_ERRORS++;// Indicate an error occurred
+ 126   2              }
+ 127   1      
+ 128   1              SMB0CN0_SI = 0;                     // Clear interrupt flag
+ 129   1      }
+ 130          
+ 131          //-----------------------------------------------------------------------------
+ 132          // TIMER3_ISR
+ 133          //-----------------------------------------------------------------------------
+ 134          //
+ 135          // TIMER3 ISR Content goes here. Remember to clear flag bits:
+ 136          // TMR3CN0::TF3H (Timer # High Byte Overflow Flag)
+ 137          // TMR3CN0::TF3L (Timer # Low Byte Overflow Flag)
+ 138          //
+ 139          //-----------------------------------------------------------------------------
+ 140          SI_INTERRUPT (TIMER3_ISR, TIMER3_IRQn)
+ 141          {
+ 142   1              SMB0CF &= ~0x80;                   // Disable SMBus
+ 143   1              SMB0CF |= 0x80;// Re-enable SMBus
+ 144   1              TMR3CN0 &= ~0x80;// Clear Timer3 interrupt-pending
+ 145   1                                               // flag
+ 146   1              SMB0CN0_STA = 0;
+ 147   1              SMB_BUSY = 0;// Free SMBus
+ 148   1      }
+ 149          
+ 150          //-----------------------------------------------------------------------------
+ 151          // I2C0_ISR
+ 152          //-----------------------------------------------------------------------------
+ 153          //
+ 154          // I2C0 ISR Content goes here. Remember to clear flag bits:
+ 155          // I2C0STAT::I2C0INT (I2C Interrupt)
+ 156          //
+ 157          //-----------------------------------------------------------------------------
+ 158          SI_INTERRUPT (I2C0_ISR, I2C0_IRQn)
+ 159          {
+ 160   1              //  Number of bytes in the transmit FIFO and shift register
+ 161   1              uint8_t txCnt = 0;
+ 162   1      
+ 163   1              if((I2C0FCN1 & I2C0FCN1_TFRQ__BMASK) && (txDataReady == 1))
+ 164   1              {
+ 165   2                      // Firmware fill the TX FIFO until the TX FIFO full, and it should
+ 166   2                      // locate at the beginning of the ISR, because the switch below may
+ 167   2                      // consume so much system cycle.
+ 168   2                      while((I2C0FCN1 & I2C0FCN1_TXNF__BMASK) == I2C0FCN1_TXNF__NOT_FULL)
+ 169   2                      {
+ 170   3                              if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET)
+ 171   3                              {
+ 172   4                                      // Master did not NACK
+ 173   4                                      // Stopping transfer of data
+ 174   4                                      // Flush FIFO if there is data in it
+ 175   4                                      I2C0STAT &= ~I2C0STAT_NACK__BMASK;
+ 176   4                              }
+ 177   3                              else
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 19:39:52 PAGE 4   
+
+ 178   3                              {
+ 179   4                                      I2C0DOUT = sendDataValue++;
+ 180   4                                      sendDataCnt++;
+ 181   4                              }
+ 182   3                      }
+ 183   2                      // The TFRQ will not set I2C0INT bit, so don't need to clear
+ 184   2                      // the I2C0INT when TFRQ happen.
+ 185   2                      // Other interrupts may be generated while dealing with the TFRQ,
+ 186   2                      // so just return to avoid clearing other interrupts.
+ 187   2                      return;
+ 188   2              }
+ 189   1      
+ 190   1              if(I2C0FCN1 & I2C0FCN1_RFRQ__SET)
+ 191   1              {
+ 192   2                      while((I2C0FCN1 & I2C0FCN1_RXE__BMASK) == I2C0FCN1_RXE__NOT_EMPTY)
+ 193   2                      { // Read data out
+ 194   3                              i2cReceivedData   = I2C0DIN;
+ 195   3                              // This example only supports host write 1 byte to slave
+ 196   3                              // If want slave to accept more than 1 byte, use a buffer to save the data from FIFO
+ 197   3                              dataReady = 1;
+ 198   3                      }
+ 199   2                      // Other interrupts may be generated while dealing with the RFRQ,
+ 200   2                      // so just return to avoid clearing other interrupts.
+ 201   2                      return;
+ 202   2              }
+ 203   1      
+ 204   1              switch (I2C0STAT & I2C_STATUS_VECTOR_MASK)
+ 205   1              {
+ 206   2      
+ 207   2                      case I2C_ADDR_RD:  // START+ADDR+R
+ 208   2                              I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_RD__BMASK);
+ 209   2                              // The data be written to FIFO within Transmit FIFO Request (TFRQ) service routines.
+ 210   2                              break;
+ 211   2      
+ 212   2                      case I2C_ADDR_WR: // START+ADDR+W
+ 213   2                              I2C0STAT &= ~(I2C0STAT_START__BMASK | I2C0STAT_WR__BMASK);
+ 214   2                              break;
+ 215   2      
+ 216   2                      case I2C_RD_DATA:
+ 217   2                              // Check for NACK
+ 218   2                              if ((I2C0STAT & I2C0STAT_NACK__BMASK) == I2C0STAT_NACK__SET)
+ 219   2                              {
+ 220   3                                      // Master did not NACK
+ 221   3                                      // Stopping transfer of data
+ 222   3                                      // Flush FIFO if there is data in it
+ 223   3                                      I2C0STAT &= ~I2C0STAT_NACK__BMASK;
+ 224   3                              }
+ 225   2                              I2C0STAT &= ~I2C0STAT_RD__BMASK;
+ 226   2                              break;
+ 227   2      
+ 228   2                      case I2C_WR_DATA:  // FIFO is full, whatever slave ACK/NACK master
+ 229   2                              I2C0STAT &= ~I2C0STAT_WR__BMASK;
+ 230   2                              break;
+ 231   2      
+ 232   2                      case I2C_STOSTA:
+ 233   2                      case I2C_STOSTARD:
+ 234   2                              I2C0STAT &= ~I2C0STAT_STOP__BMASK;
+ 235   2                              txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
+ 236   2                              // One byte be shifted to the Shift register, also need to reload it.
+ 237   2                              if(sendDataCnt > 2)
+ 238   2                              {
+ 239   3                                      txCnt += 1;
+ 240   3                              }
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 19:39:52 PAGE 5   
+
+ 241   2      
+ 242   2                              if(txCnt > 0)
+ 243   2                              {
+ 244   3                                      I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
+ 245   3                                      if(txCnt >= 2)
+ 246   3                                      {
+ 247   4                                              I2C0DOUT = sendDataValue-txCnt;
+ 248   4                                              I2C0DOUT = sendDataValue-txCnt+1;
+ 249   4                                              sendDataValue = sendDataValue-(txCnt-2);
+ 250   4                                              sendDataCnt = 2;
+ 251   4                                      }
+ 252   3                                      else if(txCnt == 1)
+ 253   3                                      {
+ 254   4                                              I2C0DOUT = sendDataValue-txCnt;
+ 255   4                                              sendDataCnt = 1;
+ 256   4                                      }
+ 257   3                              }
+ 258   2                              //
+ 259   2                              //      STOP Condition received.
+ 260   2                              //
+ 261   2                              return;         // START Flag set, so re-enter ISR
+ 262   2                              break;
+ 263   2      
+ 264   2                      case I2C_STO:
+ 265   2                              I2C0STAT &= ~I2C0STAT_STOP__BMASK;
+ 266   2                              txCnt = (I2C0FCT & I2C0FCT_TXCNT__FMASK) >> I2C0FCT_TXCNT__SHIFT;
+ 267   2                              // One byte be shifted to the Shift register, also need to reload it.
+ 268   2                              if(sendDataCnt > 2)
+ 269   2                              {
+ 270   3                                      txCnt += 1;
+ 271   3                              }
+ 272   2      
+ 273   2                              if(txCnt > 0)
+ 274   2                              {
+ 275   3                                      I2C0FCN0 |= I2C0FCN0_TFLSH__FLUSH;
+ 276   3                                      if(txCnt >= 2)
+ 277   3                                      {
+ 278   4                                              I2C0DOUT = sendDataValue-txCnt;
+ 279   4                                              I2C0DOUT = sendDataValue-txCnt+1;
+ 280   4                                              sendDataValue = sendDataValue-(txCnt-2);
+ 281   4                                              sendDataCnt = 2;
+ 282   4                                      }
+ 283   3                                      else if(txCnt == 1)
+ 284   3                                      {
+ 285   4                                              I2C0DOUT = sendDataValue-txCnt;
+ 286   4                                              sendDataCnt = 1;
+ 287   4                                      }
+ 288   3                              }
+ 289   2                              //
+ 290   2                              //      STOP Condition received.
+ 291   2                              //
+ 292   2                              break;
+ 293   2                      default:
+ 294   2                              break;
+ 295   2              }
+ 296   1      
+ 297   1              // Clear I2C interrupt flag
+ 298   1              I2C0STAT &= ~I2C0STAT_I2C0INT__BMASK;
+ 299   1      
+ 300   1      }
+ 301          
+ 302          //-----------------------------------------------------------------------------
+ 303          // TIMER4_ISR
+C51 COMPILER V9.53.0.0   INTERRUPTS                                                        12/30/2017 19:39:52 PAGE 6   
+
+ 304          //-----------------------------------------------------------------------------
+ 305          //
+ 306          // TIMER4 ISR Content goes here. Remember to clear flag bits:
+ 307          // TMR4CN0::TF4H (Timer # High Byte Overflow Flag)
+ 308          // TMR4CN0::TF4L (Timer # Low Byte Overflow Flag)
+ 309          //
+ 310          //-----------------------------------------------------------------------------
+ 311          SI_INTERRUPT (TIMER4_ISR, TIMER4_IRQn)
+ 312          {
+ 313   1              SFRPAGE = PG3_PAGE;
+ 314   1      
+ 315   1              I2C0CN0 &= ~I2C0CN0_I2C0EN__BMASK;                      // Disable I2C module
+ 316   1              I2C0CN0 |= I2C0CN0_I2C0EN__ENABLED;                     // Re-enable I2C module
+ 317   1      
+ 318   1              SFRPAGE = PG2_PAGE;
+ 319   1              TMR4CN0 &= ~TMR4CN0_TF4H__BMASK;                        // Clear Timer3 interrupt-pending flag
+ 320   1      
+ 321   1      }
+ 322          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    197    ----
+   CODE SIZE        =    504    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
